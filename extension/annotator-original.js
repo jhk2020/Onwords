@@ -12977,6 +12977,7 @@ HttpStorage.prototype.setHeader = function (key, value) {
  * :rtype: jqXHR
  */
 HttpStorage.prototype._apiRequest = function (action, obj) {
+    //debugger;
     var id = obj && obj.id;
     var url = this._urlFor(action, id);
     var options = this._apiRequestOptions(action, obj);
@@ -13062,7 +13063,7 @@ HttpStorage.prototype._urlFor = function (action, id) {
     if (typeof this.options.prefix !== 'undefined' &&
         this.options.prefix !== null) {
         url = this.options.prefix;
-    }
+    } 
 
     url += this.options.urls[action];
     // If there's an '{id}' in the URL, then fill in the ID.
@@ -13256,6 +13257,11 @@ StorageAdapter.prototype.create = function (obj) {
     );
 };
 
+StorageAdapter.prototype.deleteRender = function(arr) {
+  console.log(arr);
+  this.runHook('beforeRenderDeleted', [arr]);
+}
+
 /**
  * function:: StorageAdapter.prototype.update(obj)
  *
@@ -13351,9 +13357,14 @@ StorageAdapter.prototype.load = function (query) {
     var self = this;
     return this.query(query)
         .then(function (data) {
+
             self.runHook('annotationsLoaded', [data.results]);
         });
 };
+
+StorageAdapter.prototype.loadRender = function(arr) {
+  this.runHook('annotationsLoaded', [arr]);
+}
 
 // Cycle a store event, keeping track of the annotation object and updating it
 // as necessary.
@@ -13364,9 +13375,10 @@ StorageAdapter.prototype._cycle = function (
     afterEvent
 ) {
     var self = this;
+
     return this.runHook(beforeEvent, [obj])
         .then(function () {
-          debugger;
+          // debugger;
             var safeCopy = $.extend(true, {}, obj);
             delete safeCopy._local;
 
@@ -13376,7 +13388,7 @@ StorageAdapter.prototype._cycle = function (
             return Promise.resolve(result);
         })
         .then(function (ret) {
-          debugger;
+          // debugger;
             // Empty obj without changing identity
             for (var k in obj) {
                 if (obj.hasOwnProperty(k)) {
@@ -13556,7 +13568,7 @@ var Adder = Widget.extend({
 
 Adder.template = [
     '<div class="annotator-adder annotator-hide">',
-    '  <button type="button">' + _t('Annotate') + '</button>',
+    '  <button type="button" class="annotator-adder-btn">' + _t('Annotate') + '</button>',
     '</div>'
 ].join('\n');
 
@@ -14651,7 +14663,9 @@ var util = require('../util');
 var $ = util.$;
 var Promise = util.Promise;
 
-
+/////////////////////////////////////////////////////////////////////////////////
+var userColor = {};
+var colors = ['#FFCCCC', '#FFE5CC', '#FFFFCC', '#E5FFCC', '#CCFFCC', '#CCFFE5', '#CCFFFF', '#CCE5FF', '#CCCCFF', '#E5CCFF', '#FFCCFF', '#FFCCE5'];
 // highlightRange wraps the DOM Nodes within the provided range with a highlight
 // element of the specified class and returns the highlight Elements.
 //
@@ -14659,7 +14673,8 @@ var Promise = util.Promise;
 // cssClass - A CSS class to use for the highlight (default: 'annotator-hl')
 //
 // Returns an array of highlight Elements.
-function highlightRange(normedRange, cssClass) {
+function highlightRange(normedRange, cssClass, userId) {
+  debugger;
     if (typeof cssClass === 'undefined' || cssClass === null) {
         cssClass = 'annotator-hl';
     }
@@ -14670,6 +14685,16 @@ function highlightRange(normedRange, cssClass) {
     // subset of nodes such as table rows and lists. This does mean that there
     // may be the odd abandoned whitespace node in a paragraph that is skipped
     // but better than breaking table layouts.
+
+/////////////////////////////////////////////////////////////////////////////////
+    var index = Math.floor(Math.random() * 11);
+
+    if (!userColor[userId]) {
+      userColor[userId] = colors[index];
+      colors.splice(index, 1);
+    }
+/////////////////////////////////////////////////////////////////////////////////
+
     var nodes = normedRange.textNodes(),
         results = [];
     for (var i = 0, len = nodes.length; i < len; i++) {
@@ -14677,6 +14702,7 @@ function highlightRange(normedRange, cssClass) {
         if (!white.test(node.nodeValue)) {
             var hl = global.document.createElement('span');
             hl.className = cssClass;
+            hl.style.background = userColor[userId];
             node.parentNode.replaceChild(hl, node);
             hl.appendChild(node);
             results.push(hl);
@@ -14744,13 +14770,68 @@ Highlighter.prototype.drawAll = function (annotations) {
             var now = annList.splice(0, self.options.chunkSize);
             for (var i = 0, len = now.length; i < len; i++) {
                 highlights = highlights.concat(self.draw(now[i]));
+                // now[i]['offsetTop'] = now[i]._local.highlights[0].offsetTop;
+                // now[i]['offsetLeft'] = now[i]._local.highlights[0].offsetLeft;
             }
-            console.log('hellooooo', now);
+            
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+            var sortAnnotations = function(arr) {
+              arr.sort(function(a,b) {
+                  if (a.offsetTop < b.offsetTop) {
+                   return -1;
+                  } else if (a.offsetTop > b.offsetTop){
+                   return 1;
+                  } else {
+                     if (a.offsetLeft < b.offsetLeft) { 
+                      return -1;
+                     } else if (a.offsetLeft > b.offsetLeft){
+                      return 1;
+                     }
+                  }
+                })
+              return arr;
+            }
+            
+            debugger;
             var uri = window.location.href.split("?")[0];
-            console.log("annotations loaded", annotations);
-            var obj = {};
-            obj[uri] = annotations;
-            chrome.storage.local.set(obj);
+            if (uri.substring(uri.length-11) === 'onwords1991') {
+              uri = uri.substring(0, uri.length-13);
+            } else {
+              uri = uri;
+            }
+            chrome.storage.local.get(uri, function(obj) {
+              if (obj[uri] && now.length > 0) {
+                debugger;
+                var combined = obj[uri].concat(now);
+                var unique = {};
+                var uniqueArr = [];
+                combined.forEach(function(item) {
+                  if (!unique[item.id]) {
+                    uniqueArr.push(item);
+                    unique[item.id] = item;
+                  }
+                })
+                var sorted = sortAnnotations(uniqueArr);
+                console.log(sorted);
+                var newObj = {};
+                newObj[uri] = sorted;
+                chrome.storage.local.set(newObj);
+                console.log("annotations loaded", newObj[uri]);
+              } else if (!obj[uri] && now.length > 0) {
+                debugger;
+                var sorted = sortAnnotations(now);
+                var newObj = {};
+                newObj[uri] = sorted;
+                chrome.storage.local.set(newObj);
+                console.log("annotations loaded", newObj[uri]);
+              } else {
+                return;
+              }
+            })
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
             // If there are more to do, do them after a delay
             if (annList.length > 0) {
                 setTimeout(function () {
@@ -14799,9 +14880,16 @@ Highlighter.prototype.draw = function (annotation) {
         var normed = normedRanges[j];
         $.merge(
             annotation._local.highlights,
-            highlightRange(normed, this.options.highlightClass)
+            highlightRange(normed, this.options.highlightClass, annotation.user_id)
         );
     }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    annotation['offsetTop'] = $(annotation._local.highlights[0]).offset().top;
+    annotation['offsetLeft'] = $(annotation._local.highlights[0]).offset().left;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Save the annotation data on each highlighter element.
     $(annotation._local.highlights).data('annotation', annotation);
@@ -14811,6 +14899,7 @@ Highlighter.prototype.draw = function (annotation) {
         $(annotation._local.highlights)
             .attr('data-annotation-id', annotation.id);
     }
+
 
     return annotation._local.highlights;
 };
@@ -15132,34 +15221,48 @@ function main(options) {
             }
         });
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
         document.addEventListener('deleteAnnotation', function(e) {
-            console.log('delete this annotation:', e.detail.targetAnnotation)
-            app.annotations['delete'](e.detail.targetAnnotation);
+          console.log('delete this annotation:', e.detail.targetAnnotation);
+          app.annotations['delete'](e.detail.targetAnnotation);
         })
 
-        s.viewer = new viewer.Viewer({
-            onEdit: function (ann) {
-                // Copy the interaction point from the shown viewer:
-                s.interactionPoint = util.$(s.viewer.element)
-                                         .css(['top', 'left']);
+        document.addEventListener('updateAnnotation', function(e) {
+          console.log('update this annotation:', e.detail.targetAnnotation);
+          app.annotations['update'](e.detail.targetAnnotation);
+        })
 
-                app.annotations.update(ann);
-            },
-            onDelete: function (ann) {
-                app.annotations['delete'](ann);
-            },
-            permitEdit: function (ann) {
-                return authz.permits('update', ann, ident.who());
-            },
-            permitDelete: function (ann) {
-                return authz.permits('delete', ann, ident.who());
-            },
-            autoViewHighlights: options.element,
-            extensions: options.viewerExtensions
-        });
-        s.viewer.attach();
+        document.addEventListener('deleteRender', function(e) {
+          console.log('get rid of these renders:', e.detail.targetAnnotations);
+          app.annotations.deleteRender(e.detail.targetAnnotations);
+        })
 
-        injectDynamicStyle();
+//////////////////////////////////////////////////////////////////////////////////////////
+
+        // s.viewer = new viewer.Viewer({
+        //     onEdit: function (ann) {
+        //         // Copy the interaction point from the shown viewer:
+        //         s.interactionPoint = util.$(s.viewer.element)
+        //                                  .css(['top', 'left']);
+
+        //         app.annotations.update(ann);
+        //     },
+        //     onDelete: function (ann) {
+        //         app.annotations['delete'](ann);
+        //     },
+        //     permitEdit: function (ann) {
+        //         return authz.permits('update', ann, ident.who());
+        //     },
+        //     permitDelete: function (ann) {
+        //         return authz.permits('delete', ann, ident.who());
+        //     },
+        //     autoViewHighlights: options.element,
+        //     extensions: options.viewerExtensions
+        // });
+        // s.viewer.attach();
+
+        // injectDynamicStyle();
     }
 
     return {
@@ -15185,11 +15288,11 @@ function main(options) {
             // here to "stall" the annotation process until the editing is
             // done.
             return s.editor.load(annotation, s.interactionPoint);
-        },
-
-        beforeAnnotationUpdated: function (annotation) {
-            return s.editor.load(annotation, s.interactionPoint);
         }
+
+        // beforeAnnotationUpdated: function (annotation) {
+        //     // return s.editor.load(annotation, s.interactionPoint);
+        // }
     };
 }
 
@@ -15669,7 +15772,7 @@ var Viewer = exports.Viewer = Widget.extend({
                 self._onEditClick(e);
             })
             .on("click." + NS, '.annotator-delete', function (e) {
-              debugger;
+              // debugger;
                 self._onDeleteClick(e);
             })
             .on("mouseenter." + NS, function () {
