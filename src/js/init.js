@@ -1,6 +1,6 @@
 var customAnnotationsModule = require('./customAnnotationsModule');
 
-var initializeAnnotator = function(userId) {
+var initializeAnnotator = function(initialAnnotationsUserId) {
   // Grab the URI to store in chrome storage (local) for reference
   var uri = window.location.href.split("?")[0];
   if (uri.substring(uri.length - 11) === 'onwords1991') {
@@ -38,11 +38,12 @@ var initializeAnnotator = function(userId) {
    .include(pageInfoModule)
    .include(customAnnotationsModule);
 
+   // Start the app and load the annotations
    app.start()
     .then(function() {
       app.annotations.load({
         uri: targetUri,
-        user: userId
+        user: initialAnnotationsUserId
       });
     });
 

@@ -1,4 +1,5 @@
 var customAnnotationsModule = function() {
+  // Grab the URI of the page
   var uri = window.location.href.split("?")[0];
   if (uri.substring(uri.length - 11) === 'onwords1991') {
     uri = uri.substring(0, uri.length - 13);
@@ -47,6 +48,7 @@ var customAnnotationsModule = function() {
       });
     },
 
+    // For toggling highlights
     beforeRenderDeleted: function(annotations) {
       chrome.storage.local.get(uri, function(obj) {
         for (var i = 0; i < annotations.length; i++) {
@@ -78,6 +80,6 @@ var customAnnotationsModule = function() {
       });
     }
   }
-}
+};
 
 module.exports = customAnnotationsModule;

@@ -4,6 +4,13 @@ var App = require('./components/app');
 var React = require('react');
 var initializeAnnotator = require('./test');
 
+var code = window.location.hash.substring(1);
+var initialAnnotationsUserId;
+
+if (code.substring(code.length - 11)) {
+  initialAnnotationsUserId = code.substring(0, code.length - 11);
+}
+
 var renderComponents = function() {
   var font1 = "<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300' rel='stylesheet' type='text/css'>";
   var font2 = "<link href='https://fonts.googleapis.com/css?family=Lato:300' rel='stylesheet' type='text/css'>";
@@ -21,36 +28,31 @@ var renderComponents = function() {
 };
 
 var identityListener = function(changes) {
+  // Check if storage change is about a new user being stored (i.e. extension is initialized)
   if (changes.user && changes.user.newValue) {
-    if (!userId) {
-      userId = changes.user.newValue.id
+    // Check if there is no user Id associated with the URI (i.e. user wants to load friend's annotations)
+    if (!initialAnnotationsUserId) {
+      initialAnnotationsUserId = changes.user.newValue.id
     }
     window.localStorage.setItem('user_id', changes.user.newValue.id);
     renderComponents();
-    test.annotate(userId);
+    initializeAnnotator(initialAnnotationsUserId);
   }
 };
-
-var code = window.location.hash.substring(1);
-var userId;
-
-if (code.substring(code.length - 11)) {
-  userId = code.substring(0, code.length - 11);
-}
 
 chrome.storage.sync.get('user', function(obj) {
   // Check if user has extension turned on
   if (obj.user) {
-    // Check if user wants to load friend's annotations
-    // If not, set user's id in local storage and render app
-    if (!userId) {
-      userId = obj.user.id;
-      window.localStorage.setItem('user_id', userId);
+    // Check if there is user Id associated with the URI
+    if (!initialAnnotationsUserId) {
+      // If no user ID on URI, set user's ID in local storage and render app
+      initialAnnotationsUserId = obj.user.id;
+      window.localStorage.setItem('user_id', initialAnnotationsUserId);
     }
     renderComponents();
-    test.annotate(userId);
+    initializeAnnotator(initialAnnotationsUserId);
   } else {
-    // Listens for any changes to chrome storage(?)
+    // Add listener for when user-info is stored in chrome storage (i.e. user initializes Onwords)
     chrome.storage.onChanged.addListener(identityListener);
   }
 });

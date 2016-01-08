@@ -25,10 +25,10 @@ var annotationComment = React.createClass({
 
   render: function() {
     var userInfo = this.props.userInfo;
-    var userColor = $('span[data-annotation-id="' + this.props.annotation.id + '"]').css('background-color'); 
+    var userColor = $('span[data-annotation-id="' + this.props.annotation.id + '"]').css('background-color');
     var divStyle = {
       borderLeft: '4px solid ' + userColor
-    }
+    };
 
     console.log('inside annotationcomment:', this.props.annotation);
     var annotation = this.props.annotation;
@@ -44,13 +44,13 @@ var annotationComment = React.createClass({
       console.log(e.target);
       e.stopPropagation();
       self.props.deleteAnn(annotation);
-    }
+    };
 
     return (
       <div onClick={clickHandler} className="annotation" style={divStyle}>
         <img className='annotation-friends-pic' src={userInfo.pic_url} />
         <p className='username'> Me </p>
-        {!this.state.shouldEditComment ? <p className='annotation-text'>{annotation.text}</p> : 
+        {!this.state.shouldEditComment ? <p className='annotation-text'>{annotation.text}</p> :
           <form>
             <textArea id="annotationEdit" style={{height: 100+"px", width: 300+"px"}}>
               {annotation.text}

@@ -59,13 +59,13 @@ module.exports = ".annotator-filter *,.annotator-notice,.annotator-widget *{font
   }
 })(function () {
   "use strict";
-  
+
   // mini-underscore
   var _ = {
     has: function (obj, key) {
       return Object.prototype.hasOwnProperty.call(obj, key);
     },
-  
+
     extend: function(obj) {
       for (var i=1; i<arguments.length; ++i) {
         var source = arguments[i];
@@ -1191,7 +1191,7 @@ var inserted = {};
 module.exports = function (css, options) {
     if (inserted[css]) return;
     inserted[css] = true;
-    
+
     var elem = document.createElement('style');
     elem.setAttribute('type', 'text/css');
 
@@ -1200,7 +1200,7 @@ module.exports = function (css, options) {
     } else {
       elem.styleSheet.cssText = css;
     }
-    
+
     var head = document.getElementsByTagName('head')[0];
     if (options && options.prepend) {
         head.insertBefore(elem, head.childNodes[0]);
@@ -2902,7 +2902,7 @@ StorageAdapter.prototype.create = function (obj) {
     );
 };
 
-// Onwords method
+// Onwords method for toggling highlights
 StorageAdapter.prototype.deleteRender = function(arr) {
   console.log(arr);
   this.runHook('beforeRenderDeleted', [arr]);
@@ -4423,7 +4423,7 @@ Highlighter.prototype.drawAll = function (annotations) {
                   } else if (a.offsetTop > b.offsetTop){
                    return 1;
                   } else {
-                     if (a.offsetLeft < b.offsetLeft) { 
+                     if (a.offsetLeft < b.offsetLeft) {
                       return -1;
                      } else if (a.offsetLeft > b.offsetLeft){
                       return 1;
@@ -4432,8 +4432,8 @@ Highlighter.prototype.drawAll = function (annotations) {
                 });
               return arr;
             };
-            
-            
+
+
             var uri = window.location.href.split("?")[0];
             if (uri.substring(uri.length-11) === 'onwords1991') {
               uri = uri.substring(0, uri.length-13);
@@ -4442,7 +4442,7 @@ Highlighter.prototype.drawAll = function (annotations) {
             }
             chrome.storage.local.get(uri, function(obj) {
               if (obj[uri] && now.length > 0) {
-                
+
                 var combined = obj[uri].concat(now);
                 var unique = {};
                 var uniqueArr = [];
@@ -4453,18 +4453,15 @@ Highlighter.prototype.drawAll = function (annotations) {
                   }
                 });
                 var sorted = sortAnnotations(uniqueArr);
-                console.log(sorted);
                 var newObj = {};
                 newObj[uri] = sorted;
                 chrome.storage.local.set(newObj);
-                console.log("annotations loaded", newObj[uri]);
               } else if (!obj[uri] && now.length > 0) {
-                
+
                 var sorted = sortAnnotations(now);
                 var newObj = {};
                 newObj[uri] = sorted;
                 chrome.storage.local.set(newObj);
-                console.log("annotations loaded", newObj[uri]);
               } else {
                 return;
               }
@@ -4522,7 +4519,7 @@ Highlighter.prototype.draw = function (annotation) {
         );
     }
 
-// Onwords
+// Onwords: Save offset information to each annotation object
     annotation['offsetTop'] = $(annotation._local.highlights[0]).offset().top;
     annotation['offsetLeft'] = $(annotation._local.highlights[0]).offset().left;
 // /Onwords
@@ -4536,9 +4533,9 @@ Highlighter.prototype.draw = function (annotation) {
             .attr('data-annotation-id', annotation.id);
     }
 
-// Onwords
+// Onwords: Attach click handler on highlights to spotlight
     $('.annotator-hl').unbind('click').bind('click', function(event) {
-      
+
       var annotations = $(event.target)
                     .parents('.annotator-hl')
                     .addBack()
@@ -4875,49 +4872,22 @@ function main(options) {
         });
 
 // Onwords
+        // Delete annotations
         document.addEventListener('deleteAnnotation', function(e) {
-          console.log('delete this annotation:', e.detail.targetAnnotation);
           app.annotations['delete'](e.detail.targetAnnotation);
         })
 
+        // Update annotations
         document.addEventListener('updateAnnotation', function(e) {
-          console.log('update this annotation:', e.detail.targetAnnotation);
           app.annotations['update'](e.detail.targetAnnotation);
         })
 
+        // Get rid of highlights (i.e. toggle)
         document.addEventListener('deleteRender', function(e) {
-          console.log('get rid of these renders:', e.detail.targetAnnotations);
           app.annotations.deleteRender(e.detail.targetAnnotations);
         });
 // /Onwords
 
-// Onwords: removed s.viewer
-/*
-        s.viewer = new viewer.Viewer({
-            onEdit: function (ann) {
-                // Copy the interaction point from the shown viewer:
-                s.interactionPoint = util.$(s.viewer.element) // remember to change util.$ to $
-                                         .css(['top', 'left']);
-
-                app.annotations.update(ann);
-            },
-            onDelete: function (ann) {
-                app.annotations['delete'](ann);
-            },
-            permitEdit: function (ann) {
-                return authz.permits('update', ann, ident.who());
-            },
-            permitDelete: function (ann) {
-                return authz.permits('delete', ann, ident.who());
-            },
-            autoViewHighlights: options.element,
-            extensions: options.viewerExtensions
-        });
-        s.viewer.attach();
-
-        injectDynamicStyle();
-*/
-// /Onwords
     }
 
     return {
@@ -4944,14 +4914,6 @@ function main(options) {
             // done.
             return s.editor.load(annotation, s.interactionPoint);
         }
-// Onwords: removed beforeAnnotationUpdated
-/*
-        beforeAnnotationUpdated: function (annotation) {
-            return s.editor.load(annotation, s.interactionPoint);
-        }
-*/
-// /Onwords
-    };
 }
 
 
