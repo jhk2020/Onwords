@@ -1,7 +1,7 @@
-var renderAnnotations = function() {
+var customAnnotationsModule = function() {
   var uri = window.location.href.split("?")[0];
-  if (uri.substring(uri.length-11) === 'onwords1991') {
-    uri = uri.substring(0, uri.length-13);
+  if (uri.substring(uri.length - 11) === 'onwords1991') {
+    uri = uri.substring(0, uri.length - 13);
   } else {
     uri = uri;
   }
@@ -19,17 +19,17 @@ var renderAnnotations = function() {
           } else if (a.offsetTop > b.offsetTop){
            return 1;
           } else {
-             if (a.offsetLeft < b.offsetLeft) { 
+             if (a.offsetLeft < b.offsetLeft) {
               return -1;
              } else if (a.offsetLeft > b.offsetLeft){
               return 1;
              }
           }
-        })
+        });
         var newObj = {};
         newObj[uri] = obj[uri];
         chrome.storage.local.set(newObj);
-      })
+      });
     },
 
     beforeAnnotationDeleted: function(annotation) {
@@ -44,7 +44,7 @@ var renderAnnotations = function() {
             chrome.storage.local.set(newObj);
           }
         }
-      })
+      });
     },
 
     beforeRenderDeleted: function(annotations) {
@@ -62,7 +62,7 @@ var renderAnnotations = function() {
         var newObj = {};
         newObj[uri] = obj[uri];
         chrome.storage.local.set(newObj);
-      })
+      });
     },
 
     beforeAnnotationUpdated: function(annotation) {
@@ -75,9 +75,9 @@ var renderAnnotations = function() {
             chrome.storage.local.set(newObj);
           }
         }
-      })
+      });
     }
   }
 }
 
-module.exports = renderAnnotations;
+module.exports = customAnnotationsModule;

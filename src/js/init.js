@@ -1,17 +1,19 @@
-var renderAnnotations = require('./annotationRender');
+var customAnnotationsModule = require('./customAnnotationsModule');
 
-exports.annotate = function(userId) {
+var initializeAnnotator = function(userId) {
+  // Grab the URI to store in chrome storage (local) for reference
   var uri = window.location.href.split("?")[0];
-  if (uri.substring(uri.length-11) === 'onwords1991') {
-    targetUri = uri.substring(0, uri.length-13);
+  if (uri.substring(uri.length - 11) === 'onwords1991') {
+    targetUri = uri.substring(0, uri.length - 13);
   } else {
     targetUri = uri;
   }
 
+  // Clear annotations stored in chrome storage (local) from previous page visits
   chrome.storage.local.remove(targetUri);
 
-
-  var pageUri = function() {
+  // Annotator module to include URI, title, and user ID in every annotation object
+  var pageInfoModule = function() {
     return {
       beforeAnnotationCreated: function(ann) {
         ann.uri = targetUri;
@@ -21,6 +23,7 @@ exports.annotate = function(userId) {
     };
   };
 
+  // Annotator app configuration
   var app = new annotator.App();
   app.include(annotator.ui.main)
     .include(annotator.storage.http, {
@@ -32,18 +35,18 @@ exports.annotate = function(userId) {
         search: '/api/search'
       }
     })
-   .include(pageUri)
-   .include(renderAnnotations);
-
+   .include(pageInfoModule)
+   .include(customAnnotationsModule);
 
    app.start()
     .then(function() {
       app.annotations.load({
         uri: targetUri,
         user: userId
-      })
-    })
+      });
+    });
 
+  // Set up custom listener for when user wants to toggle on friend's annotations
   document.addEventListener('getFriendAnnotations', function(e) {
     app.annotations.load({
       uri: targetUri,
@@ -51,6 +54,7 @@ exports.annotate = function(userId) {
     });
   });
 
+  // Listener for message from background script to destroy Annotator app
   chrome.runtime.onMessage.addListener(function(request) {
     if (request.message === 'destroyApp') {
       document.body.removeChild(document.getElementById('annotation-sidebar'));
@@ -59,5 +63,4 @@ exports.annotate = function(userId) {
   });
 };
 
-
-
+module.exports = initializeAnnotator;
