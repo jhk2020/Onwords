@@ -1,13 +1,25 @@
+// Background Script: Runs when chrome extension is first loaded/initalized
+
+// Temporary measure to be able to log off
+chrome.storage.sync.clear();
+chrome.storage.local.clear();
+
+// Click handler on icon-press
+chrome.browserAction.onClicked.addListener(function() {
+  chrome.storage.sync.get('access_token', function(obj) {
+    if (!obj['access_token']) {
+      fetchToken();
+    }
+  });
+});
+
 function fetchToken() {
   var access_token;
-
   var clientID = '';
-
   var redirectUri = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
-
   var options = {
     'interactive': true,
-    url: 'https://www.facebook.com/dialog/oauth?client_id=' + clientID + 
+    url: 'https://www.facebook.com/dialog/oauth?client_id=' + clientID +
          '&response_type=token&access_type=online&redirect_uri=' + encodeURIComponent(redirectUri) +
          '&scope=email'
   };
@@ -17,32 +29,22 @@ function fetchToken() {
       console.log(new Error(chrome.runtime.lastError));
       return;
     }
-    
-    var string = redirectUri.slice(redirectUri.indexOf('#')+1);
+
+    var string = redirectUri.slice(redirectUri.indexOf('#') + 1);
     var pairs = string.split('=');
     var token = pairs[1].split('&');
     var values = {};
     values[pairs[0]] = token[0];
+
     if (values.hasOwnProperty('access_token')) {
       access_token = values['access_token'];
       fetchFbProfile(access_token);
     }
 
+    // Store FB access token in Chrome Storage (Sync)
     chrome.storage.sync.set({'access_token': access_token});
   });
 }
-
-chrome.storage.sync.clear();
-chrome.storage.local.clear();
-
-chrome.browserAction.onClicked.addListener(function() {
-  console.log('browserAction clicked');
-  chrome.storage.sync.get('access_token', function(obj) {
-    if (!obj['access_token']) {
-      fetchToken();
-    }
-  });
-});
 
 function fetchFbProfile(accessToken) {
   var xhr = new XMLHttpRequest();
@@ -77,8 +79,7 @@ function sendFbProfile(data) {
         id: resp.user_id,
         fullName: resp.full_name,
         email: resp.email,
-        picUrl: resp.pic_url/*,
-        desc: resp.description*/
+        picUrl: resp.pic_url
       };
       chrome.storage.sync.set({'user': user});
     }

@@ -2,8 +2,8 @@ var renderAnnotations = require('./annotationRender');
 
 exports.annotate = function(userId) {
   var uri = window.location.href.split("?")[0];
-  if (uri.substring(uri.length-11) === 'onwords1991') {
-    targetUri = uri.substring(0, uri.length-13);
+  if (uri.substring(uri.length - 11) === 'onwords1991') {
+    targetUri = uri.substring(0, uri.length - 13);
   } else {
     targetUri = uri;
   }
@@ -16,7 +16,6 @@ exports.annotate = function(userId) {
       beforeAnnotationCreated: function(ann) {
         ann.uri = targetUri;
         ann.title = document.getElementsByTagName('title')[0].innerHTML || document.querySelector('meta[name="twitter:title"]').getAttribute("content");
-        // ann.description = null || document.querySelector('meta[name="twitter:description"]').getAttribute("content");
         ann.user_id = window.localStorage.getItem('user_id');
       }
     };

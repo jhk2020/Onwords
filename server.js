@@ -6,7 +6,7 @@ var morgan = require('morgan');
 var app = express();
 var server = http.Server(app);
 require('./db/config.js');
-require('./db/models/annotations'); 
+require('./db/models/annotations');
 require('./db/models/users');
 
 app.use(morgan('dev'));
@@ -22,7 +22,7 @@ app.use(function(req, res, next) {
 
 
 
-// Create annotations 
+// Create annotations
 app.post('/api/annotations', function(req,res){
   var ann = req.body;
   var text = req.body.text;
@@ -33,7 +33,7 @@ app.post('/api/annotations', function(req,res){
   var startOffset = req.body.ranges[0].startOffset;
   var endOffset = req.body.ranges[0].endOffset;
   var user_id = 1;
- 
+
   db.model('Annotation').newAnnotation({
     text: text,
     quote: quote,
@@ -68,14 +68,14 @@ app.delete('/api/annotations/:id',function(req,res){
     res.sendStatus(204)
   })
 });
-// Update endpoint 
+// Update endpoint
 
 app.put('/api/annotations/:id',function(req,res){
   var annId = req.params.id;
   db.model('Annotation').updateById({id:annId, text:req.body.text}).then(function(data){
     console.log('database updated ');
   })
-  db.model('Annotation').fetchByUri(annId).then(function(data){ 
+  db.model('Annotation').fetchByUri(annId).then(function(data){
   var resObj = {
         id: data.attributes.id,
         text: req.body.text,
@@ -90,7 +90,7 @@ app.put('/api/annotations/:id',function(req,res){
         ]
        };
 
-    res.set('Content-Type','application/JSON');   
+    res.set('Content-Type','application/JSON');
     res.json(resObj);
     res.end();
   });
@@ -117,12 +117,12 @@ app.get('/api/search',function(req,res){
           }
         ]
        };
-       return resObj;   
+       return resObj;
     });
 
     var returnObj = {};
     returnObj.rows = resultsArray;
-    
+
     res.set('Content-Type', 'application/JSON');
     res.json(returnObj);
     res.end();
