@@ -2,7 +2,7 @@
 
 var App = require('./components/app');
 var React = require('react');
-var initializeAnnotator = require('./test');
+var initializeAnnotator = require('./init');
 
 var code = window.location.hash.substring(1);
 var initialAnnotationsUserId;

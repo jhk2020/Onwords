@@ -49,6 +49,7 @@
     "pg": "^4.4.3",
     "phantomjs": "^1.9.18",
     "react": "^0.13.3",
+    "reactify": "^1.1.1",
     "sinon": "^1.17.2",
     "sinon-chrome": "^0.2.1",
     "vinyl-source-stream": "^1.1.0"

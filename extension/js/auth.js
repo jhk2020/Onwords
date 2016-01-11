@@ -1,8 +1,9 @@
 // Background page that runs at initialization
+var config = require('../config.js');
 
 var fetchToken = function() {
   var access_token;
-  var clientID = '';
+  var clientID = config.clientID;
   var redirectUri = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
   var options = {
     'interactive': true,
@@ -84,5 +85,6 @@ chrome.browserAction.onClicked.addListener(function() {
   chrome.storage.sync.get('access_token', function(obj) {
     if (!obj['access_token']) {
       fetchToken();
+    }
   });
 });
