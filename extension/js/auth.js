@@ -1,9 +1,9 @@
 // Background page that runs at initialization
-var config = require('../config.js');
+// var config = require('../config.js');
 
 var fetchToken = function() {
   var access_token;
-  var clientID = config.clientID;
+  var clientID = 190161771316309;
   var redirectUri = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
   var options = {
     'interactive': true,
@@ -56,7 +56,7 @@ var fetchFbProfile = function(accessToken) {
 
 var sendFbProfile = function(data) {
   var xhr = new XMLHttpRequest();
-  var url = 'https://test2server.herokuapp.com/api/users';
+  var url = 'http://localhost:9000/api/users';
   xhr.open('POST', url, true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.onreadystatechange = function() {
@@ -77,6 +77,7 @@ var sendFbProfile = function(data) {
 
 
 // Temporary measures to clear storage for token renewal
+console.log(chrome.storage);
 chrome.storage.sync.clear();
 chrome.storage.local.clear();
 

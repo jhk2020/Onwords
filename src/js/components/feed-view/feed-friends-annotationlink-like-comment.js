@@ -15,7 +15,7 @@ var AnnotationLikeComment = React.createClass({
       currentCount--;
       this.setState({liked: false});
       this.setState({likeCount: currentCount});
-      // // make api call  
+      // // make api call
       var uri = this.props.post.uriLink;
       var user = window.localStorage.user_id;
       var likeInfo = {
@@ -26,7 +26,7 @@ var AnnotationLikeComment = React.createClass({
       };
       console.log('WE ARE un LIKING IT');
       $.ajax({
-        url: 'https://test2server.herokuapp.com/api/likes',
+        url: 'https://localhost:9000/api/likes',
         method: 'post',
         data: likeInfo,
         dataType: 'json'
@@ -47,7 +47,7 @@ var AnnotationLikeComment = React.createClass({
       };
       console.log('WE ARE LIKING IT');
       $.ajax({
-        url: 'https://test2server.herokuapp.com/api/likes',
+        url: 'https://localhost:9000/api/likes',
         method: 'post',
         data: likeInfo,
         dataType: 'json'
@@ -73,7 +73,7 @@ var AnnotationLikeComment = React.createClass({
         </div>
 
         <div className='post-comments-button-container' onClick={THIS.handleClick}>
-          <img src={chrome.extension.getURL('/assets/comment.png')} className='comment-icon' />  {this.props.post.comments.length} 
+          <img src={chrome.extension.getURL('/assets/comment.png')} className='comment-icon' />  {this.props.post.comments.length}
         </div>
       </div>
     );

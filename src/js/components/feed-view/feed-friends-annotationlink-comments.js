@@ -3,19 +3,19 @@ var React = require('react');
 var AnnotationLinkComment = React.createClass({
   getInitialState: function() {
     return {
-      comments: [] 
+      comments: []
     };
   },
   componentWillMount: function() {
-    
+
   },
   componentDidMount: function() {
     console.log('AnnotationLinkComment componentDidMount');
     var THIS = this;
     var uri = this.props.post.uriLink;
     var userID = this.props.post.userId;
-    var requestUrl =  'https://test2server.herokuapp.com/api/homefeed/comments?user_id=' + userID + '&uri=' + uri;
-    
+    var requestUrl =  'https://localhost:9000/api/homefeed/comments?user_id=' + userID + '&uri=' + uri;
+
     $.get(requestUrl, function(comments) {
       console.log('COMMENTS!!', comments);
       if (THIS.isMounted()) {

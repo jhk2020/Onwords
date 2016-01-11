@@ -19,7 +19,7 @@ var FriendsAnnotationsView = React.createClass({
   componentWillMount: function() {
     var THIS = this;
     $(document).on('click', 'body', function(e) {
-      
+
       if (e.target.className === 'annotator-button') {
         return;
       }
@@ -56,10 +56,10 @@ var FriendsAnnotationsView = React.createClass({
           newFriends[friend] = {shown: false, pic: oldFriends[friend].pic, name: oldFriends[friend].name};
         }
       }
-      this.setState({annotations: nextProps.annotations, friendsShown: newFriends});      
+      this.setState({annotations: nextProps.annotations, friendsShown: newFriends});
     }
   },
-  
+
 
   componentWillUnmount: function() {
     $(document).off();
@@ -98,7 +98,7 @@ var FriendsAnnotationsView = React.createClass({
         )
       }
     })
-    
+
 
     return (
       <div className='friends-annotations-view-container'>
@@ -135,8 +135,8 @@ var FriendsAnnotationsView = React.createClass({
     var annotations = [];
     var friendsShown = {};
 
-    $.get('https://test2server.herokuapp.com/api/users/uri/annotations', {uri: uri, user_id: ownId})
-      .done(function(data) { 
+    $.get('https://localhost:9000/api/users/uri/annotations', {uri: uri, user_id: ownId})
+      .done(function(data) {
         var oldAnnotations = self.props.annotations;
         if(oldAnnotations) {
           for (var i = 0; i < oldAnnotations.length; i++) {
@@ -155,7 +155,7 @@ var FriendsAnnotationsView = React.createClass({
           friendsShown[ownId] = {shown: false};
         }
         self.setState({annotations: annotations, friendsShown: friendsShown});
-      }) 
+      })
 
   }
 });

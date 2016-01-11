@@ -4,7 +4,7 @@ var MyLink = React.createClass({
   getInitialState: function() {
     return {
       showComments: false,
-      showLikes: false,  
+      showLikes: false,
       annotation: {},
       generalPost: ''
     };
@@ -21,19 +21,19 @@ var MyLink = React.createClass({
     var generalPost = {
       uri: uri,
       user_id: user,
-      generalPost: message 
+      generalPost: message
     };
 
     // making it shared.
     $.ajax({
-      url: 'https://test2server.herokuapp.com/api/personalfeed/share?user_id='+ user +' &uri='+ uri +'&is_shared='+'true',
+      url: 'https://localhost:9000/api/personalfeed/share?user_id='+ user +' &uri='+ uri +'&is_shared='+'true',
       method: "put",
       dataType: 'json'
     });
 
     // updating general post.
     $.ajax({
-      url: 'https://test2server.herokuapp.com/api/uri/gp',
+      url: 'https://localhost:9000/api/uri/gp',
       method: "post",
       data: generalPost,
       dataType: 'json'
@@ -55,8 +55,8 @@ var MyLink = React.createClass({
         <div className='my-annotations-title-container'>
           <a href={redirectUri} ref='uri' target='blank' className='redirectLink'>{annotation.title}</a>
         </div>
-        
-        {!generalPost ? 
+
+        {!generalPost ?
           <div className='my-annotations-form-container'>
             <form autocomplete='off' onSubmit={this.handleClick}>
                 <textArea id={this.props.index} className='inputContent' type='text' placeholder='Write a comment...' ref='postContent' />

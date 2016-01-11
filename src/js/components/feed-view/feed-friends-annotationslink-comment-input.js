@@ -11,7 +11,7 @@ var CommentInput = React.createClass({
     var THIS = this;
     chrome.storage.sync.get('user', function(info) {
       THIS.setState({pic: info.user.picUrl});
-    }); 
+    });
         // <button type='submit' />
   },
   handleSubmit: function(e) {
@@ -22,12 +22,12 @@ var CommentInput = React.createClass({
       uri: uri,
       user_id: user,
       follower_id: this.props.post.userId,
-      message: message 
+      message: message
     };
 
     // making a post.
     $.ajax({
-      url: 'https://test2server.herokuapp.com/api/comments',
+      url: 'https://localhost:9000/api/comments',
       method: 'post',
       data: comment,
       dataType: 'json'

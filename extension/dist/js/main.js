@@ -22307,19 +22307,19 @@ var React = require('react');
 var AnnotationLinkComment = React.createClass({displayName: "AnnotationLinkComment",
   getInitialState: function() {
     return {
-      comments: [] 
+      comments: []
     };
   },
   componentWillMount: function() {
-    
+
   },
   componentDidMount: function() {
     console.log('AnnotationLinkComment componentDidMount');
     var THIS = this;
     var uri = this.props.post.uriLink;
     var userID = this.props.post.userId;
-    var requestUrl =  'https://test2server.herokuapp.com/api/homefeed/comments?user_id=' + userID + '&uri=' + uri;
-    
+    var requestUrl =  'https://localhost:9000/api/homefeed/comments?user_id=' + userID + '&uri=' + uri;
+
     $.get(requestUrl, function(comments) {
       console.log('COMMENTS!!', comments);
       if (THIS.isMounted()) {
@@ -22380,7 +22380,7 @@ var AnnotationLikeComment = React.createClass({displayName: "AnnotationLikeComme
       currentCount--;
       this.setState({liked: false});
       this.setState({likeCount: currentCount});
-      // // make api call  
+      // // make api call
       var uri = this.props.post.uriLink;
       var user = window.localStorage.user_id;
       var likeInfo = {
@@ -22391,7 +22391,7 @@ var AnnotationLikeComment = React.createClass({displayName: "AnnotationLikeComme
       };
       console.log('WE ARE un LIKING IT');
       $.ajax({
-        url: 'https://test2server.herokuapp.com/api/likes',
+        url: 'https://localhost:9000/api/likes',
         method: 'post',
         data: likeInfo,
         dataType: 'json'
@@ -22412,7 +22412,7 @@ var AnnotationLikeComment = React.createClass({displayName: "AnnotationLikeComme
       };
       console.log('WE ARE LIKING IT');
       $.ajax({
-        url: 'https://test2server.herokuapp.com/api/likes',
+        url: 'https://localhost:9000/api/likes',
         method: 'post',
         data: likeInfo,
         dataType: 'json'
@@ -22584,7 +22584,7 @@ var FriendsAnnotations = React.createClass({displayName: "FriendsAnnotations",
   componentDidMount: function() {
     console.log('FriendsAnnotations - componentDidMount');
     var user = window.localStorage.user_id;
-    var completeUri = 'https://test2server.herokuapp.com/api/homefeed?user_id=' + user;
+    var completeUri = 'https://localhost:9000/api/homefeed?user_id=' + user;
 
     // get FriendsAnnotations info from database
     $.get(completeUri, function(result) {
@@ -22599,7 +22599,7 @@ var FriendsAnnotations = React.createClass({displayName: "FriendsAnnotations",
 
     $(document).on('click', '.redirectLink', function(e) {
       var url = $(this).attr('href');
-      window.open(url, '_blank');  
+      window.open(url, '_blank');
     });
   }
 });
@@ -22620,7 +22620,7 @@ var CommentInput = React.createClass({displayName: "CommentInput",
     var THIS = this;
     chrome.storage.sync.get('user', function(info) {
       THIS.setState({pic: info.user.picUrl});
-    }); 
+    });
         // <button type='submit' />
   },
   handleSubmit: function(e) {
@@ -22631,12 +22631,12 @@ var CommentInput = React.createClass({displayName: "CommentInput",
       uri: uri,
       user_id: user,
       follower_id: this.props.post.userId,
-      message: message 
+      message: message
     };
 
     // making a post.
     $.ajax({
-      url: 'https://test2server.herokuapp.com/api/comments',
+      url: 'https://localhost:9000/api/comments',
       method: 'post',
       data: comment,
       dataType: 'json'
@@ -22769,7 +22769,7 @@ var MyLink = React.createClass({displayName: "MyLink",
   getInitialState: function() {
     return {
       showComments: false,
-      showLikes: false,  
+      showLikes: false,
       annotation: {},
       generalPost: ''
     };
@@ -22786,19 +22786,19 @@ var MyLink = React.createClass({displayName: "MyLink",
     var generalPost = {
       uri: uri,
       user_id: user,
-      generalPost: message 
+      generalPost: message
     };
 
     // making it shared.
     $.ajax({
-      url: 'https://test2server.herokuapp.com/api/personalfeed/share?user_id='+ user +' &uri='+ uri +'&is_shared='+'true',
+      url: 'https://localhost:9000/api/personalfeed/share?user_id='+ user +' &uri='+ uri +'&is_shared='+'true',
       method: "put",
       dataType: 'json'
     });
 
     // updating general post.
     $.ajax({
-      url: 'https://test2server.herokuapp.com/api/uri/gp',
+      url: 'https://localhost:9000/api/uri/gp',
       method: "post",
       data: generalPost,
       dataType: 'json'
@@ -22820,8 +22820,8 @@ var MyLink = React.createClass({displayName: "MyLink",
         React.createElement("div", {className: "my-annotations-title-container"}, 
           React.createElement("a", {href: redirectUri, ref: "uri", target: "blank", className: "redirectLink"}, annotation.title)
         ), 
-        
-        !generalPost ? 
+
+        !generalPost ?
           React.createElement("div", {className: "my-annotations-form-container"}, 
             React.createElement("form", {autocomplete: "off", onSubmit: this.handleClick}, 
                 React.createElement("textArea", {id: this.props.index, className: "inputContent", type: "text", placeholder: "Write a comment...", ref: "postContent"}), 
@@ -22889,7 +22889,7 @@ var MyAnnotations = React.createClass({displayName: "MyAnnotations",
     console.log('MyAnnotations - componentDidMount');
     var user = window.localStorage.user_id;
     var uri = window.location.href.split("?")[0];
-    var completeUri = 'https://test2server.herokuapp.com/api/personalfeed?user_id=' + user;
+    var completeUri = 'https://localhost:9000/api/personalfeed?user_id=' + user;
     var self = this;
     $.get(completeUri, function(result) {
       if (self.isMounted()) {
@@ -22918,7 +22918,7 @@ var MyAnnotations = React.createClass({displayName: "MyAnnotations",
   render: function() {
     return (
       React.createElement("div", {className: "feed-my-annotations-container"}, 
-       
+
         React.createElement("div", {className: "banner-pic-container"}, 
           React.createElement("img", {className: "banner-pic", src: this.state.user.pic_url})
         ), 
@@ -23602,7 +23602,7 @@ var FriendsAnnotationsView = React.createClass({displayName: "FriendsAnnotations
   componentWillMount: function() {
     var THIS = this;
     $(document).on('click', 'body', function(e) {
-      
+
       if (e.target.className === 'annotator-button') {
         return;
       }
@@ -23639,10 +23639,10 @@ var FriendsAnnotationsView = React.createClass({displayName: "FriendsAnnotations
           newFriends[friend] = {shown: false, pic: oldFriends[friend].pic, name: oldFriends[friend].name};
         }
       }
-      this.setState({annotations: nextProps.annotations, friendsShown: newFriends});      
+      this.setState({annotations: nextProps.annotations, friendsShown: newFriends});
     }
   },
-  
+
 
   componentWillUnmount: function() {
     $(document).off();
@@ -23681,7 +23681,7 @@ var FriendsAnnotationsView = React.createClass({displayName: "FriendsAnnotations
         )
       }
     })
-    
+
 
     return (
       React.createElement("div", {className: "friends-annotations-view-container"}, 
@@ -23718,8 +23718,8 @@ var FriendsAnnotationsView = React.createClass({displayName: "FriendsAnnotations
     var annotations = [];
     var friendsShown = {};
 
-    $.get('https://test2server.herokuapp.com/api/users/uri/annotations', {uri: uri, user_id: ownId})
-      .done(function(data) { 
+    $.get('https://localhost:9000/api/users/uri/annotations', {uri: uri, user_id: ownId})
+      .done(function(data) {
         var oldAnnotations = self.props.annotations;
         if(oldAnnotations) {
           for (var i = 0; i < oldAnnotations.length; i++) {
@@ -23738,7 +23738,7 @@ var FriendsAnnotationsView = React.createClass({displayName: "FriendsAnnotations
           friendsShown[ownId] = {shown: false};
         }
         self.setState({annotations: annotations, friendsShown: friendsShown});
-      }) 
+      })
 
   }
 });
@@ -23895,7 +23895,7 @@ var initializeAnnotator = function(initialAnnotationsUserId) {
   var app = new annotator.App();
   app.include(annotator.ui.main)
     .include(annotator.storage.http, {
-      prefix: 'https://test2server.herokuapp.com',
+      prefix: 'http://localhost:9000',
       urls: {
         create: '/api/annotations',
         update: '/api/annotations/{id}',

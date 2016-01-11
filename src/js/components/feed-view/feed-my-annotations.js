@@ -12,7 +12,7 @@ var MyAnnotations = React.createClass({
     console.log('MyAnnotations - componentDidMount');
     var user = window.localStorage.user_id;
     var uri = window.location.href.split("?")[0];
-    var completeUri = 'https://test2server.herokuapp.com/api/personalfeed?user_id=' + user;
+    var completeUri = 'https://localhost:9000/api/personalfeed?user_id=' + user;
     var self = this;
     $.get(completeUri, function(result) {
       if (self.isMounted()) {
@@ -41,7 +41,7 @@ var MyAnnotations = React.createClass({
   render: function() {
     return (
       <div className='feed-my-annotations-container'>
-       
+
         <div className='banner-pic-container'>
           <img className='banner-pic' src={this.state.user.pic_url} />
         </div>

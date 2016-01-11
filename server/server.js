@@ -23,9 +23,9 @@ var pg = require('pg');
 var Pg = Promise.promisifyAll(require('pg'))
 Promise.promisifyAll(pg.Client.prototype)
 
-var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/onwords_backend_test';
+var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/onwords';
 
-var selectQueries = require('./db/queries/selectQueries.js'); 
+var selectQueries = require('./db/queries/selectQueries.js');
 var insertQueries = require('./db/queries/insertQueries.js');
 var updateQueries = require('./db/queries/updateQueries.js');
 var deleteQueries = require('./db/queries/deleteQueries.js');
@@ -50,7 +50,7 @@ app.get('/',function(req,res){
 });
 
 app.post('/api/users', function (req, res) {
-
+  console.log(req);
   var full_name = req.body.full_name;
   var username = req.body.username;
   var pic_url = req.body.pic_url;
@@ -72,7 +72,7 @@ app.post('/api/users', function (req, res) {
             if (result.rows[0].id) {
               done();
               req.body.user_id = result.rows[0].id;
-              res.set('Content-Type','application/JSON'); 
+              res.set('Content-Type','application/JSON');
               res.json(req.body);
             }
           }
@@ -94,7 +94,7 @@ app.post('/api/users', function (req, res) {
           }
           else {
             req.body.user_id = result.rows[0].id;
-            res.set('Content-Type','application/JSON'); 
+            res.set('Content-Type','application/JSON');
             res.json(req.body);
           }
         });
@@ -116,7 +116,7 @@ app.post('/api/annotations', function (req, res) {
   var startOffset = req.body.ranges[0].startOffset;
   var endOffset = req.body.ranges[0].endOffset;
   var ann = req.body;
- 
+
   (function(){
     return new Promise(function(resolve, reject) {
       pg.connect(connectionString, function(error, client, done) {
@@ -129,7 +129,7 @@ app.post('/api/annotations', function (req, res) {
           }
           resolve(result.rows[0].exists);
         });
-      }); 
+      });
     });
   })()
   .then(function(exists) {
@@ -162,8 +162,8 @@ app.post('/api/annotations', function (req, res) {
             resolve(result.rows[0].id);
           });
         });
-      } 
-    }); 
+      }
+    });
   })
   .then(function(uri_id) {
     return new Promise(function(resolve, reject) {
@@ -224,7 +224,7 @@ app.post('/api/annotations', function (req, res) {
         }
         else {
           ann.id = parseInt(result.rows[0].id);
-          res.set('Content-Type','application/JSON'); 
+          res.set('Content-Type','application/JSON');
           res.json(ann);
         }
       });
@@ -259,15 +259,15 @@ app.get('/api/search',function (req, res) {
                 endOffset: annotation.endoffset
               }
             ]
-          };        
-      }) 
-      
+          };
+      })
+
       returnObj.rows = finalAnnotationObjects;
       }
       else {
         returnObj.rows = [];
       }
-      res.set('Content-Type','application/JSON'); 
+      res.set('Content-Type','application/JSON');
       res.json(returnObj);
     });
   });
@@ -288,7 +288,7 @@ app.put('/api/annotations/:id', function (req, res) {
       }
       else {
         req.body.id = annotation_id;
-        res.set('Content-Type','application/JSON'); 
+        res.set('Content-Type','application/JSON');
         res.json(req.body);
       }
     });
@@ -336,7 +336,7 @@ app.delete('/api/annotations/:id',function (req, res) {
             var obj = {
               uri_user_id: uri_user_id,
               exists: result.rows[0].exists
-            }  
+            }
             resolve(obj);
           }
         })
@@ -403,12 +403,12 @@ app.get('/api/homefeed', function (req, res) {
       });
     });
   };
- 
+
   var getFullNamePicURLAndID = function(person) {
-    return new Promise(function(resolve, reject) { 
+    return new Promise(function(resolve, reject) {
       pg.connect(connectionString, function(error, client, done) {
         if (error) {
-          console.error('Connection error: ', error); 
+          console.error('Connection error: ', error);
           reject(error);
         }
         client.query(selectQueries.selectFullNameAndPicURLBasedOnID(person.user_id), function(err, result) {
@@ -426,7 +426,7 @@ app.get('/api/homefeed', function (req, res) {
       });
     });
   };
- 
+
   // returns an array of urls (uri objs) a person has annotated
   //    uri objs have 2 properties: url_link and title
   var getUriObjsOfPerson = function(person) {
@@ -448,7 +448,7 @@ app.get('/api/homefeed', function (req, res) {
     });
   };
 
- 
+
   // returns the general post for a specific uri
   var getGeneralPost = function(uri, userId) {
     return new Promise(function(resolve, reject) {
@@ -468,7 +468,7 @@ app.get('/api/homefeed', function (req, res) {
       });
     });
   };
- 
+
   var getCommentsOnGeneralPost = function(uri, userId) {
     return new Promise(function(resolve, reject) {
       pg.connect(connectionString, function(error, client, done) {
@@ -487,7 +487,7 @@ app.get('/api/homefeed', function (req, res) {
       });
     });
   };
- 
+
   var getLikesOnGeneralPost = function(uri, userId) {
     return new Promise(function(resolve, reject) {
       pg.connect(connectionString, function(error, client, done) {
@@ -525,7 +525,7 @@ app.get('/api/homefeed', function (req, res) {
       });
     })
   }
- 
+
   var getGeneralPostCommentsLikes = function(uri, userId) {
     return Promise.all([
       getGeneralPost(uri, userId),
@@ -534,7 +534,7 @@ app.get('/api/homefeed', function (req, res) {
       getIsSharedProperty(uri, userId)
     ]);
   };
- 
+
   var assembleArticleObj = function(generalPostCommentsLikesArray, uriObj) {
     var generalPost = generalPostCommentsLikesArray[0];
     var comments = generalPostCommentsLikesArray[1];
@@ -550,7 +550,7 @@ app.get('/api/homefeed', function (req, res) {
       likes: likes
     };
   };
- 
+
   var convertUriObjToArticleObj = function(uriObj, userId) {
     return getGeneralPostCommentsLikes(uriObj, userId)
       .then(function(generalPostCommentsLikesArray) {
@@ -560,7 +560,7 @@ app.get('/api/homefeed', function (req, res) {
         console.error('Error in convertUriObjToArticleObj:', err);
       });
   };
- 
+
   var assemblePersonInfoWithArticlesObj = function(person) {
     // Promise.all these two promises
     return Promise.all([
@@ -588,7 +588,7 @@ app.get('/api/homefeed', function (req, res) {
           console.error('Error in assemblePersonInfoWithArticlesObj:', err);
         });
   };
- 
+
   var getArrayOfPersonInfoWithArticles = getPeopleYouFollow(user_id)
     .then(function(peopleList) {
       // iterating through each user ID in peopleList
@@ -596,7 +596,7 @@ app.get('/api/homefeed', function (req, res) {
         return assemblePersonInfoWithArticlesObj(person);
       });
     });
- 
+
   getArrayOfPersonInfoWithArticles
     .then(function(arrayOfPersonInfoWithArticles) {
       res.json(arrayOfPersonInfoWithArticles);
@@ -609,7 +609,7 @@ app.get('/api/homefeed', function (req, res) {
 
 app.get('/api/personalfeed', function (req, res) {
   var user_id = req.query.user_id;
- 
+
   // returns an array of urls (uri objs) a person has annotated
   //    uri objs have 2 properties: url_link and title
   var getUriObjsOfUser = function(user_id) {
@@ -630,7 +630,7 @@ app.get('/api/personalfeed', function (req, res) {
       });
     });
   };
- 
+
   // returns the general post for a specific uri
   var getGeneralPost = function(uri, userId) {
     return new Promise(function(resolve, reject) {
@@ -650,7 +650,7 @@ app.get('/api/personalfeed', function (req, res) {
       });
     });
   };
- 
+
   var getCommentsOnGeneralPost = function(uri, userId) {
     return new Promise(function(resolve, reject) {
       pg.connect(connectionString, function(error, client, done) {
@@ -669,7 +669,7 @@ app.get('/api/personalfeed', function (req, res) {
       });
     });
   };
- 
+
   var getLikesOnGeneralPost = function(uri, userId) {
     return new Promise(function(resolve, reject) {
       pg.connect(connectionString, function(error, client, done) {
@@ -688,7 +688,7 @@ app.get('/api/personalfeed', function (req, res) {
       });
     });
   };
- 
+
   var getGeneralPostCommentsLikes = function(uri, userId) {
     return Promise.all([
       getGeneralPost(uri, userId),
@@ -696,7 +696,7 @@ app.get('/api/personalfeed', function (req, res) {
       getLikesOnGeneralPost(uri, userId)
     ]);
   };
- 
+
   var assembleArticleObj = function(generalPostCommentsLikesArray, uriObj) {
     var generalPost = generalPostCommentsLikesArray[0];
     var comments = generalPostCommentsLikesArray[1];
@@ -709,7 +709,7 @@ app.get('/api/personalfeed', function (req, res) {
       likes: likes
     };
   };
- 
+
   var convertUriObjToArticleObj = function(uriObj, userId) {
     return getGeneralPostCommentsLikes(uriObj, userId)
       .then(function(generalPostCommentsLikesArray) {
@@ -728,7 +728,7 @@ app.get('/api/personalfeed', function (req, res) {
         return convertUriObjToArticleObj(uriObj, user_id);
       });
     });
- 
+
   getArrayOfArticleObjs
     .then(function(arrayOfArticleObjs) {
       res.json(arrayOfArticleObjs);
@@ -788,7 +788,7 @@ app.put('/api/personalfeed/share', function(req, res) {
     })
   }
 
-  updateArticlesSharedStatusTo(is_shared, uri, user_id) 
+  updateArticlesSharedStatusTo(is_shared, uri, user_id)
   .then(updateTimestampOnArticle)
   .catch(function(err) {
     console.error('Error in updating the shared status of article: ', err);
@@ -799,7 +799,7 @@ app.put('/api/personalfeed/share', function(req, res) {
 
 app.post('/api/users/update', function(req,res){
   var userInfo = req.body;
-  
+
   var updateUserRow = function(infoObj) {
     return new Promise(function(resolve,reject){
       pg.connect(connectionString, function(err,client,done){
@@ -812,7 +812,7 @@ app.post('/api/users/update', function(req,res){
           }
           resolve(result.rows);
         });
-      }) 
+      })
     });
   };
   var updateUserFollowerRow = function(table,infoObj) {
@@ -827,14 +827,14 @@ app.post('/api/users/update', function(req,res){
           }
           resolve(result);
         });
-      }) 
+      })
     });
   }
 
    var userFollowerArr = [updateUserFollowerRow("users",userInfo), updateUserFollowerRow("followers",userInfo)];
-   
+
    Promise.all(userFollowerArr).then(function() {
-    res.set('Content-Type','application/JSON'); 
+    res.set('Content-Type','application/JSON');
     res.json(userInfo);
    });
 
@@ -892,11 +892,11 @@ app.get('/api/search/users', function(req, res) {
       })
     })
     .then(function(peopleArray) {
-      res.set('Content-Type','application/JSON'); 
+      res.set('Content-Type','application/JSON');
       res.json(peopleArray);
     })
 
-}); 
+});
 
 
 app.post('/api/users/follow', function(req, res) {
@@ -957,7 +957,7 @@ app.delete('/api/users/unfollow', function(req, res) {
 
 
 app.get('/api/users/uri/annotations', function (req, res) {
-  var user_id = req.query.user_id; 
+  var user_id = req.query.user_id;
   var uri = req.query.uri;
 
 
@@ -979,7 +979,7 @@ app.get('/api/users/uri/annotations', function (req, res) {
       });
     });
   };
-  
+
   var checkIfPersonAnnotatedThisArticle = function(uri, person) {
     return new Promise(function(resolve, reject) {
       pg.connect(connectionString, function(error, client, done) {
@@ -1019,7 +1019,7 @@ app.get('/api/users/uri/annotations', function (req, res) {
     });
   }
 
-  getPeopleYouFollow(user_id) 
+  getPeopleYouFollow(user_id)
     .then(function(peopleYouFollow) {
       return Promise.filter(peopleYouFollow, function(personYouFollow) {
         return checkIfPersonAnnotatedThisArticle(uri, personYouFollow)
@@ -1031,7 +1031,7 @@ app.get('/api/users/uri/annotations', function (req, res) {
       })
     })
     .then(function(fullNamesPicURLsAndIDsOfWhoAnnotatedPage) {
-      res.set('Content-Type','application/JSON'); 
+      res.set('Content-Type','application/JSON');
       res.json(fullNamesPicURLsAndIDsOfWhoAnnotatedPage);
     })
 
@@ -1061,10 +1061,10 @@ app.post('/api/uri/gp', function(req,res) {
         });
       });
     });
-    }; 
+    };
   updateGP(uri, user_id, generalPost).then(function(){
-    res.set('Content-Type','application/JSON'); 
-    res.json(gpObj);  
+    res.set('Content-Type','application/JSON');
+    res.json(gpObj);
   })
   .catch(function(error) {
     console.error('Error in loading comments on general posts ', error);
@@ -1091,14 +1091,14 @@ app.post('/api/comments', function(req,res) {
             resolve(error);
           }
           else resolve(result.row)
-        });  
-      });  
+        });
+      });
     })
   };
 
   insertComments(uri, user_id, follower_id, message)
   .then(function(data){
-    res.set('Content-Type','application/JSON'); 
+    res.set('Content-Type','application/JSON');
     res.json(req.body);
   })
 });
@@ -1123,9 +1123,9 @@ app.post('/api/likes',function(req,res) {
             reject(err);
           }
           else resolve(result);
-        });      
+        });
       });
-    });  
+    });
   };
   var deleteLike = function(uri, user_id, follower_id){
     return new Promise(function(resolve,reject){
@@ -1141,20 +1141,20 @@ app.post('/api/likes',function(req,res) {
             reject(err);
           }
           resolve(result);
-        });      
+        });
       });
-    });     
+    });
   };
   if(likeToggle.length === 5) {
     deleteLike(uri, user_id, follower_id).then(function(result){
-      res.set('Content-Type','application/JSON'); 
-      res.json(req.body);  
-    }) 
+      res.set('Content-Type','application/JSON');
+      res.json(req.body);
+    })
   }else{
     insertLike(uri, user_id, follower_id).then(function(results) {
-      res.set('Content-Type','application/JSON'); 
-      res.json(req.body);        
-    });  
+      res.set('Content-Type','application/JSON');
+      res.json(req.body);
+    });
   }
 });
 
@@ -1162,5 +1162,6 @@ app.post('/api/likes',function(req,res) {
 
 
 
-app.listen(process.env.PORT || 9000);
-console.log("Listening on port 9000...")
+app.listen(9000, function() {
+  console.log("Listening on port 9000...")
+});
