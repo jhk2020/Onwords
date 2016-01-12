@@ -12,7 +12,6 @@ var friendsAnnotationList = React.createClass({
       annotations: [],
       spotlight: '',
       spotlightOn: false,
-      mounted: false,
       userInfo: {}
     }
   },

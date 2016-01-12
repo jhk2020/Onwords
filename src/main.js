@@ -2,6 +2,7 @@
 
 var App = require('./components/app');
 var React = require('react');
+var ReactDOM = require('react-dom');
 var initializeAnnotator = require('./init');
 
 var code = window.location.hash.substring(1);
@@ -24,7 +25,7 @@ var renderComponents = function() {
   $('body').append("<div id='annotation-sidebar'></div>");
   $('#annotation-sidebar').append("<div id='annotation-header'></div>")
   $('#annotation-sidebar').append("<div id='annotation-scroll'></div>")
-  React.render(<App />, document.getElementById('annotation-scroll'));
+  ReactDOM.render(<App />, document.getElementById('annotation-scroll'));
 };
 
 var identityListener = function(changes) {

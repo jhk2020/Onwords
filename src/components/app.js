@@ -19,6 +19,7 @@ var App = React.createClass({
     var self = this;
     switch(action) {
       case 'showAnnotatorButton':
+      debugger;
         $(function() {
           $('#annotation-header').animate({width: '0px'}, {queue: false, duration: 200});
           $('#annotation-sidebar').animate({right: -(600)}, {queue: false, duration: 200});
@@ -32,6 +33,7 @@ var App = React.createClass({
         })
         break;
       case 'showAnnotatorView':
+      debugger;
         self.setState({showFriendsAnnotations: true});
         self.setState({showFeedView: false}, function() {
           setTimeout(function() {
@@ -51,7 +53,9 @@ var App = React.createClass({
   componentDidMount: function() {
     var self = this;
     document.addEventListener('spotlightAnnotation', function(e) {
+      debugger;
       self.setState({spotlight: e.detail.targetAnnotation});
+      self.updateView('showAnnotatorView');
     });
 
     var uri = window.location.href.split("?")[0];
@@ -62,6 +66,7 @@ var App = React.createClass({
     }
 
     chrome.storage.onChanged.addListener(function(changes) {
+      debugger;
       if (changes[uri] && changes[uri].newValue !== undefined) {
         var newAnnotations = changes[uri].newValue;
         var oldAnnotations = self.state.annotations;
@@ -92,10 +97,12 @@ var App = React.createClass({
   },
 
   changeSpotlight: function(annotation) {
+    debugger;
     this.setState({spotlight: annotation});
   },
 
   render: function() {
+    debugger;
     return (
       <div className='app-container'>
         {this.state.showAnnotatorButton ? <AnnotatorButton updateView={this.updateView} /> : null}

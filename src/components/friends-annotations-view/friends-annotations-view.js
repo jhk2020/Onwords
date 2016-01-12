@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react';
 var ReactAddons = require('react/addons');
 var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
@@ -41,6 +41,7 @@ var FriendsAnnotationsView = React.createClass({
 
 
   componentWillReceiveProps: function(nextProps) {
+    debugger;
     if (nextProps.annotations !== this.props.annotations) {
       var newFriends = {};
       var oldFriends = this.state.friendsShown;
@@ -66,6 +67,7 @@ var FriendsAnnotationsView = React.createClass({
   },
 
   toggleFriendAnnotations: function(id) {
+    debugger;
     var friends = this.state.friendsShown;
 
     if (!friends[id].shown) {
@@ -86,6 +88,7 @@ var FriendsAnnotationsView = React.createClass({
   },
 
   render: function() {
+    debugger;
     var ownId = window.localStorage.getItem('user_id');
     var friendsArray = Object.keys(this.state.friendsShown);
     var friendsObject = this.state.friendsShown;
@@ -123,6 +126,7 @@ var FriendsAnnotationsView = React.createClass({
   },
 
   componentDidMount: function() {
+    debugger;
     var self = this;
     var ownId = window.localStorage.getItem('user_id');
     var uri = window.location.href.split("?")[0];
@@ -135,8 +139,10 @@ var FriendsAnnotationsView = React.createClass({
     var annotations = [];
     var friendsShown = {};
 
+    // Sort through other friends that have annotated the same page / friends whose annotations are showing
     $.get('http://localhost:9000/api/users/uri/annotations', {uri: uri, user_id: ownId})
       .done(function(data) {
+        debugger;
         var oldAnnotations = self.props.annotations;
         if(oldAnnotations) {
           for (var i = 0; i < oldAnnotations.length; i++) {

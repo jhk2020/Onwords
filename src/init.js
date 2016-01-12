@@ -3,6 +3,7 @@ var customAnnotationsModule = require('./customAnnotationsModule');
 var initializeAnnotator = function(initialAnnotationsUserId) {
   // Grab the URI to store in chrome storage (local) for reference
   var uri = window.location.href.split("?")[0];
+  var targetUri;
   if (uri.substring(uri.length - 11) === 'onwords1991') {
     targetUri = uri.substring(0, uri.length - 13);
   } else {
@@ -11,17 +12,6 @@ var initializeAnnotator = function(initialAnnotationsUserId) {
 
   // Clear annotations stored in chrome storage (local) from previous page visits
   chrome.storage.local.remove(targetUri);
-
-  // Annotator module to include URI, title, and user ID in every annotation object
-  var pageInfoModule = function() {
-    return {
-      beforeAnnotationCreated: function(ann) {
-        ann.uri = targetUri;
-        ann.title = document.getElementsByTagName('title')[0].innerHTML || document.querySelector('meta[name="twitter:title"]').getAttribute("content");
-        ann.user_id = window.localStorage.getItem('user_id');
-      }
-    };
-  };
 
   // Annotator app configuration
   var app = new annotator.App();
@@ -35,7 +25,6 @@ var initializeAnnotator = function(initialAnnotationsUserId) {
         search: '/api/search'
       }
     })
-   .include(pageInfoModule)
    .include(customAnnotationsModule);
 
    // Start the app and load the annotations

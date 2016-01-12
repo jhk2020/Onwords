@@ -1,13 +1,20 @@
 var customAnnotationsModule = function() {
   // Grab the URI of the page
   var uri = window.location.href.split("?")[0];
+  var targetUri;
   if (uri.substring(uri.length - 11) === 'onwords1991') {
-    uri = uri.substring(0, uri.length - 13);
+    targetUri = uri.substring(0, uri.length - 13);
   } else {
-    uri = uri;
+    targetUri = uri;
   }
 
   return {
+    beforeAnnotationCreated: function(annotation) {
+      annotation.uri = targetUri;
+      annotation.title = document.getElementsByTagName('title')[0].innerHTML || document.querySelector('meta[name="twitter:title"]').getAttribute("content");
+      annotation.user_id = window.localStorage.getItem('user_id');
+    },
+
     annotationCreated: function(annotation) {
       chrome.storage.local.get(uri, function(obj) {
         if (!obj[uri]) {
