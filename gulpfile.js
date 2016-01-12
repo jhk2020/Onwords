@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var browserify = require('browserify');
-var reactify = require('reactify');
+var babelify = require('babelify');
 var notifier = require('node-notifier');
 var source = require('vinyl-source-stream');
 
@@ -28,8 +28,8 @@ var notify = function(error) {
 };
 
 gulp.task('browserify', function() {
-  browserify('./src/js/main.js')
-    .transform('reactify')
+  browserify('./src/main.js')
+    .transform('babelify', {presets: ['es2015', 'react']})
     .bundle()
     .on('error', notify)
     .pipe(source('main.js'))
