@@ -135,7 +135,7 @@ var FriendsAnnotationsView = React.createClass({
     var annotations = [];
     var friendsShown = {};
 
-    $.get('https://localhost:9000/api/users/uri/annotations', {uri: uri, user_id: ownId})
+    $.get('http://localhost:9000/api/users/uri/annotations', {uri: uri, user_id: ownId})
       .done(function(data) {
         var oldAnnotations = self.props.annotations;
         if(oldAnnotations) {

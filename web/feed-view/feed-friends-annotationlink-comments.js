@@ -14,7 +14,7 @@ var AnnotationLinkComment = React.createClass({
     var THIS = this;
     var uri = this.props.post.uriLink;
     var userID = this.props.post.userId;
-    var requestUrl =  'https://localhost:9000/api/homefeed/comments?user_id=' + userID + '&uri=' + uri;
+    var requestUrl =  'http://localhost:9000/api/homefeed/comments?user_id=' + userID + '&uri=' + uri;
 
     $.get(requestUrl, function(comments) {
       console.log('COMMENTS!!', comments);

@@ -26,7 +26,7 @@ var friendsAnnotationList = React.createClass({
 
   unhighlight: function() {
     var oldSpotlight = this.state.spotlight.id;
-    var oldSpotlightColorWithUmph = $('span[data-annotation-id="' + oldSpotlight + '"]').css('background-color'); 
+    var oldSpotlightColorWithUmph = $('span[data-annotation-id="' + oldSpotlight + '"]').css('background-color');
     if (oldSpotlightColorWithUmph) {
       var oldSpotlightColor = oldSpotlightColorWithUmph.slice(0, oldSpotlightColorWithUmph.length - 1) + ', 0.25)';
       var defaultColor = $('body').css('color');
@@ -35,7 +35,7 @@ var friendsAnnotationList = React.createClass({
         backgroundColor: oldSpotlightColor,
         color: defaultColor
       }
-      $('span[data-annotation-id="' + oldSpotlight + '"]').css(styles);  
+      $('span[data-annotation-id="' + oldSpotlight + '"]').css(styles);
     }
   },
 
@@ -44,19 +44,19 @@ var friendsAnnotationList = React.createClass({
       scrollTop: annotation.offsetTop - 200
     }, 350);
 
-    var newSpotlightColor = $('span[data-annotation-id="' + annotation.id + '"]').css('background-color'); 
+    var newSpotlightColor = $('span[data-annotation-id="' + annotation.id + '"]').css('background-color');
 
     var newSpotlightColorWithUmph = newSpotlightColor.slice(0, newSpotlightColor.lastIndexOf(',') + 1) + ' 1)';
     var styles = {
       backgroundColor: newSpotlightColorWithUmph,
       color: "black"
     }
-    $('span[data-annotation-id="' + annotation.id + '"]').css(styles);  
+    $('span[data-annotation-id="' + annotation.id + '"]').css(styles);
   },
 
   clickHandler: function(annotation) {
     this.props.changeSpotlight(annotation);
-    
+
   },
 
   componentWillMount: function() {
@@ -96,7 +96,7 @@ var friendsAnnotationList = React.createClass({
         username: data.user.fullName,
         description: data.user.description || 'OnWords  !!  '
       }
-      this.setState({userInfo: info});  
+      this.setState({userInfo: info});
     }.bind(this));
   },
 
@@ -114,7 +114,7 @@ var friendsAnnotationList = React.createClass({
           return (
             <div key={index}>
               <li className="annotationListItem">
-                {user.toString() === ownId ? 
+                {user.toString() === ownId ?
                   <AnnotationComment userInfo={self.state.userInfo} clickHandler={self.clickHandler} user={annotation.user_id} annotation={annotation} deleteAnn={self.deleteAnn} />
                 : <FriendAnnotationComment username={friends[user].name} userpic={friends[user].pic} spotlight={self.state.spotlight} clickHandler={self.clickHandler} user={annotation.user} annotation={annotation}/>
                 }

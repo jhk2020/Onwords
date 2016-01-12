@@ -26,7 +26,7 @@ var AnnotationLikeComment = React.createClass({
       };
       console.log('WE ARE un LIKING IT');
       $.ajax({
-        url: 'https://localhost:9000/api/likes',
+        url: 'http://localhost:9000/api/likes',
         method: 'post',
         data: likeInfo,
         dataType: 'json'
@@ -47,7 +47,7 @@ var AnnotationLikeComment = React.createClass({
       };
       console.log('WE ARE LIKING IT');
       $.ajax({
-        url: 'https://localhost:9000/api/likes',
+        url: 'http://localhost:9000/api/likes',
         method: 'post',
         data: likeInfo,
         dataType: 'json'
