@@ -22104,11 +22104,18 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.createAnn = createAnn;
+exports.loadAnns = loadAnns;
 function createAnn(annotation) {
-  debugger;
   return {
     type: 'CREATE_ANNOTATION',
     annotation: annotation
+  };
+}
+
+function loadAnns(annotations) {
+  return {
+    type: 'LOAD_ANNOTATIONS',
+    annotations: annotations
   };
 }
 
@@ -22433,6 +22440,12 @@ module.exports = annotationComment;
 },{"react":186}],200:[function(require,module,exports){
 'use strict';
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -22451,137 +22464,162 @@ var _friendsAnnotationComment2 = _interopRequireDefault(_friendsAnnotationCommen
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 var ReactCSSTransitionGroup = _react2.default.addons.CSSTransitionGroup;
 
-var friendsAnnotationList = _react2.default.createClass({
-  displayName: 'friendsAnnotationList',
+var friendsAnnotationList = function (_Component) {
+  _inherits(friendsAnnotationList, _Component);
 
-  getInitialState: function getInitialState() {
-    return {
+  function friendsAnnotationList(props) {
+    _classCallCheck(this, friendsAnnotationList);
+
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(friendsAnnotationList).call(this, props));
+
+    _this.state = {
       annotations: [],
       spotlight: '',
       spotlightOn: false,
       userInfo: {}
     };
-  },
+    return _this;
+  }
 
-  deleteAnn: function deleteAnn(annotation) {
-    var ev = new CustomEvent('deleteAnnotation', { detail: {
-        targetAnnotation: annotation
-      } });
-    document.dispatchEvent(ev);
-  },
-
-  unhighlight: function unhighlight() {
-    var oldSpotlight = this.state.spotlight.id;
-    var oldSpotlightColorWithUmph = $('span[data-annotation-id="' + oldSpotlight + '"]').css('background-color');
-    if (oldSpotlightColorWithUmph) {
-      var oldSpotlightColor = oldSpotlightColorWithUmph.slice(0, oldSpotlightColorWithUmph.length - 1) + ', 0.25)';
-      var defaultColor = $('body').css('color');
-      oldSpotlightColor = oldSpotlightColor.slice(0, oldSpotlightColor.indexOf('(')) + 'a' + oldSpotlightColor.slice(oldSpotlightColor.indexOf('('));
-      var styles = {
-        backgroundColor: oldSpotlightColor,
-        color: defaultColor
-      };
-      $('span[data-annotation-id="' + oldSpotlight + '"]').css(styles);
+  _createClass(friendsAnnotationList, [{
+    key: 'deleteAnn',
+    value: function deleteAnn(annotation) {
+      var ev = new CustomEvent('deleteAnnotation', { detail: {
+          targetAnnotation: annotation
+        } });
+      document.dispatchEvent(ev);
     }
-  },
+  }, {
+    key: 'unhighlight',
+    value: function unhighlight() {
+      var oldSpotlight = this.state.spotlight.id;
+      var oldSpotlightColorWithUmph = $('span[data-annotation-id="' + oldSpotlight + '"]').css('background-color');
+      if (oldSpotlightColorWithUmph) {
+        var oldSpotlightColor = oldSpotlightColorWithUmph.slice(0, oldSpotlightColorWithUmph.length - 1) + ', 0.25)';
+        var defaultColor = $('body').css('color');
+        oldSpotlightColor = oldSpotlightColor.slice(0, oldSpotlightColor.indexOf('(')) + 'a' + oldSpotlightColor.slice(oldSpotlightColor.indexOf('('));
+        var styles = {
+          backgroundColor: oldSpotlightColor,
+          color: defaultColor
+        };
+        $('span[data-annotation-id="' + oldSpotlight + '"]').css(styles);
+      }
+    }
+  }, {
+    key: 'highlight',
+    value: function highlight(annotation) {
+      $('html, body').animate({
+        scrollTop: annotation.offsetTop - 200
+      }, 350);
 
-  highlight: function highlight(annotation) {
-    $('html, body').animate({
-      scrollTop: annotation.offsetTop - 200
-    }, 350);
+      var newSpotlightColor = $('span[data-annotation-id="' + annotation.id + '"]').css('background-color');
 
-    var newSpotlightColor = $('span[data-annotation-id="' + annotation.id + '"]').css('background-color');
+      var newSpotlightColorWithUmph = newSpotlightColor.slice(0, newSpotlightColor.lastIndexOf(',') + 1) + ' 1)';
+      var styles = {
+        backgroundColor: newSpotlightColorWithUmph,
+        color: "black"
+      };
+      $('span[data-annotation-id="' + annotation.id + '"]').css(styles);
+    }
+  }, {
+    key: 'clickHandler',
+    value: function clickHandler(annotation) {
+      this.props.changeSpotlight(annotation);
+    }
+  }, {
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      var newSpotlight = '';
+      if (this.props.spotlight !== '') {
+        newSpotlight = this.props.spotlight;
+        this.highlight(newSpotlight);
+      };
+      this.setState({ annotations: this.props.annotations, spotlight: newSpotlight });
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
 
-    var newSpotlightColorWithUmph = newSpotlightColor.slice(0, newSpotlightColor.lastIndexOf(',') + 1) + ' 1)';
-    var styles = {
-      backgroundColor: newSpotlightColorWithUmph,
-      color: "black"
-    };
-    $('span[data-annotation-id="' + annotation.id + '"]').css(styles);
-  },
-
-  clickHandler: function clickHandler(annotation) {
-    this.props.changeSpotlight(annotation);
-  },
-
-  componentWillMount: function componentWillMount() {
-    var newSpotlight = '';
-    if (this.props.spotlight !== '') {
-      newSpotlight = this.props.spotlight;
-      this.highlight(newSpotlight);
-    };
-    this.setState({ annotations: this.props.annotations, spotlight: newSpotlight });
-  },
-
-  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
-
-    if (nextProps.spotlight !== this.state.spotlight) {
+      if (nextProps.spotlight !== this.state.spotlight) {
+        if (this.state.spotlight !== '') {
+          this.unhighlight();
+        }
+        if (nextProps.spotlight !== '') {
+          this.highlight(nextProps.spotlight);
+        }
+      }
+      this.setState({ annotations: nextProps.annotations, spotlight: nextProps.spotlight });
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
       if (this.state.spotlight !== '') {
         this.unhighlight();
-      }
-      if (nextProps.spotlight !== '') {
-        this.highlight(nextProps.spotlight);
+        this.props.changeSpotlight('');
       }
     }
-    this.setState({ annotations: nextProps.annotations, spotlight: nextProps.spotlight });
-  },
-
-  componentWillUnmount: function componentWillUnmount() {
-    if (this.state.spotlight !== '') {
-      this.unhighlight();
-      this.props.changeSpotlight('');
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      chrome.storage.sync.get('user', function (data) {
+        var info = {
+          pic_url: data.user.picUrl,
+          username: data.user.fullName,
+          description: data.user.description || 'OnWords  !!  '
+        };
+        this.setState({ userInfo: info });
+      }.bind(this));
     }
-  },
+  }, {
+    key: 'render',
+    value: function render() {
+      var ownId = window.localStorage.getItem('user_id');
+      var friends = this.props.friends;
+      var annotations = this.state.annotations;
+      var self = this;
 
-  componentDidMount: function componentDidMount() {
-    chrome.storage.sync.get('user', function (data) {
-      var info = {
-        pic_url: data.user.picUrl,
-        username: data.user.fullName,
-        description: data.user.description || 'OnWords  !!  '
-      };
-      this.setState({ userInfo: info });
-    }.bind(this));
-  },
+      var annotationList = annotations.map(function (annotation, index) {
+        var user = annotation.user_id;
+        if (friends[user]) {
+          console.log('friend is', friends[user]);
+          return _react2.default.createElement(
+            'div',
+            { key: index },
+            _react2.default.createElement(
+              'li',
+              { className: 'annotationListItem' },
+              user.toString() === ownId ? _react2.default.createElement(_annotationComment2.default, { userInfo: self.state.userInfo, clickHandler: self.clickHandler, user: annotation.user_id, annotation: annotation, deleteAnn: self.deleteAnn }) : _react2.default.createElement(_friendsAnnotationComment2.default, { username: friends[user].name, userpic: friends[user].pic, spotlight: self.state.spotlight, clickHandler: self.clickHandler, user: annotation.user, annotation: annotation })
+            ),
+            _react2.default.createElement('br', null)
+          );
+        }
+      });
 
-  render: function render() {
-    var ownId = window.localStorage.getItem('user_id');
-    var friends = this.props.friends;
-    var annotations = this.state.annotations;
-    var self = this;
-
-    var annotationList = annotations.map(function (annotation, index) {
-      var user = annotation.user_id;
-      if (friends[user]) {
-        console.log('friend is', friends[user]);
-        return _react2.default.createElement(
+      return _react2.default.createElement(
+        ReactCSSTransitionGroup,
+        { transitionName: 'annotationList', transitionAppear: true, transitionAppearTimeout: 100 },
+        _react2.default.createElement(
           'div',
-          { key: index },
-          _react2.default.createElement(
-            'li',
-            { className: 'annotationListItem' },
-            user.toString() === ownId ? _react2.default.createElement(_annotationComment2.default, { userInfo: self.state.userInfo, clickHandler: self.clickHandler, user: annotation.user_id, annotation: annotation, deleteAnn: self.deleteAnn }) : _react2.default.createElement(_friendsAnnotationComment2.default, { username: friends[user].name, userpic: friends[user].pic, spotlight: self.state.spotlight, clickHandler: self.clickHandler, user: annotation.user, annotation: annotation })
-          ),
-          _react2.default.createElement('br', null)
-        );
-      }
-    });
+          { className: 'annotationList' },
+          annotationList
+        )
+      );
+    }
+  }]);
 
-    return _react2.default.createElement(
-      ReactCSSTransitionGroup,
-      { transitionName: 'annotationList', transitionAppear: true, transitionAppearTimeout: 100 },
-      _react2.default.createElement(
-        'div',
-        { className: 'annotationList' },
-        annotationList
-      )
-    );
-  }
-});
+  return friendsAnnotationList;
+}(_react.Component);
 
-module.exports = friendsAnnotationList;
+exports.default = friendsAnnotationList;
+;
 
 },{"./annotationComment":199,"./friends-annotationComment":203,"react":186,"react/addons":12}],201:[function(require,module,exports){
 'use strict';
@@ -22737,35 +22775,35 @@ var App = function (_Component) {
         uri = uri;
       }
 
-      chrome.storage.onChanged.addListener(function (changes) {
-        debugger;
-        if (changes[uri] && changes[uri].newValue !== undefined) {
-          var newAnnotations = changes[uri].newValue;
-          var oldAnnotations = self.state.annotations;
-          var currentSpotlight = self.state.spotlight;
-
-          if (newAnnotations.length === 0) {
-            currentSpotlight = '';
-          } else {
-            var intersection = {};
-            for (var i = 0; i < oldAnnotations.length; i++) {
-              intersection[oldAnnotations[i].id] = false;
-            };
-
-            for (var i = 0; i < newAnnotations.length; i++) {
-              intersection[newAnnotations[i].id] = true;
-            }
-
-            if (intersection[currentSpotlight.id]) {
-              currentSpotlight = currentSpotlight;
-            } else {
-              currentSpotlight = '';
-            }
-          }
-
-          self.setState({ annotations: newAnnotations, spotlight: currentSpotlight });
-        }
-      });
+      // chrome.storage.onChanged.addListener(function(changes) {
+      //   debugger;
+      //   if (changes[uri] && changes[uri].newValue !== undefined) {
+      //     var newAnnotations = changes[uri].newValue;
+      //     var oldAnnotations = self.state.annotations;
+      //     var currentSpotlight = self.state.spotlight;
+      //
+      //     if (newAnnotations.length === 0) {
+      //       currentSpotlight = '';
+      //     } else {
+      //       var intersection = {};
+      //       for (var i = 0; i < oldAnnotations.length; i++) {
+      //         intersection[oldAnnotations[i].id] = false;
+      //       };
+      //
+      //       for (var i = 0; i < newAnnotations.length; i++) {
+      //           intersection[newAnnotations[i].id] = true;
+      //       }
+      //
+      //       if (intersection[currentSpotlight.id]) {
+      //         currentSpotlight = currentSpotlight;
+      //       } else {
+      //         currentSpotlight = '';
+      //       }
+      //     }
+      //
+      //     self.setState({annotations: newAnnotations, spotlight: currentSpotlight});
+      //   }
+      // });
     }
   }, {
     key: 'changeSpotlight',
@@ -22921,6 +22959,10 @@ var customAnnotationsModule = function customAnnotationsModule() {
   }
 
   return {
+    annotationsLoaded: function annotationsLoaded(annotations) {
+      _renderApp.store.dispatch((0, _annotationsAction.loadAnns)(annotations));
+    },
+
     beforeAnnotationCreated: function beforeAnnotationCreated(annotation) {
       annotation.uri = targetUri;
       annotation.title = document.getElementsByTagName('title')[0].innerHTML || document.querySelector('meta[name="twitter:title"]').getAttribute("content");
@@ -23119,28 +23161,35 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = annotations;
+var sortAnnotations = function sortAnnotations(arr) {
+  arr.sort(function (a, b) {
+    if (a.offsetTop < b.offsetTop) {
+      return -1;
+    } else if (a.offsetTop > b.offsetTop) {
+      return 1;
+    } else {
+      if (a.offsetLeft < b.offsetLeft) {
+        return -1;
+      } else if (a.offsetLeft > b.offsetLeft) {
+        return 1;
+      }
+    }
+  });
+  return arr;
+};
+
 function annotations() {
   var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
   var action = arguments[1];
 
   switch (action.type) {
+    case 'LOAD_ANNOTATIONS':
+      var annotations = action.annotations.slice();
+      return sortAnnotations(annotations);
+
     case 'CREATE_ANNOTATION':
-      debugger;
       var newState = state.slice().concat([action.annotation]);
-      newState.sort(function (a, b) {
-        if (a.offsetTop < b.offsetTop) {
-          return -1;
-        } else if (a.offsetTop > b.offsetTop) {
-          return 1;
-        } else {
-          if (a.offsetLeft < b.offsetLeft) {
-            return -1;
-          } else if (a.offsetLeft > b.offsetLeft) {
-            return 1;
-          }
-        }
-      });
-      return newState;
+      return sortAnnotations(newState);
     default:
       return state;
   }

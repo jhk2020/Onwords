@@ -1,7 +1,13 @@
 export function createAnn(annotation) {
-  debugger;
   return {
     type: 'CREATE_ANNOTATION',
     annotation
+  }
+}
+
+export function loadAnns(annotations) {
+  return {
+    type: 'LOAD_ANNOTATIONS',
+    annotations
   }
 }

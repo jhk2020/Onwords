@@ -64,35 +64,35 @@ export default class App extends Component {
       uri = uri;
     }
 
-    chrome.storage.onChanged.addListener(function(changes) {
-      debugger;
-      if (changes[uri] && changes[uri].newValue !== undefined) {
-        var newAnnotations = changes[uri].newValue;
-        var oldAnnotations = self.state.annotations;
-        var currentSpotlight = self.state.spotlight;
-
-        if (newAnnotations.length === 0) {
-          currentSpotlight = '';
-        } else {
-          var intersection = {};
-          for (var i = 0; i < oldAnnotations.length; i++) {
-            intersection[oldAnnotations[i].id] = false;
-          };
-
-          for (var i = 0; i < newAnnotations.length; i++) {
-              intersection[newAnnotations[i].id] = true;
-          }
-
-          if (intersection[currentSpotlight.id]) {
-            currentSpotlight = currentSpotlight;
-          } else {
-            currentSpotlight = '';
-          }
-        }
-
-        self.setState({annotations: newAnnotations, spotlight: currentSpotlight});
-      }
-    });
+    // chrome.storage.onChanged.addListener(function(changes) {
+    //   debugger;
+    //   if (changes[uri] && changes[uri].newValue !== undefined) {
+    //     var newAnnotations = changes[uri].newValue;
+    //     var oldAnnotations = self.state.annotations;
+    //     var currentSpotlight = self.state.spotlight;
+    //
+    //     if (newAnnotations.length === 0) {
+    //       currentSpotlight = '';
+    //     } else {
+    //       var intersection = {};
+    //       for (var i = 0; i < oldAnnotations.length; i++) {
+    //         intersection[oldAnnotations[i].id] = false;
+    //       };
+    //
+    //       for (var i = 0; i < newAnnotations.length; i++) {
+    //           intersection[newAnnotations[i].id] = true;
+    //       }
+    //
+    //       if (intersection[currentSpotlight.id]) {
+    //         currentSpotlight = currentSpotlight;
+    //       } else {
+    //         currentSpotlight = '';
+    //       }
+    //     }
+    //
+    //     self.setState({annotations: newAnnotations, spotlight: currentSpotlight});
+    //   }
+    // });
   }
 
   changeSpotlight(annotation) {

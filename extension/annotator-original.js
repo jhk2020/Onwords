@@ -4415,56 +4415,56 @@ Highlighter.prototype.drawAll = function (annotations) {
             }
 
 // Onwords
-            var sortAnnotations = function(arr) {
-              arr.sort(function(a,b) {
-                  if (a.offsetTop < b.offsetTop) {
-                   return -1;
-                  } else if (a.offsetTop > b.offsetTop){
-                   return 1;
-                  } else {
-                     if (a.offsetLeft < b.offsetLeft) {
-                      return -1;
-                     } else if (a.offsetLeft > b.offsetLeft){
-                      return 1;
-                     }
-                  }
-                });
-              return arr;
-            };
+            // var sortAnnotations = function(arr) {
+            //   arr.sort(function(a,b) {
+            //       if (a.offsetTop < b.offsetTop) {
+            //        return -1;
+            //       } else if (a.offsetTop > b.offsetTop){
+            //        return 1;
+            //       } else {
+            //          if (a.offsetLeft < b.offsetLeft) {
+            //           return -1;
+            //          } else if (a.offsetLeft > b.offsetLeft){
+            //           return 1;
+            //          }
+            //       }
+            //     });
+            //   return arr;
+            // };
 
 
-            var uri = window.location.href.split("?")[0];
-            if (uri.substring(uri.length-11) === 'onwords1991') {
-              uri = uri.substring(0, uri.length-13);
-            } else {
-              uri = uri;
-            }
-            chrome.storage.local.get(uri, function(obj) {
-              if (obj[uri] && now.length > 0) {
-
-                var combined = obj[uri].concat(now);
-                var unique = {};
-                var uniqueArr = [];
-                combined.forEach(function(item) {
-                  if (!unique[item.id]) {
-                    uniqueArr.push(item);
-                    unique[item.id] = item;
-                  }
-                });
-                var sorted = sortAnnotations(uniqueArr);
-                var newObj = {};
-                newObj[uri] = sorted;
-                chrome.storage.local.set(newObj);
-              } else if (!obj[uri] && now.length > 0) {
-
-                var sorted = sortAnnotations(now);
-                var newObj = {};
-                newObj[uri] = sorted;
-                chrome.storage.local.set(newObj);
-              } else {
-                return;
-              }
-            });
+            // var uri = window.location.href.split("?")[0];
+            // if (uri.substring(uri.length-11) === 'onwords1991') {
+            //   uri = uri.substring(0, uri.length-13);
+            // } else {
+            //   uri = uri;
+            // }
+            // chrome.storage.local.get(uri, function(obj) {
+            //   if (obj[uri] && now.length > 0) {
+            //
+            //     var combined = obj[uri].concat(now);
+            //     var unique = {};
+            //     var uniqueArr = [];
+            //     combined.forEach(function(item) {
+            //       if (!unique[item.id]) {
+            //         uniqueArr.push(item);
+            //         unique[item.id] = item;
+            //       }
+            //     });
+            //     var sorted = sortAnnotations(uniqueArr);
+            //     var newObj = {};
+            //     newObj[uri] = sorted;
+            //     chrome.storage.local.set(newObj);
+            //   } else if (!obj[uri] && now.length > 0) {
+            //
+            //     var sorted = sortAnnotations(now);
+            //     var newObj = {};
+            //     newObj[uri] = sorted;
+            //     chrome.storage.local.set(newObj);
+            //   } else {
+            //     return;
+            //   }
+            // });
 // /Onwords
 
             // If there are more to do, do them after a delay

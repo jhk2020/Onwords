@@ -1,5 +1,5 @@
 import { store } from './renderApp';
-import { createAnn } from './actions/annotationsAction';
+import { loadAnns, createAnn } from './actions/annotationsAction';
 
 var customAnnotationsModule = function() {
   // Grab the URI of the page
@@ -12,6 +12,10 @@ var customAnnotationsModule = function() {
   }
 
   return {
+    annotationsLoaded: function(annotations) {
+      store.dispatch(loadAnns(annotations));
+    },
+
     beforeAnnotationCreated: function(annotation) {
       annotation.uri = targetUri;
       annotation.title = document.getElementsByTagName('title')[0].innerHTML || document.querySelector('meta[name="twitter:title"]').getAttribute("content");

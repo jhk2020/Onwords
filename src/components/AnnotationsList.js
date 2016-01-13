@@ -6,24 +6,25 @@ import AnnotationComment from './annotationComment';
 import FriendAnnotationComment from './friends-annotationComment';
 
 
-var friendsAnnotationList = React.createClass({
-  getInitialState: function() {
-    return {
+export default class friendsAnnotationList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       annotations: [],
       spotlight: '',
       spotlightOn: false,
       userInfo: {}
     }
-  },
+  }
 
-  deleteAnn: function(annotation) {
+  deleteAnn(annotation) {
     var ev = new CustomEvent('deleteAnnotation', {detail: {
       targetAnnotation: annotation
     }});
     document.dispatchEvent(ev);
-  },
+  }
 
-  unhighlight: function() {
+  unhighlight() {
     var oldSpotlight = this.state.spotlight.id;
     var oldSpotlightColorWithUmph = $('span[data-annotation-id="' + oldSpotlight + '"]').css('background-color');
     if (oldSpotlightColorWithUmph) {
@@ -36,9 +37,9 @@ var friendsAnnotationList = React.createClass({
       }
       $('span[data-annotation-id="' + oldSpotlight + '"]').css(styles);
     }
-  },
+  }
 
-  highlight: function(annotation) {
+  highlight(annotation) {
     $('html, body').animate({
       scrollTop: annotation.offsetTop - 200
     }, 350);
@@ -51,23 +52,22 @@ var friendsAnnotationList = React.createClass({
       color: "black"
     }
     $('span[data-annotation-id="' + annotation.id + '"]').css(styles);
-  },
+  }
 
-  clickHandler: function(annotation) {
+  clickHandler(annotation) {
     this.props.changeSpotlight(annotation);
+  }
 
-  },
-
-  componentWillMount: function() {
+  componentWillMount() {
     var newSpotlight = '';
     if (this.props.spotlight !== '') {
       newSpotlight = this.props.spotlight;
       this.highlight(newSpotlight);
     };
     this.setState({annotations: this.props.annotations, spotlight: newSpotlight});
-  },
+  }
 
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps(nextProps) {
 
     if (nextProps.spotlight !== this.state.spotlight) {
       if (this.state.spotlight !== '') {
@@ -79,16 +79,16 @@ var friendsAnnotationList = React.createClass({
 
     }
     this.setState({annotations: nextProps.annotations, spotlight: nextProps.spotlight});
-  },
+  }
 
-  componentWillUnmount: function() {
+  componentWillUnmount() {
     if (this.state.spotlight !== '') {
       this.unhighlight();
       this.props.changeSpotlight('');
     }
-  },
+  }
 
-  componentDidMount: function () {
+  componentDidMount () {
     chrome.storage.sync.get('user',function(data){
       var info = {
         pic_url: data.user.picUrl,
@@ -97,9 +97,9 @@ var friendsAnnotationList = React.createClass({
       }
       this.setState({userInfo: info});
     }.bind(this));
-  },
+  }
 
-  render: function() {
+  render() {
     var ownId = window.localStorage.getItem('user_id');
     var friends = this.props.friends;
     var annotations = this.state.annotations;
@@ -133,6 +133,4 @@ var friendsAnnotationList = React.createClass({
         </ReactCSSTransitionGroup>
     )
   }
-});
-
-module.exports = friendsAnnotationList;
+};
