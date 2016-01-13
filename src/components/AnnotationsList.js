@@ -11,7 +11,6 @@ export default class AnnotationsList extends Component {
     super(props);
     this.state = {
       spotlight: '',
-      spotlightOn: false,
       userInfo: {}
     }
   }

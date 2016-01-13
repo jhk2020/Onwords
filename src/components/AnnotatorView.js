@@ -6,13 +6,11 @@ export default class AnnotatorView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      friendsShown: {},
-      friendsInfo: {}
+      friendsShown: {}
     }
   }
 
   componentWillMount() {
-    var THIS = this;
     $(document).on('click', 'body', function(e) {
 
       if (e.target.className === 'annotator-button') {
@@ -31,8 +29,8 @@ export default class AnnotatorView extends Component {
           return;
       }
 
-      THIS.props.updateView();
-    });
+      this.props.updateView();
+    }.bind(this));
   }
 
 
@@ -84,21 +82,19 @@ export default class AnnotatorView extends Component {
   // }
 
   render() {
-    debugger;
-    let { annotations } = this.props;
+    let { annotations, friends } = this.props;
     var ownId = window.localStorage.getItem('user_id');
     var friendsArray = Object.keys(this.state.friendsShown);
     var friendsObject = this.state.friendsShown;
     var self = this;
 
-    var friendCarousel = friendsArray.map(function(friend, index) {
-      if (friend !== ownId) {
+    var friendCarousel = friends.map(function(friend, index) {
+      if (friend.id !== ownId) {
         return (
-          <img key={index} data-id={friend} onClick={self.toggleFriendAnnotations.bind(null, friend)} className='friends-pic' src={friendsObject[friend].pic} />
+          <img key={index} data-id={friend.id} className='friends-pic' src={friend.pic_url} />
         )
       }
-    })
-
+    });
 
     return (
       <div className='friends-annotations-view-container'>
@@ -122,8 +118,6 @@ export default class AnnotatorView extends Component {
   }
 
   componentDidMount() {
-    debugger;
-    var self = this;
     var ownId = window.localStorage.getItem('user_id');
     var uri = window.location.href.split("?")[0];
     if (uri.substring(uri.length-11) === 'onwords1991') {
@@ -136,28 +130,28 @@ export default class AnnotatorView extends Component {
     var friendsShown = {};
 
     // Sort through other friends that have annotated the same page / friends whose annotations are showing
-    $.get('http://localhost:9000/api/users/uri/annotations', {uri: uri, user_id: ownId})
-      .done(function(data) {
-        debugger;
-        var oldAnnotations = self.props.annotations;
-        if(oldAnnotations) {
-          for (var i = 0; i < oldAnnotations.length; i++) {
-            friendsShown[oldAnnotations[i].user_id] = { shown: true };
-          }
-          annotations = oldAnnotations;
-        }
-        for (var i = 0; i < data.length; i++) {
-          if (friendsShown[data[i].id]) {
-            friendsShown[data[i].id] = {shown: true, pic: data[i].pic_url, name: data[i].full_name};
-          } else {
-            friendsShown[data[i].id] = {shown: false, pic: data[i].pic_url, name: data[i].full_name};
-          }
-        }
-        if (!friendsShown[ownId]) {
-          friendsShown[ownId] = {shown: false};
-        }
-        self.setState({annotations: annotations, friendsShown: friendsShown});
-      })
+    // $.get('https://test2server.herokuapp.com/api/users/uri/annotations', {uri: uri, user_id: ownId})
+    //   .done(function(data) {
+    //     console.log(data);
+    //     var oldAnnotations = this.props.annotations;
+    //     if(oldAnnotations) {
+    //       for (var i = 0; i < oldAnnotations.length; i++) {
+    //         friendsShown[oldAnnotations[i].user_id] = { shown: true };
+    //       }
+    //       annotations = oldAnnotations;
+    //     }
+    //     for (var i = 0; i < data.length; i++) {
+    //       if (friendsShown[data[i].id]) {
+    //         friendsShown[data[i].id] = {shown: true, pic: data[i].pic_url, name: data[i].full_name};
+    //       } else {
+    //         friendsShown[data[i].id] = {shown: false, pic: data[i].pic_url, name: data[i].full_name};
+    //       }
+    //     }
+    //     if (!friendsShown[ownId]) {
+    //       friendsShown[ownId] = {shown: false};
+    //     }
+    //     this.setState({annotations: annotations, friendsShown: friendsShown});
+    //   }.bind(this))
 
   }
 };

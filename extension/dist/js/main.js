@@ -22133,6 +22133,38 @@ function deleteAnn(annotation) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.sortFriends = sortFriends;
+exports.fetchFriends = fetchFriends;
+function sortFriends(friends) {
+  return {
+    type: 'SORT_FRIENDS',
+    friends: friends
+  };
+}
+
+function fetchFriends() {
+  return function (dispatch) {
+    var firstUserId = window.localStorage.getItem('user_id');
+    var uri = window.location.href.split("?")[0];
+    if (uri.substring(uri.length - 11) === 'onwords1991') {
+      uri = uri.substring(0, uri.length - 13);
+    } else {
+      uri = uri;
+    }
+
+    $.get('https://test2server.herokuapp.com/api/users/uri/annotations', { uri: uri, user_id: firstUserId }).done(function (friends) {
+      console.log('friends: ', friends);
+      dispatch(sortFriends(friends));
+    });
+  };
+}
+
+},{}],199:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.default = showAnnotator;
 function showAnnotator() {
   return {
@@ -22140,7 +22172,7 @@ function showAnnotator() {
   };
 }
 
-},{}],199:[function(require,module,exports){
+},{}],200:[function(require,module,exports){
 'use strict';
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -22180,8 +22212,7 @@ var AnnotatorView = function (_Component) {
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AnnotatorView).call(this, props));
 
     _this.state = {
-      friendsShown: {},
-      friendsInfo: {}
+      friendsShown: {}
     };
     return _this;
   }
@@ -22189,7 +22220,6 @@ var AnnotatorView = function (_Component) {
   _createClass(AnnotatorView, [{
     key: 'componentWillMount',
     value: function componentWillMount() {
-      var THIS = this;
       $(document).on('click', 'body', function (e) {
 
         if (e.target.className === 'annotator-button') {
@@ -22208,8 +22238,8 @@ var AnnotatorView = function (_Component) {
           return;
         }
 
-        THIS.props.updateView();
-      });
+        this.props.updateView();
+      }.bind(this));
     }
 
     // componentWillReceiveProps(nextProps) {
@@ -22263,17 +22293,18 @@ var AnnotatorView = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      debugger;
-      var annotations = this.props.annotations;
+      var _props = this.props;
+      var annotations = _props.annotations;
+      var friends = _props.friends;
 
       var ownId = window.localStorage.getItem('user_id');
       var friendsArray = Object.keys(this.state.friendsShown);
       var friendsObject = this.state.friendsShown;
       var self = this;
 
-      var friendCarousel = friendsArray.map(function (friend, index) {
-        if (friend !== ownId) {
-          return _react2.default.createElement('img', { key: index, 'data-id': friend, onClick: self.toggleFriendAnnotations.bind(null, friend), className: 'friends-pic', src: friendsObject[friend].pic });
+      var friendCarousel = friends.map(function (friend, index) {
+        if (friend.id !== ownId) {
+          return _react2.default.createElement('img', { key: index, 'data-id': friend.id, className: 'friends-pic', src: friend.pic_url });
         }
       });
 
@@ -22315,8 +22346,6 @@ var AnnotatorView = function (_Component) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      debugger;
-      var self = this;
       var ownId = window.localStorage.getItem('user_id');
       var uri = window.location.href.split("?")[0];
       if (uri.substring(uri.length - 11) === 'onwords1991') {
@@ -22329,27 +22358,28 @@ var AnnotatorView = function (_Component) {
       var friendsShown = {};
 
       // Sort through other friends that have annotated the same page / friends whose annotations are showing
-      $.get('http://localhost:9000/api/users/uri/annotations', { uri: uri, user_id: ownId }).done(function (data) {
-        debugger;
-        var oldAnnotations = self.props.annotations;
-        if (oldAnnotations) {
-          for (var i = 0; i < oldAnnotations.length; i++) {
-            friendsShown[oldAnnotations[i].user_id] = { shown: true };
-          }
-          annotations = oldAnnotations;
-        }
-        for (var i = 0; i < data.length; i++) {
-          if (friendsShown[data[i].id]) {
-            friendsShown[data[i].id] = { shown: true, pic: data[i].pic_url, name: data[i].full_name };
-          } else {
-            friendsShown[data[i].id] = { shown: false, pic: data[i].pic_url, name: data[i].full_name };
-          }
-        }
-        if (!friendsShown[ownId]) {
-          friendsShown[ownId] = { shown: false };
-        }
-        self.setState({ annotations: annotations, friendsShown: friendsShown });
-      });
+      // $.get('https://test2server.herokuapp.com/api/users/uri/annotations', {uri: uri, user_id: ownId})
+      //   .done(function(data) {
+      //     console.log(data);
+      //     var oldAnnotations = this.props.annotations;
+      //     if(oldAnnotations) {
+      //       for (var i = 0; i < oldAnnotations.length; i++) {
+      //         friendsShown[oldAnnotations[i].user_id] = { shown: true };
+      //       }
+      //       annotations = oldAnnotations;
+      //     }
+      //     for (var i = 0; i < data.length; i++) {
+      //       if (friendsShown[data[i].id]) {
+      //         friendsShown[data[i].id] = {shown: true, pic: data[i].pic_url, name: data[i].full_name};
+      //       } else {
+      //         friendsShown[data[i].id] = {shown: false, pic: data[i].pic_url, name: data[i].full_name};
+      //       }
+      //     }
+      //     if (!friendsShown[ownId]) {
+      //       friendsShown[ownId] = {shown: false};
+      //     }
+      //     this.setState({annotations: annotations, friendsShown: friendsShown});
+      //   }.bind(this))
     }
   }]);
 
@@ -22359,7 +22389,7 @@ var AnnotatorView = function (_Component) {
 exports.default = AnnotatorView;
 ;
 
-},{"./annotationsList":202,"./my-annotations-button":205,"react":186}],200:[function(require,module,exports){
+},{"./annotationsList":203,"./my-annotations-button":206,"react":186}],201:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -22456,12 +22486,12 @@ var App = function (_Component) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var self = this;
       document.addEventListener('spotlightAnnotation', function (e) {
-        debugger;
-        self.setState({ spotlight: e.detail.targetAnnotation });
-        self.updateView('showAnnotatorView');
-      });
+        this.setState({ spotlight: e.detail.targetAnnotation });
+        this.updateView('showAnnotatorView');
+      }.bind(this));
+
+      this.props.fetchFriends();
 
       // var uri = window.location.href.split("?")[0];
       // if (uri.substring(uri.length-11) === 'onwords1991') {
@@ -22513,11 +22543,12 @@ var App = function (_Component) {
       var annotations = _props.annotations;
       var annotatorShown = _props.annotatorShown;
       var showAnnotator = _props.showAnnotator;
+      var friends = _props.friends;
 
       return _react2.default.createElement(
         'div',
         { className: 'app-container' },
-        !annotatorShown ? _react2.default.createElement(_annotatorButton2.default, { updateView: showAnnotator }) : _react2.default.createElement(_AnnotatorView2.default, { annotations: annotations, changeSpotlight: this.changeSpotlight, updateView: showAnnotator })
+        !annotatorShown ? _react2.default.createElement(_annotatorButton2.default, { updateView: showAnnotator }) : _react2.default.createElement(_AnnotatorView2.default, { annotations: annotations, changeSpotlight: this.changeSpotlight, updateView: showAnnotator, friends: friends })
       );
     }
   }]);
@@ -22528,7 +22559,7 @@ var App = function (_Component) {
 exports.default = App;
 ;
 
-},{"./AnnotatorView":199,"./annotator-button":203,"react":186}],201:[function(require,module,exports){
+},{"./AnnotatorView":200,"./annotator-button":204,"react":186}],202:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -22627,7 +22658,7 @@ var annotationComment = React.createClass({
 
 module.exports = annotationComment;
 
-},{"react":186}],202:[function(require,module,exports){
+},{"react":186}],203:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -22672,7 +22703,6 @@ var AnnotationsList = function (_Component) {
 
     _this.state = {
       spotlight: '',
-      spotlightOn: false,
       userInfo: {}
     };
     return _this;
@@ -22811,7 +22841,7 @@ var AnnotationsList = function (_Component) {
 exports.default = AnnotationsList;
 ;
 
-},{"./annotationComment":201,"./friends-annotationComment":204,"react":186,"react/addons":12}],203:[function(require,module,exports){
+},{"./annotationComment":202,"./friends-annotationComment":205,"react":186,"react/addons":12}],204:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -22868,7 +22898,7 @@ var AnnotatorButton = function (_Component) {
 exports.default = AnnotatorButton;
 ;
 
-},{"react":186}],204:[function(require,module,exports){
+},{"react":186}],205:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -22915,7 +22945,7 @@ var friendAnnotationComment = React.createClass({
 
 module.exports = friendAnnotationComment;
 
-},{"react":186}],205:[function(require,module,exports){
+},{"react":186}],206:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -22952,7 +22982,7 @@ var MyAnnotationsButton = React.createClass({
 
 module.exports = MyAnnotationsButton;
 
-},{"react":186}],206:[function(require,module,exports){
+},{"react":186}],207:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22973,12 +23003,15 @@ var _showAnnotatorAction = require('../actions/showAnnotatorAction');
 
 var _showAnnotatorAction2 = _interopRequireDefault(_showAnnotatorAction);
 
+var _friendsAction = require('../actions/friendsAction');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function mapStateToProps(state) {
   return {
     annotations: state.annotations,
-    annotatorShown: state.annotatorShown
+    annotatorShown: state.annotatorShown,
+    friends: state.friends
   };
 }
 
@@ -22986,13 +23019,16 @@ function mapDispatchToProps(dispatch) {
   return {
     showAnnotator: function showAnnotator() {
       dispatch((0, _showAnnotatorAction2.default)());
+    },
+    fetchFriends: function fetchFriends() {
+      dispatch((0, _friendsAction.fetchFriends)());
     }
   };
 }
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_App2.default);
 
-},{"../actions/showAnnotatorAction":198,"../components/App":200,"react":186,"react-redux":5}],207:[function(require,module,exports){
+},{"../actions/friendsAction":198,"../actions/showAnnotatorAction":199,"../components/App":201,"react":186,"react-redux":5}],208:[function(require,module,exports){
 'use strict';
 
 var _renderApp = require('./renderApp');
@@ -23098,7 +23134,7 @@ var customAnnotationsModule = function customAnnotationsModule() {
 
 module.exports = customAnnotationsModule;
 
-},{"./actions/annotationsAction":197,"./renderApp":213}],208:[function(require,module,exports){
+},{"./actions/annotationsAction":197,"./renderApp":215}],209:[function(require,module,exports){
 'use strict';
 
 var customAnnotationsModule = require('./customAnnotationsModule');
@@ -23119,7 +23155,7 @@ var initializeAnnotator = function initializeAnnotator(initialAnnotationsUserId)
   // Annotator app configuration
   var app = new annotator.App();
   app.include(annotator.ui.main).include(annotator.storage.http, {
-    prefix: 'http://localhost:9000',
+    prefix: 'https://test2server.herokuapp.com',
     urls: {
       create: '/api/annotations',
       update: '/api/annotations/{id}',
@@ -23155,7 +23191,7 @@ var initializeAnnotator = function initializeAnnotator(initialAnnotationsUserId)
 
 module.exports = initializeAnnotator;
 
-},{"./customAnnotationsModule":207}],209:[function(require,module,exports){
+},{"./customAnnotationsModule":208}],210:[function(require,module,exports){
 'use strict';
 
 var _init = require('./init');
@@ -23205,7 +23241,7 @@ chrome.storage.sync.get('user', function (obj) {
   }
 });
 
-},{"./init":208,"./renderApp":213}],210:[function(require,module,exports){
+},{"./init":209,"./renderApp":215}],211:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23239,7 +23275,7 @@ function annotations() {
       return sortAnnotations(annotations);
 
     case 'CREATE_ANNOTATION':
-      var newState = state.slice().concat([action.annotation]);
+      var newState = [state.slice().concat([action.annotation])];
       return sortAnnotations(newState);
 
     case 'DELETE_ANNOTATION':
@@ -23255,7 +23291,7 @@ function annotations() {
   }
 }
 
-},{}],211:[function(require,module,exports){
+},{}],212:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23274,7 +23310,28 @@ function annotatorShown() {
   }
 }
 
-},{}],212:[function(require,module,exports){
+},{}],213:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = friends;
+function friends() {
+  var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+  var action = arguments[1];
+
+  switch (action.type) {
+    case 'SORT_FRIENDS':
+      var ownId = window.localStorage.getItem('user_id');
+      var newState = state.slice().concat(action.friends);
+      return newState;
+    default:
+      return state;
+  }
+}
+
+},{}],214:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23291,16 +23348,21 @@ var _annotatorShownReducer = require('./annotatorShownReducer');
 
 var _annotatorShownReducer2 = _interopRequireDefault(_annotatorShownReducer);
 
+var _friendsReducer = require('./friendsReducer');
+
+var _friendsReducer2 = _interopRequireDefault(_friendsReducer);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var rootReducer = (0, _redux.combineReducers)({
   annotations: _annotationsReducer2.default,
-  annotatorShown: _annotatorShownReducer2.default
+  annotatorShown: _annotatorShownReducer2.default,
+  friends: _friendsReducer2.default
 });
 
 exports.default = rootReducer;
 
-},{"./annotationsReducer":210,"./annotatorShownReducer":211,"redux":189}],213:[function(require,module,exports){
+},{"./annotationsReducer":211,"./annotatorShownReducer":212,"./friendsReducer":213,"redux":189}],215:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23351,7 +23413,7 @@ var renderApp = exports.renderApp = function renderApp() {
   ), document.getElementById('annotation-scroll'));
 };
 
-},{"./containers/AppContainer":206,"./store/configStore":214,"react":186,"react-dom":2,"react-redux":5}],214:[function(require,module,exports){
+},{"./containers/AppContainer":207,"./store/configStore":216,"react":186,"react-dom":2,"react-redux":5}],216:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23378,4 +23440,4 @@ function configureStore() {
   return store;
 }
 
-},{"../reducers/rootReducer":212,"redux":189,"redux-thunk":187}]},{},[209]);
+},{"../reducers/rootReducer":214,"redux":189,"redux-thunk":187}]},{},[210]);

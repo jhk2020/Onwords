@@ -63,12 +63,12 @@ export default class App extends Component {
   // }
 
   componentDidMount() {
-    var self = this;
     document.addEventListener('spotlightAnnotation', function(e) {
-      debugger;
-      self.setState({spotlight: e.detail.targetAnnotation});
-      self.updateView('showAnnotatorView');
-    });
+      this.setState({spotlight: e.detail.targetAnnotation});
+      this.updateView('showAnnotatorView');
+    }.bind(this));
+
+    this.props.fetchFriends();
 
     // var uri = window.location.href.split("?")[0];
     // if (uri.substring(uri.length-11) === 'onwords1991') {
@@ -114,11 +114,11 @@ export default class App extends Component {
   }
 
   render() {
-    const { annotations, annotatorShown, showAnnotator } = this.props;
+    const { annotations, annotatorShown, showAnnotator, friends } = this.props;
     return (
       <div className='app-container'>
         { !annotatorShown ? <AnnotatorButton updateView={showAnnotator} />
-      : <AnnotatorView annotations={annotations} changeSpotlight={this.changeSpotlight} updateView={showAnnotator} />
+      : <AnnotatorView annotations={annotations} changeSpotlight={this.changeSpotlight} updateView={showAnnotator} friends={friends}/>
         }
       </div>
     );
