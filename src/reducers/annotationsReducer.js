@@ -18,7 +18,7 @@ const sortAnnotations = function(arr) {
 export default function annotations (state = [], action) {
   switch (action.type) {
     case 'LOAD_ANNOTATIONS':
-      const annotations = action.annotations.slice();
+      const annotations = state.slice().concat(action.annotations);
       return sortAnnotations(annotations);
 
     case 'CREATE_ANNOTATION':

@@ -1,53 +1,66 @@
 import React, { Component } from 'react';
 import AnnotatorButton from './annotator-button';
-import AnnotatorView from '../containers/AnnotatorViewContainer';
+import AnnotatorView from './AnnotatorView';
 
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      showAnnotatorButton: true,
-      showFriendsAnnotations: false,
-      spotlight: '',
-      annotations: []
-    };
-    this.updateView = this.updateView.bind(this);
+    // this.updateView = this.updateView.bind(this);
   }
 
-  updateView(action) {
-    var self = this;
-    switch(action) {
-      case 'showAnnotatorButton':
-      debugger;
-        $(function() {
-          $('#annotation-header').animate({width: '0px'}, {queue: false, duration: 200});
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.annotatorShown) {
+          // $('#annotation-header').animate({width: '0px'}, {queue: false, duration: 200});
           $('#annotation-sidebar').animate({right: -(600)}, {queue: false, duration: 200});
-        })
-        .promise().done(function() {
-          setTimeout(function() {
-            self.setState({showFriendsAnnotations: false});
-            self.setState({showAnnotatorButton: true});
-            self.setState({spotlight: ''});
-          }, 200)
-        })
-        break;
-      case 'showAnnotatorView':
-      debugger;
-        self.setState({showFriendsAnnotations: true});
-        self.setState({showFeedView: false}, function() {
-          setTimeout(function() {
-            $(function () {
-              self.setState({showAnnotatorButton: false});
-              $('#annotation-sidebar').animate({right: -(300)}, {queue: false, duration: 200});
-              $('#annotation-header').animate({width: '300px'}, {queue: false, duration: 200});
-            })
-          }, 130)
-        });
-        break;
-      default:
-        console.log('nothing happened')
+      // .promise().done(function() {
+        // setTimeout(function() {
+          // self.setState({showFriendsAnnotations: false});
+          // self.setState({showAnnotatorButton: true});
+          // self.setState({spotlight: ''});
+        // }, 200)
+      // })
+    } else {
+      // self.setState({showFriendsAnnotations: true});
+      // self.setState({showFeedView: false}, function() {
+        // setTimeout(function() {
+        setTimeout(function() {
+            // self.setState({showAnnotatorButton: false});
+            $('#annotation-sidebar').animate({right: -(300)}, {queue: false, duration: 200});
+            // $('#annotation-header').animate({width: '300px'}, {queue: false, duration: 200});
+
+        }, 130);
+        // }, 130)
+      // });
     }
   }
+
+  // updateView() {
+    // var self = this;
+    // if (!this.props.annotatorShown) {
+    //   $(function() {
+    //     $('#annotation-header').animate({width: '0px'}, {queue: false, duration: 200});
+    //     $('#annotation-sidebar').animate({right: -(600)}, {queue: false, duration: 200});
+    //   })
+    //   .promise().done(function() {
+    //     setTimeout(function() {
+    //       // self.setState({showFriendsAnnotations: false});
+    //       // self.setState({showAnnotatorButton: true});
+    //       self.setState({spotlight: ''});
+    //     }, 200)
+    //   })
+    // } else {
+    //   // self.setState({showFriendsAnnotations: true});
+    //   // self.setState({showFeedView: false}, function() {
+    //     setTimeout(function() {
+    //       $(function () {
+    //         // self.setState({showAnnotatorButton: false});
+    //         $('#annotation-sidebar').animate({right: -(300)}, {queue: false, duration: 200});
+    //         $('#annotation-header').animate({width: '300px'}, {queue: false, duration: 200});
+    //       })
+    //     }, 130)
+    //   // });
+    // }
+  // }
 
   componentDidMount() {
     var self = this;
@@ -57,12 +70,12 @@ export default class App extends Component {
       self.updateView('showAnnotatorView');
     });
 
-    var uri = window.location.href.split("?")[0];
-    if (uri.substring(uri.length-11) === 'onwords1991') {
-      uri = uri.substring(0, uri.length-13);
-    } else {
-      uri = uri;
-    }
+    // var uri = window.location.href.split("?")[0];
+    // if (uri.substring(uri.length-11) === 'onwords1991') {
+    //   uri = uri.substring(0, uri.length-13);
+    // } else {
+    //   uri = uri;
+    // }
 
     // chrome.storage.onChanged.addListener(function(changes) {
     //   debugger;
@@ -101,11 +114,12 @@ export default class App extends Component {
   }
 
   render() {
-    debugger;
+    const { annotations, annotatorShown, showAnnotator } = this.props;
     return (
       <div className='app-container'>
-        {this.state.showAnnotatorButton ? <AnnotatorButton updateView={this.updateView} /> : null}
-        {this.state.showFriendsAnnotations ? <AnnotatorView annotations={this.state.annotations} changeSpotlight={this.changeSpotlight} spotlight={this.state.spotlight} updateView={this.updateView} /> : null}
+        { !annotatorShown ? <AnnotatorButton updateView={showAnnotator} />
+      : <AnnotatorView annotations={annotations} changeSpotlight={this.changeSpotlight} spotlight={this.state.spotlight} updateView={showAnnotator} />
+        }
       </div>
     );
   }

@@ -23,7 +23,6 @@ var customAnnotationsModule = function() {
     },
 
     annotationCreated: function(annotation) {
-      debugger;
       store.dispatch(createAnn(annotation));
       // chrome.storage.local.get(uri, function(obj) {
       //   if (!obj[uri]) {

@@ -6,7 +6,6 @@ export default class AnnotatorView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      annotations: props.annotations,
       friendsShown: {},
       friendsInfo: {}
     }
@@ -31,7 +30,8 @@ export default class AnnotatorView extends Component {
           e.preventDefault();
           return;
       }
-      THIS.props.updateView('showAnnotatorButton');
+
+      THIS.props.updateView();
     });
   }
 
@@ -115,7 +115,7 @@ export default class AnnotatorView extends Component {
         </div>
         <br></br>
           <div className='friends-annotations-list'>
-            {this.state.annotations.length > 0 ? <FriendAnnotationList {...this.props} friends={this.state.friendsShown} annotations={this.props.annotations}/> : null}
+            {annotations.length > 0 ? <FriendAnnotationList {...this.props} friends={this.state.friendsShown} annotations={annotations}/> : null}
           </div>
       </div>
     );

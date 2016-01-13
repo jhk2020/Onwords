@@ -7,7 +7,9 @@ export default class AnnotatorButton extends Component {
   }
 
   handleClick() {
-    this.props.updateView('showAnnotatorView');
+    setTimeout(function() {
+      this.props.updateView();
+    }.bind(this), 130);
   }
 
   render() {

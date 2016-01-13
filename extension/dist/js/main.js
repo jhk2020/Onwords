@@ -22122,6 +22122,19 @@ function loadAnns(annotations) {
 },{}],198:[function(require,module,exports){
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = showAnnotator;
+function showAnnotator() {
+  return {
+    type: 'SHOW_ANNOTATOR'
+  };
+}
+
+},{}],199:[function(require,module,exports){
+'use strict';
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -22159,7 +22172,6 @@ var AnnotatorView = function (_Component) {
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AnnotatorView).call(this, props));
 
     _this.state = {
-      annotations: props.annotations,
       friendsShown: {},
       friendsInfo: {}
     };
@@ -22187,7 +22199,8 @@ var AnnotatorView = function (_Component) {
           e.preventDefault();
           return;
         }
-        THIS.props.updateView('showAnnotatorButton');
+
+        THIS.props.updateView();
       });
     }
 
@@ -22287,7 +22300,7 @@ var AnnotatorView = function (_Component) {
         _react2.default.createElement(
           'div',
           { className: 'friends-annotations-list' },
-          this.state.annotations.length > 0 ? _react2.default.createElement(_annotationsList2.default, _extends({}, this.props, { friends: this.state.friendsShown, annotations: this.props.annotations })) : null
+          annotations.length > 0 ? _react2.default.createElement(_annotationsList2.default, _extends({}, this.props, { friends: this.state.friendsShown, annotations: annotations })) : null
         )
       );
     }
@@ -22338,7 +22351,176 @@ var AnnotatorView = function (_Component) {
 exports.default = AnnotatorView;
 ;
 
-},{"./annotationsList":200,"./my-annotations-button":204,"react":186}],199:[function(require,module,exports){
+},{"./annotationsList":202,"./my-annotations-button":205,"react":186}],200:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _annotatorButton = require('./annotator-button');
+
+var _annotatorButton2 = _interopRequireDefault(_annotatorButton);
+
+var _AnnotatorView = require('./AnnotatorView');
+
+var _AnnotatorView2 = _interopRequireDefault(_AnnotatorView);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var App = function (_Component) {
+  _inherits(App, _Component);
+
+  function App(props) {
+    _classCallCheck(this, App);
+
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this, props));
+    // this.updateView = this.updateView.bind(this);
+  }
+
+  _createClass(App, [{
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      if (!nextProps.annotatorShown) {
+        // $('#annotation-header').animate({width: '0px'}, {queue: false, duration: 200});
+        $('#annotation-sidebar').animate({ right: -600 }, { queue: false, duration: 200 });
+        // .promise().done(function() {
+        // setTimeout(function() {
+        // self.setState({showFriendsAnnotations: false});
+        // self.setState({showAnnotatorButton: true});
+        // self.setState({spotlight: ''});
+        // }, 200)
+        // })
+      } else {
+          // self.setState({showFriendsAnnotations: true});
+          // self.setState({showFeedView: false}, function() {
+          // setTimeout(function() {
+          setTimeout(function () {
+            // self.setState({showAnnotatorButton: false});
+            $('#annotation-sidebar').animate({ right: -300 }, { queue: false, duration: 200 });
+            // $('#annotation-header').animate({width: '300px'}, {queue: false, duration: 200});
+          }, 130);
+          // }, 130)
+          // });
+        }
+    }
+
+    // updateView() {
+    // var self = this;
+    // if (!this.props.annotatorShown) {
+    //   $(function() {
+    //     $('#annotation-header').animate({width: '0px'}, {queue: false, duration: 200});
+    //     $('#annotation-sidebar').animate({right: -(600)}, {queue: false, duration: 200});
+    //   })
+    //   .promise().done(function() {
+    //     setTimeout(function() {
+    //       // self.setState({showFriendsAnnotations: false});
+    //       // self.setState({showAnnotatorButton: true});
+    //       self.setState({spotlight: ''});
+    //     }, 200)
+    //   })
+    // } else {
+    //   // self.setState({showFriendsAnnotations: true});
+    //   // self.setState({showFeedView: false}, function() {
+    //     setTimeout(function() {
+    //       $(function () {
+    //         // self.setState({showAnnotatorButton: false});
+    //         $('#annotation-sidebar').animate({right: -(300)}, {queue: false, duration: 200});
+    //         $('#annotation-header').animate({width: '300px'}, {queue: false, duration: 200});
+    //       })
+    //     }, 130)
+    //   // });
+    // }
+    // }
+
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var self = this;
+      document.addEventListener('spotlightAnnotation', function (e) {
+        debugger;
+        self.setState({ spotlight: e.detail.targetAnnotation });
+        self.updateView('showAnnotatorView');
+      });
+
+      // var uri = window.location.href.split("?")[0];
+      // if (uri.substring(uri.length-11) === 'onwords1991') {
+      //   uri = uri.substring(0, uri.length-13);
+      // } else {
+      //   uri = uri;
+      // }
+
+      // chrome.storage.onChanged.addListener(function(changes) {
+      //   debugger;
+      //   if (changes[uri] && changes[uri].newValue !== undefined) {
+      //     var newAnnotations = changes[uri].newValue;
+      //     var oldAnnotations = self.state.annotations;
+      //     var currentSpotlight = self.state.spotlight;
+      //
+      //     if (newAnnotations.length === 0) {
+      //       currentSpotlight = '';
+      //     } else {
+      //       var intersection = {};
+      //       for (var i = 0; i < oldAnnotations.length; i++) {
+      //         intersection[oldAnnotations[i].id] = false;
+      //       };
+      //
+      //       for (var i = 0; i < newAnnotations.length; i++) {
+      //           intersection[newAnnotations[i].id] = true;
+      //       }
+      //
+      //       if (intersection[currentSpotlight.id]) {
+      //         currentSpotlight = currentSpotlight;
+      //       } else {
+      //         currentSpotlight = '';
+      //       }
+      //     }
+      //
+      //     self.setState({annotations: newAnnotations, spotlight: currentSpotlight});
+      //   }
+      // });
+    }
+  }, {
+    key: 'changeSpotlight',
+    value: function changeSpotlight(annotation) {
+      debugger;
+      this.setState({ spotlight: annotation });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props = this.props;
+      var annotations = _props.annotations;
+      var annotatorShown = _props.annotatorShown;
+      var showAnnotator = _props.showAnnotator;
+
+      return _react2.default.createElement(
+        'div',
+        { className: 'app-container' },
+        !annotatorShown ? _react2.default.createElement(_annotatorButton2.default, { updateView: showAnnotator }) : _react2.default.createElement(_AnnotatorView2.default, { annotations: annotations, changeSpotlight: this.changeSpotlight, spotlight: this.state.spotlight, updateView: showAnnotator })
+      );
+    }
+  }]);
+
+  return App;
+}(_react.Component);
+
+exports.default = App;
+;
+
+},{"./AnnotatorView":199,"./annotator-button":203,"react":186}],201:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -22437,7 +22619,7 @@ var annotationComment = React.createClass({
 
 module.exports = annotationComment;
 
-},{"react":186}],200:[function(require,module,exports){
+},{"react":186}],202:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -22621,7 +22803,7 @@ var friendsAnnotationList = function (_Component) {
 exports.default = friendsAnnotationList;
 ;
 
-},{"./annotationComment":199,"./friends-annotationComment":203,"react":186,"react/addons":12}],201:[function(require,module,exports){
+},{"./annotationComment":201,"./friends-annotationComment":204,"react":186,"react/addons":12}],203:[function(require,module,exports){
 'use strict';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -22657,7 +22839,9 @@ var AnnotatorButton = function (_Component) {
   _createClass(AnnotatorButton, [{
     key: 'handleClick',
     value: function handleClick() {
-      this.props.updateView('showAnnotatorView');
+      setTimeout(function () {
+        this.props.updateView();
+      }.bind(this), 130);
     }
   }, {
     key: 'render',
@@ -22676,161 +22860,7 @@ var AnnotatorButton = function (_Component) {
 exports.default = AnnotatorButton;
 ;
 
-},{"react":186}],202:[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _annotatorButton = require('./annotator-button');
-
-var _annotatorButton2 = _interopRequireDefault(_annotatorButton);
-
-var _AnnotatorViewContainer = require('../containers/AnnotatorViewContainer');
-
-var _AnnotatorViewContainer2 = _interopRequireDefault(_AnnotatorViewContainer);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var App = function (_Component) {
-  _inherits(App, _Component);
-
-  function App(props) {
-    _classCallCheck(this, App);
-
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this, props));
-
-    _this.state = {
-      showAnnotatorButton: true,
-      showFriendsAnnotations: false,
-      spotlight: '',
-      annotations: []
-    };
-    _this.updateView = _this.updateView.bind(_this);
-    return _this;
-  }
-
-  _createClass(App, [{
-    key: 'updateView',
-    value: function updateView(action) {
-      var self = this;
-      switch (action) {
-        case 'showAnnotatorButton':
-          debugger;
-          $(function () {
-            $('#annotation-header').animate({ width: '0px' }, { queue: false, duration: 200 });
-            $('#annotation-sidebar').animate({ right: -600 }, { queue: false, duration: 200 });
-          }).promise().done(function () {
-            setTimeout(function () {
-              self.setState({ showFriendsAnnotations: false });
-              self.setState({ showAnnotatorButton: true });
-              self.setState({ spotlight: '' });
-            }, 200);
-          });
-          break;
-        case 'showAnnotatorView':
-          debugger;
-          self.setState({ showFriendsAnnotations: true });
-          self.setState({ showFeedView: false }, function () {
-            setTimeout(function () {
-              $(function () {
-                self.setState({ showAnnotatorButton: false });
-                $('#annotation-sidebar').animate({ right: -300 }, { queue: false, duration: 200 });
-                $('#annotation-header').animate({ width: '300px' }, { queue: false, duration: 200 });
-              });
-            }, 130);
-          });
-          break;
-        default:
-          console.log('nothing happened');
-      }
-    }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      var self = this;
-      document.addEventListener('spotlightAnnotation', function (e) {
-        debugger;
-        self.setState({ spotlight: e.detail.targetAnnotation });
-        self.updateView('showAnnotatorView');
-      });
-
-      var uri = window.location.href.split("?")[0];
-      if (uri.substring(uri.length - 11) === 'onwords1991') {
-        uri = uri.substring(0, uri.length - 13);
-      } else {
-        uri = uri;
-      }
-
-      // chrome.storage.onChanged.addListener(function(changes) {
-      //   debugger;
-      //   if (changes[uri] && changes[uri].newValue !== undefined) {
-      //     var newAnnotations = changes[uri].newValue;
-      //     var oldAnnotations = self.state.annotations;
-      //     var currentSpotlight = self.state.spotlight;
-      //
-      //     if (newAnnotations.length === 0) {
-      //       currentSpotlight = '';
-      //     } else {
-      //       var intersection = {};
-      //       for (var i = 0; i < oldAnnotations.length; i++) {
-      //         intersection[oldAnnotations[i].id] = false;
-      //       };
-      //
-      //       for (var i = 0; i < newAnnotations.length; i++) {
-      //           intersection[newAnnotations[i].id] = true;
-      //       }
-      //
-      //       if (intersection[currentSpotlight.id]) {
-      //         currentSpotlight = currentSpotlight;
-      //       } else {
-      //         currentSpotlight = '';
-      //       }
-      //     }
-      //
-      //     self.setState({annotations: newAnnotations, spotlight: currentSpotlight});
-      //   }
-      // });
-    }
-  }, {
-    key: 'changeSpotlight',
-    value: function changeSpotlight(annotation) {
-      debugger;
-      this.setState({ spotlight: annotation });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      debugger;
-      return _react2.default.createElement(
-        'div',
-        { className: 'app-container' },
-        this.state.showAnnotatorButton ? _react2.default.createElement(_annotatorButton2.default, { updateView: this.updateView }) : null,
-        this.state.showFriendsAnnotations ? _react2.default.createElement(_AnnotatorViewContainer2.default, { annotations: this.state.annotations, changeSpotlight: this.changeSpotlight, spotlight: this.state.spotlight, updateView: this.updateView }) : null
-      );
-    }
-  }]);
-
-  return App;
-}(_react.Component);
-
-exports.default = App;
-;
-
-},{"../containers/AnnotatorViewContainer":205,"./annotator-button":201,"react":186}],203:[function(require,module,exports){
+},{"react":186}],204:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -22877,7 +22907,7 @@ var friendAnnotationComment = React.createClass({
 
 module.exports = friendAnnotationComment;
 
-},{"react":186}],204:[function(require,module,exports){
+},{"react":186}],205:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -22914,7 +22944,7 @@ var MyAnnotationsButton = React.createClass({
 
 module.exports = MyAnnotationsButton;
 
-},{"react":186}],205:[function(require,module,exports){
+},{"react":186}],206:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22927,21 +22957,34 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRedux = require('react-redux');
 
-var _AnnotatorView = require('../components/AnnotatorView');
+var _App = require('../components/App');
 
-var _AnnotatorView2 = _interopRequireDefault(_AnnotatorView);
+var _App2 = _interopRequireDefault(_App);
+
+var _showAnnotatorAction = require('../actions/showAnnotatorAction');
+
+var _showAnnotatorAction2 = _interopRequireDefault(_showAnnotatorAction);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function mapStateToProps(state) {
   return {
-    annotations: state.annotations
+    annotations: state.annotations,
+    annotatorShown: state.annotatorShown
   };
 }
 
-exports.default = (0, _reactRedux.connect)(mapStateToProps)(_AnnotatorView2.default);
+function mapDispatchToProps(dispatch) {
+  return {
+    showAnnotator: function showAnnotator() {
+      dispatch((0, _showAnnotatorAction2.default)());
+    }
+  };
+}
 
-},{"../components/AnnotatorView":198,"react":186,"react-redux":5}],206:[function(require,module,exports){
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_App2.default);
+
+},{"../actions/showAnnotatorAction":198,"../components/App":200,"react":186,"react-redux":5}],207:[function(require,module,exports){
 'use strict';
 
 var _renderApp = require('./renderApp');
@@ -22970,7 +23013,6 @@ var customAnnotationsModule = function customAnnotationsModule() {
     },
 
     annotationCreated: function annotationCreated(annotation) {
-      debugger;
       _renderApp.store.dispatch((0, _annotationsAction.createAnn)(annotation));
       // chrome.storage.local.get(uri, function(obj) {
       //   if (!obj[uri]) {
@@ -23047,7 +23089,7 @@ var customAnnotationsModule = function customAnnotationsModule() {
 
 module.exports = customAnnotationsModule;
 
-},{"./actions/annotationsAction":197,"./renderApp":211}],207:[function(require,module,exports){
+},{"./actions/annotationsAction":197,"./renderApp":213}],208:[function(require,module,exports){
 'use strict';
 
 var customAnnotationsModule = require('./customAnnotationsModule');
@@ -23104,7 +23146,7 @@ var initializeAnnotator = function initializeAnnotator(initialAnnotationsUserId)
 
 module.exports = initializeAnnotator;
 
-},{"./customAnnotationsModule":206}],208:[function(require,module,exports){
+},{"./customAnnotationsModule":207}],209:[function(require,module,exports){
 'use strict';
 
 var _init = require('./init');
@@ -23154,7 +23196,7 @@ chrome.storage.sync.get('user', function (obj) {
   }
 });
 
-},{"./init":207,"./renderApp":211}],209:[function(require,module,exports){
+},{"./init":208,"./renderApp":213}],210:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23184,7 +23226,7 @@ function annotations() {
 
   switch (action.type) {
     case 'LOAD_ANNOTATIONS':
-      var annotations = action.annotations.slice();
+      var annotations = state.slice().concat(action.annotations);
       return sortAnnotations(annotations);
 
     case 'CREATE_ANNOTATION':
@@ -23195,7 +23237,26 @@ function annotations() {
   }
 }
 
-},{}],210:[function(require,module,exports){
+},{}],211:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = annotatorShown;
+function annotatorShown() {
+  var state = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+  var action = arguments[1];
+
+  switch (action.type) {
+    case 'SHOW_ANNOTATOR':
+      return !state;
+    default:
+      return state;
+  }
+}
+
+},{}],212:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23208,15 +23269,20 @@ var _annotationsReducer = require('./annotationsReducer');
 
 var _annotationsReducer2 = _interopRequireDefault(_annotationsReducer);
 
+var _annotatorShownReducer = require('./annotatorShownReducer');
+
+var _annotatorShownReducer2 = _interopRequireDefault(_annotatorShownReducer);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var rootReducer = (0, _redux.combineReducers)({
-  annotations: _annotationsReducer2.default
+  annotations: _annotationsReducer2.default,
+  annotatorShown: _annotatorShownReducer2.default
 });
 
 exports.default = rootReducer;
 
-},{"./annotationsReducer":209,"redux":189}],211:[function(require,module,exports){
+},{"./annotationsReducer":210,"./annotatorShownReducer":211,"redux":189}],213:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23224,9 +23290,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.renderApp = exports.store = undefined;
 
-var _app = require('./components/app');
+var _AppContainer = require('./containers/AppContainer');
 
-var _app2 = _interopRequireDefault(_app);
+var _AppContainer2 = _interopRequireDefault(_AppContainer);
 
 var _react = require('react');
 
@@ -23263,11 +23329,11 @@ var renderApp = exports.renderApp = function renderApp() {
   _reactDom2.default.render(_react2.default.createElement(
     _reactRedux.Provider,
     { store: store },
-    _react2.default.createElement(_app2.default, null)
+    _react2.default.createElement(_AppContainer2.default, null)
   ), document.getElementById('annotation-scroll'));
 };
 
-},{"./components/app":202,"./store/configStore":212,"react":186,"react-dom":2,"react-redux":5}],212:[function(require,module,exports){
+},{"./containers/AppContainer":206,"./store/configStore":214,"react":186,"react-dom":2,"react-redux":5}],214:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -23294,4 +23360,4 @@ function configureStore() {
   return store;
 }
 
-},{"../reducers/rootReducer":210,"redux":189,"redux-thunk":187}]},{},[208]);
+},{"../reducers/rootReducer":212,"redux":189,"redux-thunk":187}]},{},[209]);
