@@ -1,21 +1,20 @@
-var React = require('react');
-var ReactAddons = require('react/addons');
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+import React, { Component } from 'react';
+import AnnotatorButton from './annotator-button';
+import AnnotatorView from '../containers/AnnotatorViewContainer';
 
-var AnnotatorButton = require('./annotator-view/annotator-button');
-var FriendsAnnotations = require('./friends-annotations-view/friends-annotations-view');
-
-var App = React.createClass({
-  getInitialState: function() {
-    return {
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       showAnnotatorButton: true,
       showFriendsAnnotations: false,
       spotlight: '',
       annotations: []
     };
-  },
+    this.updateView = this.updateView.bind(this);
+  }
 
-  updateView: function(action){
+  updateView(action) {
     var self = this;
     switch(action) {
       case 'showAnnotatorButton':
@@ -48,9 +47,9 @@ var App = React.createClass({
       default:
         console.log('nothing happened')
     }
-  },
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     var self = this;
     document.addEventListener('spotlightAnnotation', function(e) {
       debugger;
@@ -94,22 +93,20 @@ var App = React.createClass({
         self.setState({annotations: newAnnotations, spotlight: currentSpotlight});
       }
     });
-  },
+  }
 
-  changeSpotlight: function(annotation) {
+  changeSpotlight(annotation) {
     debugger;
     this.setState({spotlight: annotation});
-  },
+  }
 
-  render: function() {
+  render() {
     debugger;
     return (
       <div className='app-container'>
         {this.state.showAnnotatorButton ? <AnnotatorButton updateView={this.updateView} /> : null}
-        {this.state.showFriendsAnnotations ? <FriendsAnnotations annotations={this.state.annotations} changeSpotlight={this.changeSpotlight} spotlight={this.state.spotlight} updateView={this.updateView} /> : null}
+        {this.state.showFriendsAnnotations ? <AnnotatorView annotations={this.state.annotations} changeSpotlight={this.changeSpotlight} spotlight={this.state.spotlight} updateView={this.updateView} /> : null}
       </div>
     );
   }
-});
-
-module.exports = App;
+};

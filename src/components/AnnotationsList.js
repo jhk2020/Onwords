@@ -1,9 +1,9 @@
-var React = require('react');
-var ReactAddons = require('react/addons');
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+import React, { Component } from 'react';
+import ReactAddons from 'react/addons';
+const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 
-var AnnotationComment = require('../annotator-view/annotationComment');
-var FriendAnnotationComment = require('./friends-annotationComment');
+import AnnotationComment from './annotationComment';
+import FriendAnnotationComment from './friends-annotationComment';
 
 
 var friendsAnnotationList = React.createClass({

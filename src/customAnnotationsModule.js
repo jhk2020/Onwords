@@ -1,3 +1,6 @@
+import { store } from './renderApp';
+import { createAnn } from './actions/annotationsAction';
+
 var customAnnotationsModule = function() {
   // Grab the URI of the page
   var uri = window.location.href.split("?")[0];
@@ -16,28 +19,30 @@ var customAnnotationsModule = function() {
     },
 
     annotationCreated: function(annotation) {
-      chrome.storage.local.get(uri, function(obj) {
-        if (!obj[uri]) {
-          obj[uri] = [];
-        }
-        obj[uri].push(annotation);
-        obj[uri].sort(function(a,b) {
-          if (a.offsetTop < b.offsetTop) {
-           return -1;
-          } else if (a.offsetTop > b.offsetTop){
-           return 1;
-          } else {
-             if (a.offsetLeft < b.offsetLeft) {
-              return -1;
-             } else if (a.offsetLeft > b.offsetLeft){
-              return 1;
-             }
-          }
-        });
-        var newObj = {};
-        newObj[uri] = obj[uri];
-        chrome.storage.local.set(newObj);
-      });
+      debugger;
+      store.dispatch(createAnn(annotation));
+      // chrome.storage.local.get(uri, function(obj) {
+      //   if (!obj[uri]) {
+      //     obj[uri] = [];
+      //   }
+      //   obj[uri].push(annotation);
+      //   obj[uri].sort(function(a,b) {
+      //     if (a.offsetTop < b.offsetTop) {
+      //      return -1;
+      //     } else if (a.offsetTop > b.offsetTop){
+      //      return 1;
+      //     } else {
+      //        if (a.offsetLeft < b.offsetLeft) {
+      //         return -1;
+      //        } else if (a.offsetLeft > b.offsetLeft){
+      //         return 1;
+      //        }
+      //     }
+      //   });
+      //   var newObj = {};
+      //   newObj[uri] = obj[uri];
+      //   chrome.storage.local.set(newObj);
+      // });
     },
 
     beforeAnnotationDeleted: function(annotation) {

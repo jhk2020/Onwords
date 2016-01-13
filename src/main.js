@@ -1,9 +1,7 @@
 // Content script that runs on every new page/refresh
 
-var App = require('./components/app');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var initializeAnnotator = require('./init');
+import initializeAnnotator from './init';
+import { renderApp } from './renderApp';
 
 var code = window.location.hash.substring(1);
 var initialAnnotationsUserId;
@@ -11,22 +9,6 @@ var initialAnnotationsUserId;
 if (code.substring(code.length - 11)) {
   initialAnnotationsUserId = code.substring(0, code.length - 11);
 }
-
-var renderComponents = function() {
-  var font1 = "<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300' rel='stylesheet' type='text/css'>";
-  var font2 = "<link href='https://fonts.googleapis.com/css?family=Lato:300' rel='stylesheet' type='text/css'>";
-  var font3 = "<link href='https://fonts.googleapis.com/css?family=Libre+Baskerville' rel='stylesheet' type='text/css'>";
-  var font4 = "<link href='https://fonts.googleapis.com/css?family=Noto+Sans' rel='stylesheet' type='text/css'>";
-  $('head').after(font1);
-  $('head').after(font2);
-  $('head').after(font3);
-  $('head').after(font4);
-
-  $('body').append("<div id='annotation-sidebar'></div>");
-  $('#annotation-sidebar').append("<div id='annotation-header'></div>")
-  $('#annotation-sidebar').append("<div id='annotation-scroll'></div>")
-  ReactDOM.render(<App />, document.getElementById('annotation-scroll'));
-};
 
 var identityListener = function(changes) {
   // Check if storage change is about a new user being stored (i.e. extension is initialized)
@@ -36,7 +18,7 @@ var identityListener = function(changes) {
       initialAnnotationsUserId = changes.user.newValue.id
     }
     window.localStorage.setItem('user_id', changes.user.newValue.id);
-    renderComponents();
+    renderApp();
     initializeAnnotator(initialAnnotationsUserId);
   }
 };
@@ -50,7 +32,7 @@ chrome.storage.sync.get('user', function(obj) {
       initialAnnotationsUserId = obj.user.id;
       window.localStorage.setItem('user_id', initialAnnotationsUserId);
     }
-    renderComponents();
+    renderApp();
     initializeAnnotator(initialAnnotationsUserId);
   } else {
     // Add listener for when user-info is stored in chrome storage (i.e. user initializes Onwords)

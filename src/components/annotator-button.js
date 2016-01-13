@@ -1,17 +1,20 @@
-var React = require('react');
+import React, { Component } from 'react';
 
-var AnnotatorButton = React.createClass({
-  handleClick: function() {
-    debugger;
+export default class AnnotatorButton extends Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
     this.props.updateView('showAnnotatorView');
-  },
-  render: function() {
+  }
+
+  render() {
     return (
       <div onClick={this.handleClick} className='annotator-button-container'>
         <img className='annotator-button' src='https://cdn1.iconfinder.com/data/icons/education-set-5/512/dialogue-512.png' />
       </div>
     );
   }
-});
-
-module.exports = AnnotatorButton;
+};

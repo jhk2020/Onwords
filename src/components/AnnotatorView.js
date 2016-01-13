@@ -1,22 +1,18 @@
-import React from 'react';
-var ReactAddons = require('react/addons');
-var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
+import React, { Component } from 'react';
+import MyAnnotationsButton from './my-annotations-button';
+import FriendAnnotationList from './annotationsList';
 
-var HomeButton = require('../annotator-view/home-button');
-var AnnotatorMinimizeButton = require('../annotator-view/annotator-minimize-button');
-var MyAnnotationsButton = require('./my-annotations-button');
-var FriendAnnotationList = require('./friends-annotationList');
-
-var FriendsAnnotationsView = React.createClass({
-  getInitialState: function() {
-    return {
-      annotations: [],
+export default class AnnotatorView extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      annotations: props.annotations,
       friendsShown: {},
       friendsInfo: {}
     }
-  },
+  }
 
-  componentWillMount: function() {
+  componentWillMount() {
     var THIS = this;
     $(document).on('click', 'body', function(e) {
 
@@ -37,58 +33,59 @@ var FriendsAnnotationsView = React.createClass({
       }
       THIS.props.updateView('showAnnotatorButton');
     });
-  },
+  }
 
 
-  componentWillReceiveProps: function(nextProps) {
-    debugger;
-    if (nextProps.annotations !== this.props.annotations) {
-      var newFriends = {};
-      var oldFriends = this.state.friendsShown;
-      if (nextProps.annotations.length > 0) {
-        for (var i = 0; i < nextProps.annotations.length; i++) {
-          var user = nextProps.annotations[i].user_id;
-          newFriends[user] = {shown: true, pic: oldFriends[user].pic, name: oldFriends[user].name};
-        }
-      }
+  // componentWillReceiveProps(nextProps) {
+  //   debugger;
+  //   if (nextProps.annotations !== this.props.annotations) {
+  //     var newFriends = {};
+  //     var oldFriends = this.state.friendsShown;
+  //     if (nextProps.annotations.length > 0) {
+  //       for (var i = 0; i < nextProps.annotations.length; i++) {
+  //         var user = nextProps.annotations[i].user_id;
+  //         newFriends[user] = {shown: true, pic: oldFriends[user].pic, name: oldFriends[user].name};
+  //       }
+  //     }
+  //
+  //     for (var friend in oldFriends) {
+  //       if (newFriends[friend] === undefined) {
+  //         newFriends[friend] = {shown: false, pic: oldFriends[friend].pic, name: oldFriends[friend].name};
+  //       }
+  //     }
+  //     this.setState({annotations: nextProps.annotations, friendsShown: newFriends});
+  //   }
+  // }
 
-      for (var friend in oldFriends) {
-        if (newFriends[friend] === undefined) {
-          newFriends[friend] = {shown: false, pic: oldFriends[friend].pic, name: oldFriends[friend].name};
-        }
-      }
-      this.setState({annotations: nextProps.annotations, friendsShown: newFriends});
-    }
-  },
 
-
-  componentWillUnmount: function() {
+  componentWillUnmount() {
     $(document).off();
-  },
+  }
 
-  toggleFriendAnnotations: function(id) {
+  // toggleFriendAnnotations(id) {
+  //   debugger;
+  //   var friends = this.state.friendsShown;
+  //
+  //   if (!friends[id].shown) {
+  //     var ev = new CustomEvent('getFriendAnnotations', {detail: {userId: id}});
+  //     document.dispatchEvent(ev);
+  //   } else {
+  //     var targetAnnotations = [];
+  //     for (var i = 0; i < this.state.annotations.length; i++) {
+  //       if (this.state.annotations[i].user_id.toString() === id) {
+  //         targetAnnotations.push(this.state.annotations[i]);
+  //       }
+  //     }
+  //     var ev = new CustomEvent('deleteRender', {detail: {
+  //       targetAnnotations: targetAnnotations
+  //     }});
+  //     document.dispatchEvent(ev);
+  //   }
+  // }
+
+  render() {
     debugger;
-    var friends = this.state.friendsShown;
-
-    if (!friends[id].shown) {
-      var ev = new CustomEvent('getFriendAnnotations', {detail: {userId: id}});
-      document.dispatchEvent(ev);
-    } else {
-      var targetAnnotations = [];
-      for (var i = 0; i < this.state.annotations.length; i++) {
-        if (this.state.annotations[i].user_id.toString() === id) {
-          targetAnnotations.push(this.state.annotations[i]);
-        }
-      }
-      var ev = new CustomEvent('deleteRender', {detail: {
-        targetAnnotations: targetAnnotations
-      }});
-      document.dispatchEvent(ev);
-    }
-  },
-
-  render: function() {
-    debugger;
+    let { annotations } = this.props;
     var ownId = window.localStorage.getItem('user_id');
     var friendsArray = Object.keys(this.state.friendsShown);
     var friendsObject = this.state.friendsShown;
@@ -107,7 +104,6 @@ var FriendsAnnotationsView = React.createClass({
       <div className='friends-annotations-view-container'>
         <div className='friends-annotations-header'>
           <div className='friends-annotations-buttons-container'>
-            <AnnotatorMinimizeButton {...this.props} />
             <div className='annotations-title'>ANNOTATIONS</div>
             <MyAnnotationsButton toggleFriendAnnotations={this.toggleFriendAnnotations} />
           </div>
@@ -119,13 +115,13 @@ var FriendsAnnotationsView = React.createClass({
         </div>
         <br></br>
           <div className='friends-annotations-list'>
-            {this.state.annotations.length > 0 ? <FriendAnnotationList {...this.props} friends={this.state.friendsShown} annotations={this.state.annotations}/> : null}
+            {this.state.annotations.length > 0 ? <FriendAnnotationList {...this.props} friends={this.state.friendsShown} annotations={this.props.annotations}/> : null}
           </div>
       </div>
     );
-  },
+  }
 
-  componentDidMount: function() {
+  componentDidMount() {
     debugger;
     var self = this;
     var ownId = window.localStorage.getItem('user_id');
@@ -164,6 +160,4 @@ var FriendsAnnotationsView = React.createClass({
       })
 
   }
-});
-
-module.exports = FriendsAnnotationsView;
+};

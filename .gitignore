@@ -4,3 +4,4 @@ node_modules/
 /extension/dependencies
 /extension/dist
 npm-debug.log
+/extension/config.js

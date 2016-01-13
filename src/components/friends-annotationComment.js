@@ -28,6 +28,6 @@ var friendAnnotationComment = React.createClass({
       </div>
     )
   }
-})
+});
 
 module.exports = friendAnnotationComment;
