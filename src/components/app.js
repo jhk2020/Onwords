@@ -118,7 +118,7 @@ export default class App extends Component {
     return (
       <div className='app-container'>
         { !annotatorShown ? <AnnotatorButton updateView={showAnnotator} />
-      : <AnnotatorView annotations={annotations} changeSpotlight={this.changeSpotlight} spotlight={this.state.spotlight} updateView={showAnnotator} />
+      : <AnnotatorView annotations={annotations} changeSpotlight={this.changeSpotlight} updateView={showAnnotator} />
         }
       </div>
     );

@@ -11,3 +11,10 @@ export function loadAnns(annotations) {
     annotations
   }
 }
+
+export function deleteAnn(annotation) {
+  return {
+    type: 'DELETE_ANNOTATION',
+    annotation
+  }
+}

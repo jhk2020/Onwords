@@ -22105,6 +22105,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.createAnn = createAnn;
 exports.loadAnns = loadAnns;
+exports.deleteAnn = deleteAnn;
 function createAnn(annotation) {
   return {
     type: 'CREATE_ANNOTATION',
@@ -22116,6 +22117,13 @@ function loadAnns(annotations) {
   return {
     type: 'LOAD_ANNOTATIONS',
     annotations: annotations
+  };
+}
+
+function deleteAnn(annotation) {
+  return {
+    type: 'DELETE_ANNOTATION',
+    annotation: annotation
   };
 }
 
@@ -22509,7 +22517,7 @@ var App = function (_Component) {
       return _react2.default.createElement(
         'div',
         { className: 'app-container' },
-        !annotatorShown ? _react2.default.createElement(_annotatorButton2.default, { updateView: showAnnotator }) : _react2.default.createElement(_AnnotatorView2.default, { annotations: annotations, changeSpotlight: this.changeSpotlight, spotlight: this.state.spotlight, updateView: showAnnotator })
+        !annotatorShown ? _react2.default.createElement(_annotatorButton2.default, { updateView: showAnnotator }) : _react2.default.createElement(_AnnotatorView2.default, { annotations: annotations, changeSpotlight: this.changeSpotlight, updateView: showAnnotator })
       );
     }
   }]);
@@ -22654,16 +22662,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var ReactCSSTransitionGroup = _react2.default.addons.CSSTransitionGroup;
 
-var friendsAnnotationList = function (_Component) {
-  _inherits(friendsAnnotationList, _Component);
+var AnnotationsList = function (_Component) {
+  _inherits(AnnotationsList, _Component);
 
-  function friendsAnnotationList(props) {
-    _classCallCheck(this, friendsAnnotationList);
+  function AnnotationsList(props) {
+    _classCallCheck(this, AnnotationsList);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(friendsAnnotationList).call(this, props));
+    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(AnnotationsList).call(this, props));
 
     _this.state = {
-      annotations: [],
       spotlight: '',
       spotlightOn: false,
       userInfo: {}
@@ -22671,7 +22678,7 @@ var friendsAnnotationList = function (_Component) {
     return _this;
   }
 
-  _createClass(friendsAnnotationList, [{
+  _createClass(AnnotationsList, [{
     key: 'deleteAnn',
     value: function deleteAnn(annotation) {
       var ev = new CustomEvent('deleteAnnotation', { detail: {
@@ -22719,26 +22726,27 @@ var friendsAnnotationList = function (_Component) {
   }, {
     key: 'componentWillMount',
     value: function componentWillMount() {
-      var newSpotlight = '';
-      if (this.props.spotlight !== '') {
-        newSpotlight = this.props.spotlight;
-        this.highlight(newSpotlight);
-      };
-      this.setState({ annotations: this.props.annotations, spotlight: newSpotlight });
+      // var newSpotlight = '';
+      // if (this.props.spotlight !== '') {
+      //   newSpotlight = this.props.spotlight;
+      //   this.highlight(newSpotlight);
+      // };
+      // this.setState({annotations: this.props.annotations, spotlight: newSpotlight});
     }
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
-
-      if (nextProps.spotlight !== this.state.spotlight) {
-        if (this.state.spotlight !== '') {
-          this.unhighlight();
-        }
-        if (nextProps.spotlight !== '') {
-          this.highlight(nextProps.spotlight);
-        }
-      }
-      this.setState({ annotations: nextProps.annotations, spotlight: nextProps.spotlight });
+      //
+      //   if (nextProps.spotlight !== this.state.spotlight) {
+      //     if (this.state.spotlight !== '') {
+      //       this.unhighlight();
+      //     }
+      //     if (nextProps.spotlight !== '') {
+      //       this.highlight(nextProps.spotlight);
+      //     }
+      //
+      //   }
+      //   this.setState({annotations: nextProps.annotations, spotlight: nextProps.spotlight});
     }
   }, {
     key: 'componentWillUnmount',
@@ -22765,7 +22773,7 @@ var friendsAnnotationList = function (_Component) {
     value: function render() {
       var ownId = window.localStorage.getItem('user_id');
       var friends = this.props.friends;
-      var annotations = this.state.annotations;
+      var annotations = this.props.annotations;
       var self = this;
 
       var annotationList = annotations.map(function (annotation, index) {
@@ -22797,10 +22805,10 @@ var friendsAnnotationList = function (_Component) {
     }
   }]);
 
-  return friendsAnnotationList;
+  return AnnotationsList;
 }(_react.Component);
 
-exports.default = friendsAnnotationList;
+exports.default = AnnotationsList;
 ;
 
 },{"./annotationComment":201,"./friends-annotationComment":204,"react":186,"react/addons":12}],203:[function(require,module,exports){
@@ -23039,18 +23047,19 @@ var customAnnotationsModule = function customAnnotationsModule() {
     },
 
     beforeAnnotationDeleted: function beforeAnnotationDeleted(annotation) {
-      var id = annotation.id;
-      $('[data-annotation-id=' + id + ']').contents().unwrap();
-      chrome.storage.local.get(uri, function (obj) {
-        for (var i = 0; i < obj[uri].length; i++) {
-          if (obj[uri][i].id === annotation.id) {
-            obj[uri].splice(i, 1);
-            var newObj = {};
-            newObj[uri] = obj[uri];
-            chrome.storage.local.set(newObj);
-          }
-        }
-      });
+      _renderApp.store.dispatch((0, _annotationsAction.deleteAnn)(annotation));
+      // var id = annotation.id;
+      // $('[data-annotation-id=' + id + ']').contents().unwrap();
+      // chrome.storage.local.get(uri, function(obj) {
+      //   for (var i = 0; i < obj[uri].length; i++) {
+      //     if (obj[uri][i].id === annotation.id) {
+      //       obj[uri].splice(i, 1);
+      //       var newObj = {};
+      //       newObj[uri] = obj[uri];
+      //       chrome.storage.local.set(newObj);
+      //     }
+      //   }
+      // });
     },
 
     // For toggling highlights
@@ -23232,6 +23241,15 @@ function annotations() {
     case 'CREATE_ANNOTATION':
       var newState = state.slice().concat([action.annotation]);
       return sortAnnotations(newState);
+
+    case 'DELETE_ANNOTATION':
+      var id = action.annotation.id;
+      $('[data-annotation-id=' + id + ']').contents().unwrap();
+      var newAnnotations = state.slice();
+      var deleteIndex = newAnnotations.indexOf(action.annotation);
+      newAnnotations.splice(deleteIndex, 1);
+      return newAnnotations;
+
     default:
       return state;
   }

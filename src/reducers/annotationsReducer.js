@@ -18,12 +18,21 @@ const sortAnnotations = function(arr) {
 export default function annotations (state = [], action) {
   switch (action.type) {
     case 'LOAD_ANNOTATIONS':
-      const annotations = state.slice().concat(action.annotations);
+      let annotations = state.slice().concat(action.annotations);
       return sortAnnotations(annotations);
 
     case 'CREATE_ANNOTATION':
-      var newState = state.slice().concat([action.annotation]);
+      let newState = state.slice().concat([action.annotation]);
       return sortAnnotations(newState);
+
+    case 'DELETE_ANNOTATION':
+      let id = action.annotation.id;
+      $('[data-annotation-id=' + id + ']').contents().unwrap();
+      let newAnnotations = state.slice();
+      let deleteIndex = newAnnotations.indexOf(action.annotation);
+      newAnnotations.splice(deleteIndex, 1);
+      return newAnnotations;
+
     default:
       return state;
   }

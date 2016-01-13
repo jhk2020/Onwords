@@ -6,11 +6,10 @@ import AnnotationComment from './annotationComment';
 import FriendAnnotationComment from './friends-annotationComment';
 
 
-export default class friendsAnnotationList extends Component {
+export default class AnnotationsList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      annotations: [],
       spotlight: '',
       spotlightOn: false,
       userInfo: {}
@@ -59,26 +58,26 @@ export default class friendsAnnotationList extends Component {
   }
 
   componentWillMount() {
-    var newSpotlight = '';
-    if (this.props.spotlight !== '') {
-      newSpotlight = this.props.spotlight;
-      this.highlight(newSpotlight);
-    };
-    this.setState({annotations: this.props.annotations, spotlight: newSpotlight});
+    // var newSpotlight = '';
+    // if (this.props.spotlight !== '') {
+    //   newSpotlight = this.props.spotlight;
+    //   this.highlight(newSpotlight);
+    // };
+    // this.setState({annotations: this.props.annotations, spotlight: newSpotlight});
   }
 
   componentWillReceiveProps(nextProps) {
-
-    if (nextProps.spotlight !== this.state.spotlight) {
-      if (this.state.spotlight !== '') {
-        this.unhighlight();
-      }
-      if (nextProps.spotlight !== '') {
-        this.highlight(nextProps.spotlight);
-      }
-
-    }
-    this.setState({annotations: nextProps.annotations, spotlight: nextProps.spotlight});
+  //
+  //   if (nextProps.spotlight !== this.state.spotlight) {
+  //     if (this.state.spotlight !== '') {
+  //       this.unhighlight();
+  //     }
+  //     if (nextProps.spotlight !== '') {
+  //       this.highlight(nextProps.spotlight);
+  //     }
+  //
+  //   }
+  //   this.setState({annotations: nextProps.annotations, spotlight: nextProps.spotlight});
   }
 
   componentWillUnmount() {
@@ -102,7 +101,7 @@ export default class friendsAnnotationList extends Component {
   render() {
     var ownId = window.localStorage.getItem('user_id');
     var friends = this.props.friends;
-    var annotations = this.state.annotations;
+    var annotations = this.props.annotations;
     var self = this;
 
 

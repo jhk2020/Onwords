@@ -1,5 +1,5 @@
 import { store } from './renderApp';
-import { loadAnns, createAnn } from './actions/annotationsAction';
+import { loadAnns, createAnn, deleteAnn } from './actions/annotationsAction';
 
 var customAnnotationsModule = function() {
   // Grab the URI of the page
@@ -49,18 +49,19 @@ var customAnnotationsModule = function() {
     },
 
     beforeAnnotationDeleted: function(annotation) {
-      var id = annotation.id;
-      $('[data-annotation-id=' + id + ']').contents().unwrap();
-      chrome.storage.local.get(uri, function(obj) {
-        for (var i = 0; i < obj[uri].length; i++) {
-          if (obj[uri][i].id === annotation.id) {
-            obj[uri].splice(i, 1);
-            var newObj = {};
-            newObj[uri] = obj[uri];
-            chrome.storage.local.set(newObj);
-          }
-        }
-      });
+      store.dispatch(deleteAnn(annotation));
+      // var id = annotation.id;
+      // $('[data-annotation-id=' + id + ']').contents().unwrap();
+      // chrome.storage.local.get(uri, function(obj) {
+      //   for (var i = 0; i < obj[uri].length; i++) {
+      //     if (obj[uri][i].id === annotation.id) {
+      //       obj[uri].splice(i, 1);
+      //       var newObj = {};
+      //       newObj[uri] = obj[uri];
+      //       chrome.storage.local.set(newObj);
+      //     }
+      //   }
+      // });
     },
 
     // For toggling highlights
