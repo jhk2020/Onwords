@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import MyAnnotationsButton from './my-annotations-button';
 import FriendAnnotationList from './annotationsList';
+import FriendsCarousel from '../containers/FriendsCarouselContainer';
 
 export default class AnnotatorView extends Component {
   constructor(props) {
@@ -77,31 +78,17 @@ export default class AnnotatorView extends Component {
   }
 
   render() {
-    let { annotations, friends } = this.props;
-    console.log(this.props.userInfo)
-    var ownId = window.localStorage.getItem('user_id');
-    var friendsArray = Object.keys(friends);
-
-    var friendCarousel = friendsArray.map(function(friend, index) {
-      if (friend !== ownId) {
-        return (
-          <img key={index} data-id={friend} onClick={this.toggleFriendAnnotations.bind(null, friend)} className='friends-pic' src={friends[friend].pic} />
-        )
-      }
-    }.bind(this));
-
+    let {annotations} = this.props;
     return (
       <div className='friends-annotations-view-container'>
         <div className='friends-annotations-header'>
           <div className='friends-annotations-buttons-container'>
             <div className='annotations-title'>ANNOTATIONS</div>
-            <MyAnnotationsButton toggleFriendAnnotations={this.toggleFriendAnnotations} />
+            <MyAnnotationsButton />
           </div>
 
           <div className='friends-heading'>People You Follow</div>
-          <div className='friends-container'>
-            {friendCarousel}
-          </div>
+            <FriendsCarousel />
         </div>
         <br></br>
           <div className='friends-annotations-list'>

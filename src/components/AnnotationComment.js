@@ -25,6 +25,7 @@ var annotationComment = React.createClass({
 
   render: function() {
     var userInfo = this.props.userInfo;
+    console.log(userInfo.pic)
     var userColor = $('span[data-annotation-id="' + this.props.annotation.id + '"]').css('background-color');
     var divStyle = {
       borderLeft: '4px solid ' + userColor

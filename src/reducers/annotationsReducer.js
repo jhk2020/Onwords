@@ -32,7 +32,12 @@ export default function annotations (state = [], action) {
       let deleteIndex = newAnnotations.indexOf(action.annotation);
       newAnnotations.splice(deleteIndex, 1);
       return newAnnotations;
-
+    case 'TOGGLE_OFF_FRIEND_ANNOTATIONS':
+      let friendId = action.friendId;
+      let filteredState = state.filter(function(annotation) {
+        return !(annotation.user_id.toString() === friendId);
+      });
+      return filteredState;
     default:
       return state;
   }

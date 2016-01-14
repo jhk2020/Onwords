@@ -12,14 +12,14 @@ var MyAnnotationsButton = React.createClass({
           pic_url: data.user.picUrl,
           username: data.user.fullName,
           description: data.user.description || 'OnWords  !!  '
-        });  
+        });
       }.bind(this));
   },
   handleClick: function() {
     var ownId = window.localStorage.getItem('user_id');
-    this.props.toggleFriendAnnotations(ownId);
-  }, 
-  render: function() {   
+    // this.props.toggleFriendAnnotations(ownId);
+  },
+  render: function() {
     return (
       <div onClick={this.handleClick} className='my-annotations-button-container'>
         <img className='my-annotations-button' src={this.state.pic_url} />

@@ -4882,9 +4882,9 @@ function main(options) {
         })
 
         // Get rid of highlights (i.e. toggle)
-        document.addEventListener('deleteRender', function(e) {
-          app.annotations.deleteRender(e.detail.targetAnnotations);
-        });
+        // document.addEventListener('deleteRender', function(e) {
+        //   app.annotations.deleteRender(e.detail.targetAnnotations);
+        // });
 // /Onwords
 
     }

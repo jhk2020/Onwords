@@ -1,4 +1,3 @@
-// import { store } from './renderApp';
 import { loadAnns, createAnn, deleteAnn } from './actions/annotationsAction';
 
 var customAnnotationsModule = function(store) {
@@ -24,64 +23,30 @@ var customAnnotationsModule = function(store) {
 
     annotationCreated: function(annotation) {
       store.dispatch(createAnn(annotation));
-      // chrome.storage.local.get(uri, function(obj) {
-      //   if (!obj[uri]) {
-      //     obj[uri] = [];
-      //   }
-      //   obj[uri].push(annotation);
-      //   obj[uri].sort(function(a,b) {
-      //     if (a.offsetTop < b.offsetTop) {
-      //      return -1;
-      //     } else if (a.offsetTop > b.offsetTop){
-      //      return 1;
-      //     } else {
-      //        if (a.offsetLeft < b.offsetLeft) {
-      //         return -1;
-      //        } else if (a.offsetLeft > b.offsetLeft){
-      //         return 1;
-      //        }
-      //     }
-      //   });
-      //   var newObj = {};
-      //   newObj[uri] = obj[uri];
-      //   chrome.storage.local.set(newObj);
-      // });
     },
 
     beforeAnnotationDeleted: function(annotation) {
       store.dispatch(deleteAnn(annotation));
-      // var id = annotation.id;
-      // $('[data-annotation-id=' + id + ']').contents().unwrap();
-      // chrome.storage.local.get(uri, function(obj) {
-      //   for (var i = 0; i < obj[uri].length; i++) {
-      //     if (obj[uri][i].id === annotation.id) {
-      //       obj[uri].splice(i, 1);
-      //       var newObj = {};
-      //       newObj[uri] = obj[uri];
-      //       chrome.storage.local.set(newObj);
-      //     }
-      //   }
-      // });
     },
 
     // For toggling highlights
-    beforeRenderDeleted: function(annotations) {
-      chrome.storage.local.get(uri, function(obj) {
-        for (var i = 0; i < annotations.length; i++) {
-          var id = annotations[i].id;
-          $('[data-annotation-id=' + id + ']').contents().unwrap();
-          for (var j = 0; j < obj[uri].length; j++) {
-            if (obj[uri][j].id === id) {
-              obj[uri].splice(j, 1);
-              break;
-            }
-          }
-        }
-        var newObj = {};
-        newObj[uri] = obj[uri];
-        chrome.storage.local.set(newObj);
-      });
-    },
+    // beforeRenderDeleted: function(annotations) {
+    //   chrome.storage.local.get(uri, function(obj) {
+    //     for (var i = 0; i < annotations.length; i++) {
+    //       var id = annotations[i].id;
+    //       $('[data-annotation-id=' + id + ']').contents().unwrap();
+    //       for (var j = 0; j < obj[uri].length; j++) {
+    //         if (obj[uri][j].id === id) {
+    //           obj[uri].splice(j, 1);
+    //           break;
+    //         }
+    //       }
+    //     }
+    //     var newObj = {};
+    //     newObj[uri] = obj[uri];
+    //     chrome.storage.local.set(newObj);
+    //   });
+    // },
 
     beforeAnnotationUpdated: function(annotation) {
       chrome.storage.local.get(uri, function(obj) {

@@ -26,12 +26,12 @@ var identityListener = function(changes) {
     }
     window.localStorage.setItem('user_id', initialAnnotationsUserId);
 
-    initialState.userInfo[initialAnnotationsUserId] = {
+    initialState.userInfo = {
+      id: changes.user.newValue.id,
       shown: true,
       pic: changes.user.newValue.picUrl,
       name: changes.user.newValue.fullName
     }
-    console.log(initialState);
     const store = configStore(initialState);
     renderApp(store);
     initializeAnnotator(initialAnnotationsUserId, store);
@@ -47,10 +47,11 @@ chrome.storage.sync.get('user', function(obj) {
       initialAnnotationsUserId = obj.user.id;
       window.localStorage.setItem('user_id', initialAnnotationsUserId);
     }
-    initialState.userInfo[initialAnnotationsUserId] = {
+    initialState.userInfo = {
+      id: obj.user.id,
       shown: true,
-      pic: changes.user.newValue.picUrl,
-      name: changes.user.newValue.fullName
+      pic: obj.user.picUrl,
+      name: obj.user.fullName
     }
     const store = configStore(initialState);
     renderApp(store);

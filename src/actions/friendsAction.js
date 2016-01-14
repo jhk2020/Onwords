@@ -1,10 +1,3 @@
-export function toggleFriend(friend) {
-  return {
-    type: 'TOGGLE_FRIEND',
-    friend
-  }
-}
-
 export function fetchFriends(friends) {
   return {
     type: 'FETCH_FRIENDS',
