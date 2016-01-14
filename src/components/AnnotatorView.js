@@ -5,14 +5,10 @@ import FriendAnnotationList from './annotationsList';
 export default class AnnotatorView extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      friendsShown: {}
-    }
   }
 
   componentWillMount() {
     $(document).on('click', 'body', function(e) {
-
       if (e.target.className === 'annotator-button') {
         return;
       }
@@ -28,7 +24,6 @@ export default class AnnotatorView extends Component {
           e.preventDefault();
           return;
       }
-
       this.props.updateView();
     }.bind(this));
   }
@@ -60,12 +55,12 @@ export default class AnnotatorView extends Component {
     $(document).off();
   }
 
-  // toggleFriendAnnotations(id) {
+  toggleFriendAnnotations(id) {
   //   debugger;
   //   var friends = this.state.friendsShown;
   //
   //   if (!friends[id].shown) {
-  //     var ev = new CustomEvent('getFriendAnnotations', {detail: {userId: id}});
+      var ev = new CustomEvent('getFriendAnnotations', {detail: {userId: id}});
   //     document.dispatchEvent(ev);
   //   } else {
   //     var targetAnnotations = [];
@@ -74,27 +69,26 @@ export default class AnnotatorView extends Component {
   //         targetAnnotations.push(this.state.annotations[i]);
   //       }
   //     }
-  //     var ev = new CustomEvent('deleteRender', {detail: {
-  //       targetAnnotations: targetAnnotations
-  //     }});
+      var ev = new CustomEvent('deleteRender', {detail: {
+        targetAnnotations: targetAnnotations
+      }});
   //     document.dispatchEvent(ev);
   //   }
-  // }
+  }
 
   render() {
     let { annotations, friends } = this.props;
+    console.log(this.props.userInfo)
     var ownId = window.localStorage.getItem('user_id');
-    var friendsArray = Object.keys(this.state.friendsShown);
-    var friendsObject = this.state.friendsShown;
-    var self = this;
+    var friendsArray = Object.keys(friends);
 
-    var friendCarousel = friends.map(function(friend, index) {
-      if (friend.id !== ownId) {
+    var friendCarousel = friendsArray.map(function(friend, index) {
+      if (friend !== ownId) {
         return (
-          <img key={index} data-id={friend.id} className='friends-pic' src={friend.pic_url} />
+          <img key={index} data-id={friend} onClick={this.toggleFriendAnnotations.bind(null, friend)} className='friends-pic' src={friends[friend].pic} />
         )
       }
-    });
+    }.bind(this));
 
     return (
       <div className='friends-annotations-view-container'>
@@ -111,23 +105,23 @@ export default class AnnotatorView extends Component {
         </div>
         <br></br>
           <div className='friends-annotations-list'>
-            {annotations.length > 0 ? <FriendAnnotationList {...this.props} friends={this.state.friendsShown} annotations={annotations}/> : null}
+            {annotations.length > 0 ? <FriendAnnotationList {...this.props} /> : null}
           </div>
       </div>
     );
   }
 
-  componentDidMount() {
-    var ownId = window.localStorage.getItem('user_id');
-    var uri = window.location.href.split("?")[0];
-    if (uri.substring(uri.length-11) === 'onwords1991') {
-      uri = uri.substring(0, uri.length-13);
-    } else {
-      uri = uri;
-    }
-
-    var annotations = [];
-    var friendsShown = {};
+  // componentDidMount() {
+    // var ownId = window.localStorage.getItem('user_id');
+    // var uri = window.location.href.split("?")[0];
+    // if (uri.substring(uri.length-11) === 'onwords1991') {
+    //   uri = uri.substring(0, uri.length-13);
+    // } else {
+    //   uri = uri;
+    // }
+    //
+    // var annotations = [];
+    // var friendsShown = {};
 
     // Sort through other friends that have annotated the same page / friends whose annotations are showing
     // $.get('https://test2server.herokuapp.com/api/users/uri/annotations', {uri: uri, user_id: ownId})
@@ -153,5 +147,5 @@ export default class AnnotatorView extends Component {
     //     this.setState({annotations: annotations, friendsShown: friendsShown});
     //   }.bind(this))
 
-  }
+  // }
 };

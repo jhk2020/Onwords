@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import App from '../components/App';
 import showAnnotator from '../actions/showAnnotatorAction';
-import { fetchFriends } from '../actions/friendsAction';
+import { fetchFriendsAsync, toggleFriend } from '../actions/friendsAction';
 
 function mapStateToProps(state) {
   return {
     annotations: state.annotations,
     annotatorShown: state.annotatorShown,
-    friends: state.friends
+    friends: state.friends,
+    userInfo: state.userInfo
   }
 }
 
@@ -18,7 +19,10 @@ function mapDispatchToProps(dispatch) {
       dispatch(showAnnotator());
     },
     fetchFriends: () => {
-      dispatch(fetchFriends());
+      dispatch(fetchFriendsAsync());
+    },
+    toggleFriend: () => {
+      dispatch(toggleFriend());
     }
   }
 }

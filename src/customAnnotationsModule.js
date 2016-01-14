@@ -1,7 +1,7 @@
-import { store } from './renderApp';
+// import { store } from './renderApp';
 import { loadAnns, createAnn, deleteAnn } from './actions/annotationsAction';
 
-var customAnnotationsModule = function() {
+var customAnnotationsModule = function(store) {
   // Grab the URI of the page
   var uri = window.location.href.split("?")[0];
   var targetUri;

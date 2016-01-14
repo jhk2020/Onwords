@@ -1,11 +1,18 @@
-export function sortFriends(friends) {
+export function toggleFriend(friend) {
   return {
-    type: 'SORT_FRIENDS',
+    type: 'TOGGLE_FRIEND',
+    friend
+  }
+}
+
+export function fetchFriends(friends) {
+  return {
+    type: 'FETCH_FRIENDS',
     friends
   }
 }
 
-export function fetchFriends() {
+export function fetchFriendsAsync() {
   return (dispatch) => {
     var firstUserId = window.localStorage.getItem('user_id');
     var uri = window.location.href.split("?")[0];
@@ -17,8 +24,7 @@ export function fetchFriends() {
 
     $.get('https://test2server.herokuapp.com/api/users/uri/annotations', {uri: uri, user_id: firstUserId})
       .done(function(friends) {
-        console.log('friends: ', friends);
-        dispatch(sortFriends(friends));
-      })
+        dispatch(fetchFriends(friends));
+      });
   }
 }

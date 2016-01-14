@@ -4,9 +4,9 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import configStore from './store/configStore';
 
-export const store = configStore();
+// export const store = configStore();
 
-export const renderApp = function() {
+export const renderApp = function(store) {
   var font1 = "<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300' rel='stylesheet' type='text/css'>";
   var font2 = "<link href='https://fonts.googleapis.com/css?family=Lato:300' rel='stylesheet' type='text/css'>";
   var font3 = "<link href='https://fonts.googleapis.com/css?family=Libre+Baskerville' rel='stylesheet' type='text/css'>";

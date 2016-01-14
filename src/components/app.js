@@ -28,7 +28,7 @@ export default class App extends Component {
             $('#annotation-sidebar').animate({right: -(300)}, {queue: false, duration: 200});
             // $('#annotation-header').animate({width: '300px'}, {queue: false, duration: 200});
 
-        }, 130);
+        }, 100);
         // }, 130)
       // });
     }
@@ -108,17 +108,19 @@ export default class App extends Component {
     // });
   }
 
-  changeSpotlight(annotation) {
-    debugger;
-    this.setState({spotlight: annotation});
-  }
+  // changeSpotlight(annotation) {
+  //   debugger;
+  //   this.setState({spotlight: annotation});
+  // }
 
   render() {
-    const { annotations, annotatorShown, showAnnotator, friends } = this.props;
+    let { annotations, annotatorShown, showAnnotator, friends, userInfo } = this.props;
+    console.log(userInfo)
     return (
       <div className='app-container'>
-        { !annotatorShown ? <AnnotatorButton updateView={showAnnotator} />
-      : <AnnotatorView annotations={annotations} changeSpotlight={this.changeSpotlight} updateView={showAnnotator} friends={friends}/>
+        { !annotatorShown ?
+          <AnnotatorButton updateView={showAnnotator} />
+        : <AnnotatorView userInfo={userInfo} annotations={annotations} updateView={showAnnotator} friends={friends}/>
         }
       </div>
     );

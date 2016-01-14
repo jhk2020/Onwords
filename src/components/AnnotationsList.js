@@ -87,40 +87,38 @@ export default class AnnotationsList extends Component {
   }
 
   componentDidMount () {
-    chrome.storage.sync.get('user',function(data){
-      var info = {
-        pic_url: data.user.picUrl,
-        username: data.user.fullName,
-        description: data.user.description || 'OnWords  !!  '
-      }
-      this.setState({userInfo: info});
-    }.bind(this));
+    // chrome.storage.sync.get('user',function(data){
+    //   var info = {
+    //     pic_url: data.user.picUrl,
+    //     username: data.user.fullName,
+    //     description: data.user.description || 'OnWords  !!  '
+    //   }
+    //   this.setState({userInfo: info});
+    // }.bind(this));
   }
 
   render() {
     var ownId = window.localStorage.getItem('user_id');
-    var friends = this.props.friends;
-    var annotations = this.props.annotations;
-    var self = this;
-
+    let { userInfo, friends, annotations } = this.props;
+    console.log(userInfo)
 
     var annotationList = annotations.map(function(annotation, index) {
       var user = annotation.user_id;
-        if (friends[user]) {
-          console.log('friend is', friends[user]);
+        // if (friends[user]) {
+          // console.log('friend is', friends[user]);
           return (
             <div key={index}>
               <li className="annotationListItem">
                 {user.toString() === ownId ?
-                  <AnnotationComment userInfo={self.state.userInfo} clickHandler={self.clickHandler} user={annotation.user_id} annotation={annotation} deleteAnn={self.deleteAnn} />
-                : <FriendAnnotationComment username={friends[user].name} userpic={friends[user].pic} spotlight={self.state.spotlight} clickHandler={self.clickHandler} user={annotation.user} annotation={annotation}/>
+                  <AnnotationComment userInfo={userInfo} clickHandler={this.clickHandler} user={annotation.user_id} annotation={annotation} deleteAnn={this.deleteAnn} />
+                : <FriendAnnotationComment friendInfo = {friends[user]} spotlight={this.state.spotlight} clickHandler={this.clickHandler} user={annotation.user} annotation={annotation}/>
                 }
               </li>
               <br></br>
             </div>
           )
-        }
-    });
+        // }
+    }.bind(this));
 
 
     return (

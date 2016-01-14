@@ -1,6 +1,6 @@
 var customAnnotationsModule = require('./customAnnotationsModule');
 
-var initializeAnnotator = function(initialAnnotationsUserId) {
+var initializeAnnotator = function(initialAnnotationsUserId, store) {
   // Grab the URI to store in chrome storage (local) for reference
   var uri = window.location.href.split("?")[0];
   var targetUri;
@@ -25,7 +25,7 @@ var initializeAnnotator = function(initialAnnotationsUserId) {
         search: '/api/search'
       }
     })
-   .include(customAnnotationsModule);
+   .include(customAnnotationsModule, store);
 
    // Start the app and load the annotations
    app.start()

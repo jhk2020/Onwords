@@ -48,7 +48,7 @@ var annotationComment = React.createClass({
 
     return (
       <div onClick={clickHandler} className="annotation" style={divStyle}>
-        <img className='annotation-friends-pic' src={userInfo.pic_url} />
+        <img className='annotation-friends-pic' src={userInfo.pic} />
         <p className='username'> Me </p>
         {!this.state.shouldEditComment ? <p className='annotation-text'>{annotation.text}</p> :
           <form>

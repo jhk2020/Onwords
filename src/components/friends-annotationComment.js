@@ -1,13 +1,13 @@
-var React = require('react');
+import React, { Component } from 'react';
 
-var friendAnnotationComment = React.createClass({
+export default class friendAnnotationComment extends Component {
+  render() {
+    const { friendInfo, annotation } = this.props;
+    const username = friendInfo.username;
+    const userpic = friendInfo.userpic;
 
-
-  render: function() {
-    var username = this.props.username;
-    var userpic = this.props.userpic;
-    var annotation = this.props.annotation;
     var self = this;
+
     var clickHandler = function() {
       self.props.clickHandler(annotation);
     };
@@ -28,6 +28,4 @@ var friendAnnotationComment = React.createClass({
       </div>
     )
   }
-});
-
-module.exports = friendAnnotationComment;
+};
