@@ -9,7 +9,19 @@ export function checkSpotlight(newSpotlight) {
   }
 }
 
-export function mountSpotlight(newSpotlight) {
+export function checkSpotlightFromHighlights(newSpotlight) {
+  return (dispatch, getState) => {
+    const { annotatorShown } = getState();
+    if (!annotatorShown) {
+      dispatch(mountSpotlight(newSpotlight));
+    } else {
+      dispatch(checkSpotlight(newSpotlight));
+    }
+  }
+
+}
+
+function mountSpotlight(newSpotlight) {
   return {
     type: 'MOUNT_SPOTLIGHT',
     newSpotlight

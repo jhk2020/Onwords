@@ -8,7 +8,8 @@ function mapStateToProps(state) {
   return {
     userInfo: state.userInfo,
     friends: state.friends,
-    annotations: state.annotations
+    annotations: state.annotations,
+    spotlight: state.spotlight
   }
 }
 

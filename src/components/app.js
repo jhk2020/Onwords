@@ -64,7 +64,7 @@ export default class App extends Component {
 
   componentDidMount() {
     document.addEventListener('spotlightAnnotation', function(e) {
-      this.props.mountSpotlight(e.detail.targetAnnotation);
+      this.props.checkSpotlightFromHighlights(e.detail.targetAnnotation);
     //   this.setState({spotlight: e.detail.targetAnnotation});
     //   this.updateView('showAnnotatorView');
     }.bind(this));

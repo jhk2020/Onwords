@@ -22223,7 +22223,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.checkSpotlight = checkSpotlight;
-exports.mountSpotlight = mountSpotlight;
+exports.checkSpotlightFromHighlights = checkSpotlightFromHighlights;
 exports.unmountSpotlight = unmountSpotlight;
 function checkSpotlight(newSpotlight) {
   return function (dispatch, getState) {
@@ -22235,6 +22235,20 @@ function checkSpotlight(newSpotlight) {
       dispatch(moveToSpotlight());
     } else {
       dispatch(changeHighlights(newSpotlight));
+    }
+  };
+}
+
+function checkSpotlightFromHighlights(newSpotlight) {
+  return function (dispatch, getState) {
+    var _getState2 = getState();
+
+    var annotatorShown = _getState2.annotatorShown;
+
+    if (!annotatorShown) {
+      dispatch(mountSpotlight(newSpotlight));
+    } else {
+      dispatch(checkSpotlight(newSpotlight));
     }
   };
 }
@@ -22730,7 +22744,7 @@ var App = function (_Component) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       document.addEventListener('spotlightAnnotation', function (e) {
-        this.props.mountSpotlight(e.detail.targetAnnotation);
+        this.props.checkSpotlightFromHighlights(e.detail.targetAnnotation);
         //   this.setState({spotlight: e.detail.targetAnnotation});
         //   this.updateView('showAnnotatorView');
       }.bind(this));
@@ -22976,26 +22990,27 @@ var MyAnnotationComment = function (_Component) {
       var userInfo = _props.userInfo;
       var annotation = _props.annotation;
       var checkSpotlight = _props.checkSpotlight;
+      var deleteAnn = _props.deleteAnn;
 
       var userColor = $('span[data-annotation-id="' + annotation.id + '"]').css('background-color');
       var divStyle = {
         borderLeft: '4px solid ' + userColor
       };
 
-      var clickHandler = function clickHandler(e) {
+      var checkSpotlightOnClick = function checkSpotlightOnClick(e) {
         if (e.target.className !== 'comment-delete-button') {
           checkSpotlight(annotation);
         }
       };
 
-      var deleteAnn = function deleteAnn(e) {
+      var deleteOnClick = function deleteOnClick(e) {
         e.stopPropagation();
-        self.props.deleteAnn(annotation);
+        deleteAnn(annotation);
       };
 
       return _react2.default.createElement(
         'div',
-        { onClick: clickHandler, className: 'annotation', style: divStyle },
+        { onClick: checkSpotlightOnClick, className: 'annotation', style: divStyle },
         _react2.default.createElement('img', { className: 'annotation-friends-pic', src: userInfo.pic }),
         _react2.default.createElement(
           'p',
@@ -23025,7 +23040,7 @@ var MyAnnotationComment = function (_Component) {
           { className: 'modify-comment-container' },
           _react2.default.createElement(
             'button',
-            { className: 'comment-delete-button', onClick: deleteAnn },
+            { className: 'comment-delete-button', onClick: deleteOnClick },
             'Remove'
           ),
           _react2.default.createElement(
@@ -23185,8 +23200,8 @@ function mapDispatchToProps(dispatch) {
     toggleFriend: function toggleFriend() {
       dispatch((0, _friendsAction.toggleFriend)());
     },
-    mountSpotlight: function mountSpotlight(newSpotlight) {
-      dispatch((0, _spotlightAction.mountSpotlight)(newSpotlight));
+    checkSpotlightFromHighlights: function checkSpotlightFromHighlights(newSpotlight) {
+      dispatch((0, _spotlightAction.checkSpotlightFromHighlights)(newSpotlight));
     }
   };
 }
@@ -23257,7 +23272,8 @@ function mapStateToProps(state) {
   return {
     userInfo: state.userInfo,
     friends: state.friends,
-    annotations: state.annotations
+    annotations: state.annotations,
+    spotlight: state.spotlight
   };
 }
 
@@ -23491,7 +23507,7 @@ function annotations() {
 
     case 'CREATE_ANNOTATION':
       debugger;
-      var newState = [state.slice().concat(action.annotation)];
+      var newState = state.slice().concat(action.annotation);
       return sortAnnotations(newState);
 
     case 'DELETE_ANNOTATION':

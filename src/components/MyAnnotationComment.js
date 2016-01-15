@@ -24,26 +24,26 @@ export default class MyAnnotationComment extends Component {
 
 
   render() {
-    const { userInfo, annotation, checkSpotlight } = this.props;
+    const { userInfo, annotation, checkSpotlight, deleteAnn } = this.props;
 
     var userColor = $('span[data-annotation-id="' + annotation.id + '"]').css('background-color');
     var divStyle = {
       borderLeft: '4px solid ' + userColor
     };
 
-    var clickHandler = function(e) {
+    var checkSpotlightOnClick = function(e) {
       if (e.target.className !== 'comment-delete-button') {
         checkSpotlight(annotation);
       }
     };
 
-    var deleteAnn = function(e) {
+    var deleteOnClick = function(e) {
       e.stopPropagation();
-      self.props.deleteAnn(annotation);
+      deleteAnn(annotation);
     };
 
     return (
-      <div onClick={clickHandler} className="annotation" style={divStyle}>
+      <div onClick={checkSpotlightOnClick} className="annotation" style={divStyle}>
         <img className='annotation-friends-pic' src={userInfo.pic} />
         <p className='username'> Me </p>
         {!this.state.shouldEditComment ? <p className='annotation-text'>{annotation.text}</p> :
@@ -55,7 +55,7 @@ export default class MyAnnotationComment extends Component {
           </form>
         }
         <div className='modify-comment-container'>
-          <button className='comment-delete-button' onClick={deleteAnn}>Remove</button>
+          <button className='comment-delete-button' onClick={deleteOnClick}>Remove</button>
           <button className='comment-edit-button' onClick={this.editComment}>Edit</button>
         </div>
       </div>

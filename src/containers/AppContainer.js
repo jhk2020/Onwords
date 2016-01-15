@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import App from '../components/App';
 import showAnnotator from '../actions/showAnnotatorAction';
 import { fetchFriendsAsync, toggleFriend } from '../actions/friendsAction';
-import { mountSpotlight } from '../actions/spotlightAction';
+import { checkSpotlightFromHighlights } from '../actions/spotlightAction';
 
 function mapStateToProps(state) {
   return {
@@ -25,8 +25,8 @@ function mapDispatchToProps(dispatch) {
     toggleFriend: () => {
       dispatch(toggleFriend());
     },
-    mountSpotlight: (newSpotlight) => {
-      dispatch(mountSpotlight(newSpotlight));
+    checkSpotlightFromHighlights: (newSpotlight) => {
+      dispatch(checkSpotlightFromHighlights(newSpotlight));
     }
   }
 }
