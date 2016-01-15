@@ -22331,85 +22331,6 @@ var AnnotationsList = function (_Component) {
         } });
       document.dispatchEvent(ev);
     }
-
-    // unhighlight() {
-    //   var oldSpotlight = this.state.spotlight.id;
-    //   var oldSpotlightColorWithUmph = $('span[data-annotation-id="' + oldSpotlight + '"]').css('background-color');
-    //   if (oldSpotlightColorWithUmph) {
-    //     var oldSpotlightColor = oldSpotlightColorWithUmph.slice(0, oldSpotlightColorWithUmph.length - 1) + ', 0.25)';
-    //     var defaultColor = $('body').css('color');
-    //     oldSpotlightColor = oldSpotlightColor.slice(0, oldSpotlightColor.indexOf('(')) + 'a' + oldSpotlightColor.slice(oldSpotlightColor.indexOf('('));
-    //     var styles = {
-    //       backgroundColor: oldSpotlightColor,
-    //       color: defaultColor
-    //     }
-    //     $('span[data-annotation-id="' + oldSpotlight + '"]').css(styles);
-    //   }
-    // }
-    //
-    // highlight(annotation) {
-    //   $('html, body').animate({
-    //     scrollTop: annotation.offsetTop - 200
-    //   }, 350);
-    //
-    //   var newSpotlightColor = $('span[data-annotation-id="' + annotation.id + '"]').css('background-color');
-    //
-    //   var newSpotlightColorWithUmph = newSpotlightColor.slice(0, newSpotlightColor.lastIndexOf(',') + 1) + ' 1)';
-    //   var styles = {
-    //     backgroundColor: newSpotlightColorWithUmph,
-    //     color: "black"
-    //   }
-    //   $('span[data-annotation-id="' + annotation.id + '"]').css(styles);
-    // }
-
-    // clickHandler(annotation) {
-    //   this.props.changeSpotlight(annotation);
-    // }
-
-    // componentWillMount() {
-    // var newSpotlight = '';
-    // if (this.props.spotlight !== '') {
-    //   newSpotlight = this.props.spotlight;
-    //   this.highlight(newSpotlight);
-    // };
-    // this.setState({annotations: this.props.annotations, spotlight: newSpotlight});
-    // }
-
-    // componentWillReceiveProps(nextProps) {
-    //
-    //   if (nextProps.spotlight !== this.state.spotlight) {
-    //     if (this.state.spotlight !== '') {
-    //       this.unhighlight();
-    //     }
-    //     if (nextProps.spotlight !== '') {
-    //       this.highlight(nextProps.spotlight);
-    //     }
-    //
-    //   }
-    //   this.setState({annotations: nextProps.annotations, spotlight: nextProps.spotlight});
-    // }
-
-  }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      // if (this.state.spotlight !== '') {
-      //   this.unhighlight();
-      //   this.props.changeSpotlight('');
-      // }
-      this.props.unmountSpotlight();
-    }
-  }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      // chrome.storage.sync.get('user',function(data){
-      //   var info = {
-      //     pic_url: data.user.picUrl,
-      //     username: data.user.fullName,
-      //     description: data.user.description || 'OnWords  !!  '
-      //   }
-      //   this.setState({userInfo: info});
-      // }.bind(this));
-    }
   }, {
     key: 'render',
     value: function render() {
@@ -22439,6 +22360,11 @@ var AnnotationsList = function (_Component) {
         { className: 'annotationList' },
         annotationList
       );
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this.props.unmountSpotlight();
     }
   }]);
 
@@ -22499,7 +22425,6 @@ var AnnotatorView = function (_Component) {
         if (e.target.className === 'annotator-button') {
           return;
         }
-        // highlighter click check
         if (getSelection().toString()) {
           return;
         }
@@ -22514,55 +22439,11 @@ var AnnotatorView = function (_Component) {
         this.props.updateView();
       }.bind(this));
     }
-
-    // componentWillReceiveProps(nextProps) {
-    //   debugger;
-    //   if (nextProps.annotations !== this.props.annotations) {
-    //     var newFriends = {};
-    //     var oldFriends = this.state.friendsShown;
-    //     if (nextProps.annotations.length > 0) {
-    //       for (var i = 0; i < nextProps.annotations.length; i++) {
-    //         var user = nextProps.annotations[i].user_id;
-    //         newFriends[user] = {shown: true, pic: oldFriends[user].pic, name: oldFriends[user].name};
-    //       }
-    //     }
-    //
-    //     for (var friend in oldFriends) {
-    //       if (newFriends[friend] === undefined) {
-    //         newFriends[friend] = {shown: false, pic: oldFriends[friend].pic, name: oldFriends[friend].name};
-    //       }
-    //     }
-    //     this.setState({annotations: nextProps.annotations, friendsShown: newFriends});
-    //   }
-    // }
-
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       $(document).off();
     }
-
-    // toggleFriendAnnotations(id) {
-    //   debugger;
-    //   var friends = this.state.friendsShown;
-    //
-    //   if (!friends[id].shown) {
-    // var ev = new CustomEvent('getFriendAnnotations', {detail: {userId: id}});
-    //     document.dispatchEvent(ev);
-    //   } else {
-    //     var targetAnnotations = [];
-    //     for (var i = 0; i < this.state.annotations.length; i++) {
-    //       if (this.state.annotations[i].user_id.toString() === id) {
-    //         targetAnnotations.push(this.state.annotations[i]);
-    //       }
-    //     }
-    // var ev = new CustomEvent('deleteRender', {detail: {
-    //   targetAnnotations: targetAnnotations
-    // }});
-    //     document.dispatchEvent(ev);
-    //   }
-    // }
-
   }, {
     key: 'render',
     value: function render() {
@@ -22595,49 +22476,10 @@ var AnnotatorView = function (_Component) {
         _react2.default.createElement(
           'div',
           { className: 'friends-annotations-list' },
-          annotations.length > 0 ? _react2.default.createElement(_annotationsListContainer2.default, null) : null
+          _react2.default.createElement(_annotationsListContainer2.default, null)
         )
       );
     }
-
-    // componentDidMount() {
-    // var ownId = window.localStorage.getItem('user_id');
-    // var uri = window.location.href.split("?")[0];
-    // if (uri.substring(uri.length-11) === 'onwords1991') {
-    //   uri = uri.substring(0, uri.length-13);
-    // } else {
-    //   uri = uri;
-    // }
-    //
-    // var annotations = [];
-    // var friendsShown = {};
-
-    // Sort through other friends that have annotated the same page / friends whose annotations are showing
-    // $.get('https://test2server.herokuapp.com/api/users/uri/annotations', {uri: uri, user_id: ownId})
-    //   .done(function(data) {
-    //     console.log(data);
-    //     var oldAnnotations = this.props.annotations;
-    //     if(oldAnnotations) {
-    //       for (var i = 0; i < oldAnnotations.length; i++) {
-    //         friendsShown[oldAnnotations[i].user_id] = { shown: true };
-    //       }
-    //       annotations = oldAnnotations;
-    //     }
-    //     for (var i = 0; i < data.length; i++) {
-    //       if (friendsShown[data[i].id]) {
-    //         friendsShown[data[i].id] = {shown: true, pic: data[i].pic_url, name: data[i].full_name};
-    //       } else {
-    //         friendsShown[data[i].id] = {shown: false, pic: data[i].pic_url, name: data[i].full_name};
-    //       }
-    //     }
-    //     if (!friendsShown[ownId]) {
-    //       friendsShown[ownId] = {shown: false};
-    //     }
-    //     this.setState({annotations: annotations, friendsShown: friendsShown});
-    //   }.bind(this))
-
-    // }
-
   }]);
 
   return AnnotatorView;
@@ -22682,118 +22524,28 @@ var App = function (_Component) {
     _classCallCheck(this, App);
 
     return _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this, props));
-    // this.updateView = this.updateView.bind(this);
   }
 
   _createClass(App, [{
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
       if (!nextProps.annotatorShown) {
-        // $('#annotation-header').animate({width: '0px'}, {queue: false, duration: 200});
         $('#annotation-sidebar').animate({ right: -600 }, { queue: false, duration: 200 });
-        // .promise().done(function() {
-        // setTimeout(function() {
-        // self.setState({showFriendsAnnotations: false});
-        // self.setState({showAnnotatorButton: true});
-        // self.setState({spotlight: ''});
-        // }, 200)
-        // })
       } else {
-          // self.setState({showFriendsAnnotations: true});
-          // self.setState({showFeedView: false}, function() {
-          // setTimeout(function() {
-          setTimeout(function () {
-            // self.setState({showAnnotatorButton: false});
-            $('#annotation-sidebar').animate({ right: -300 }, { queue: false, duration: 200 });
-            // $('#annotation-header').animate({width: '300px'}, {queue: false, duration: 200});
-          }, 100);
-          // }, 130)
-          // });
-        }
+        setTimeout(function () {
+          $('#annotation-sidebar').animate({ right: -300 }, { queue: false, duration: 200 });
+        }, 100);
+      }
     }
-
-    // updateView() {
-    // var self = this;
-    // if (!this.props.annotatorShown) {
-    //   $(function() {
-    //     $('#annotation-header').animate({width: '0px'}, {queue: false, duration: 200});
-    //     $('#annotation-sidebar').animate({right: -(600)}, {queue: false, duration: 200});
-    //   })
-    //   .promise().done(function() {
-    //     setTimeout(function() {
-    //       // self.setState({showFriendsAnnotations: false});
-    //       // self.setState({showAnnotatorButton: true});
-    //       self.setState({spotlight: ''});
-    //     }, 200)
-    //   })
-    // } else {
-    //   // self.setState({showFriendsAnnotations: true});
-    //   // self.setState({showFeedView: false}, function() {
-    //     setTimeout(function() {
-    //       $(function () {
-    //         // self.setState({showAnnotatorButton: false});
-    //         $('#annotation-sidebar').animate({right: -(300)}, {queue: false, duration: 200});
-    //         $('#annotation-header').animate({width: '300px'}, {queue: false, duration: 200});
-    //       })
-    //     }, 130)
-    //   // });
-    // }
-    // }
-
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
       document.addEventListener('spotlightAnnotation', function (e) {
         this.props.checkSpotlightFromHighlights(e.detail.targetAnnotation);
-        //   this.setState({spotlight: e.detail.targetAnnotation});
-        //   this.updateView('showAnnotatorView');
       }.bind(this));
 
       this.props.fetchFriends();
-
-      // var uri = window.location.href.split("?")[0];
-      // if (uri.substring(uri.length-11) === 'onwords1991') {
-      //   uri = uri.substring(0, uri.length-13);
-      // } else {
-      //   uri = uri;
-      // }
-
-      // chrome.storage.onChanged.addListener(function(changes) {
-      //   debugger;
-      //   if (changes[uri] && changes[uri].newValue !== undefined) {
-      //     var newAnnotations = changes[uri].newValue;
-      //     var oldAnnotations = self.state.annotations;
-      //     var currentSpotlight = self.state.spotlight;
-      //
-      //     if (newAnnotations.length === 0) {
-      //       currentSpotlight = '';
-      //     } else {
-      //       var intersection = {};
-      //       for (var i = 0; i < oldAnnotations.length; i++) {
-      //         intersection[oldAnnotations[i].id] = false;
-      //       };
-      //
-      //       for (var i = 0; i < newAnnotations.length; i++) {
-      //           intersection[newAnnotations[i].id] = true;
-      //       }
-      //
-      //       if (intersection[currentSpotlight.id]) {
-      //         currentSpotlight = currentSpotlight;
-      //       } else {
-      //         currentSpotlight = '';
-      //       }
-      //     }
-      //
-      //     self.setState({annotations: newAnnotations, spotlight: currentSpotlight});
-      //   }
-      // });
     }
-
-    // changeSpotlight(annotation) {
-    //   debugger;
-    //   this.setState({spotlight: annotation});
-    // }
-
   }, {
     key: 'render',
     value: function render() {
@@ -22801,13 +22553,11 @@ var App = function (_Component) {
       var annotations = _props.annotations;
       var annotatorShown = _props.annotatorShown;
       var showAnnotator = _props.showAnnotator;
-      var friends = _props.friends;
-      var userInfo = _props.userInfo;
 
       return _react2.default.createElement(
         'div',
         { className: 'app-container' },
-        !annotatorShown ? _react2.default.createElement(_annotatorButton2.default, { updateView: showAnnotator }) : _react2.default.createElement(_AnnotatorView2.default, { userInfo: userInfo, annotations: annotations, updateView: showAnnotator, friends: friends })
+        !annotatorShown ? _react2.default.createElement(_annotatorButton2.default, { updateView: showAnnotator }) : _react2.default.createElement(_AnnotatorView2.default, { annotations: annotations, updateView: showAnnotator })
       );
     }
   }]);
@@ -22856,15 +22606,11 @@ var FriendsAnnotationComment = function (_Component) {
       var annotation = _props.annotation;
       var checkSpotlight = _props.checkSpotlight;
 
-      var username = friendInfo.name;
-      var userpic = friendInfo.pic;
-
       var clickHandler = function clickHandler() {
         checkSpotlight(annotation);
       };
 
       var userColor = $('span[data-annotation-id="' + annotation.id + '"]').css('background-color');
-
       var divStyle = {
         borderLeft: '4px solid ' + userColor
       };
@@ -22872,14 +22618,14 @@ var FriendsAnnotationComment = function (_Component) {
       return _react2.default.createElement(
         'div',
         { onClick: clickHandler, className: 'annotation', style: divStyle },
-        _react2.default.createElement('img', { className: 'annotation-friends-pic', src: userpic }),
+        _react2.default.createElement('img', { className: 'annotation-friends-pic', src: friendInfo.pic }),
         _react2.default.createElement(
           'div',
           { className: 'annotation-text' },
           _react2.default.createElement(
             'p',
             { className: 'username' },
-            username
+            friendInfo.name
           ),
           _react2.default.createElement(
             'p',
@@ -23183,9 +22929,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function mapStateToProps(state) {
   return {
     annotations: state.annotations,
-    annotatorShown: state.annotatorShown,
-    friends: state.friends,
-    userInfo: state.userInfo
+    annotatorShown: state.annotatorShown
   };
 }
 
@@ -23479,23 +23223,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = annotations;
-var sortAnnotations = function sortAnnotations(arr) {
-  arr.sort(function (a, b) {
-    if (a.offsetTop < b.offsetTop) {
-      return -1;
-    } else if (a.offsetTop > b.offsetTop) {
-      return 1;
-    } else {
-      if (a.offsetLeft < b.offsetLeft) {
-        return -1;
-      } else if (a.offsetLeft > b.offsetLeft) {
-        return 1;
-      }
-    }
-  });
-  return arr;
-};
-
 function annotations() {
   var state = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
   var action = arguments[1];
@@ -23527,6 +23254,23 @@ function annotations() {
       return state;
   }
 }
+
+function sortAnnotations(arr) {
+  arr.sort(function (a, b) {
+    if (a.offsetTop < b.offsetTop) {
+      return -1;
+    } else if (a.offsetTop > b.offsetTop) {
+      return 1;
+    } else {
+      if (a.offsetLeft < b.offsetLeft) {
+        return -1;
+      } else if (a.offsetLeft > b.offsetLeft) {
+        return 1;
+      }
+    }
+  });
+  return arr;
+};
 
 },{}],217:[function(require,module,exports){
 'use strict';

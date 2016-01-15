@@ -8,9 +8,7 @@ import { checkSpotlightFromHighlights } from '../actions/spotlightAction';
 function mapStateToProps(state) {
   return {
     annotations: state.annotations,
-    annotatorShown: state.annotatorShown,
-    friends: state.friends,
-    userInfo: state.userInfo
+    annotatorShown: state.annotatorShown
   }
 }
 
