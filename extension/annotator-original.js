@@ -2903,10 +2903,10 @@ StorageAdapter.prototype.create = function (obj) {
 };
 
 // Onwords method for toggling highlights
-StorageAdapter.prototype.deleteRender = function(arr) {
-  console.log(arr);
-  this.runHook('beforeRenderDeleted', [arr]);
-};
+// StorageAdapter.prototype.deleteRender = function(arr) {
+//   console.log(arr);
+//   this.runHook('beforeRenderDeleted', [arr]);
+// };
 
 /**
  * function:: StorageAdapter.prototype.update(obj)

@@ -1,15 +1,14 @@
 import React, { Component } from 'react';
 
-export default class friendAnnotationComment extends Component {
+export default class FriendsAnnotationComment extends Component {
   render() {
-    const { friendInfo, annotation } = this.props;
-    const username = friendInfo.username;
-    const userpic = friendInfo.userpic;
+    const { friendInfo, annotation, checkSpotlight } = this.props;
+    const username = friendInfo.name;
+    const userpic = friendInfo.pic;
 
-    var self = this;
 
     var clickHandler = function() {
-      self.props.clickHandler(annotation);
+      checkSpotlight(annotation);
     };
 
     var userColor = $('span[data-annotation-id="' + annotation.id + '"]').css('background-color');

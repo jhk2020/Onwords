@@ -1,48 +1,43 @@
-var React = require('react');
+import React, { Component } from 'react';
 
-var annotationComment = React.createClass({
-  getInitialState: function() {
-    return {
+export default class MyAnnotationComment extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       shouldEditComment: false
     }
-  },
+  }
 
-  editComment: function() {
+  editComment() {
     this.setState({shouldEditComment: true});
-  },
+  }
 
-  submitChange: function(e) {
+  submitChange(e) {
     e.preventDefault();
     var newText = $('textArea#annotationEdit').val();
-    console.log('new text:', newText)
     var annotation = this.props.annotation;
     annotation.text = newText;
     var ev = new CustomEvent('updateAnnotation', {detail: {targetAnnotation: annotation}})
     document.dispatchEvent(ev);
     this.setState({shouldEditComment: false});
-  },
+  }
 
 
-  render: function() {
-    var userInfo = this.props.userInfo;
-    console.log(userInfo.pic)
-    var userColor = $('span[data-annotation-id="' + this.props.annotation.id + '"]').css('background-color');
+  render() {
+    const { userInfo, annotation, checkSpotlight } = this.props;
+
+    var userColor = $('span[data-annotation-id="' + annotation.id + '"]').css('background-color');
     var divStyle = {
       borderLeft: '4px solid ' + userColor
     };
 
-    console.log('inside annotationcomment:', this.props.annotation);
-    var annotation = this.props.annotation;
-    var self = this;
-
     var clickHandler = function(e) {
       if (e.target.className !== 'comment-delete-button') {
-        self.props.clickHandler(annotation);
+        checkSpotlight(annotation);
       }
     };
 
     var deleteAnn = function(e) {
-      console.log(e.target);
       e.stopPropagation();
       self.props.deleteAnn(annotation);
     };
@@ -66,7 +61,4 @@ var annotationComment = React.createClass({
       </div>
     )
   }
-});
-
-
-module.exports = annotationComment;
+};

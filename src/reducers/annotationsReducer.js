@@ -22,7 +22,8 @@ export default function annotations (state = [], action) {
       return sortAnnotations(annotations);
 
     case 'CREATE_ANNOTATION':
-      let newState = [state.slice().concat([action.annotation])];
+      debugger;
+      let newState = [state.slice().concat(action.annotation)];
       return sortAnnotations(newState);
 
     case 'DELETE_ANNOTATION':

@@ -29,25 +29,6 @@ var customAnnotationsModule = function(store) {
       store.dispatch(deleteAnn(annotation));
     },
 
-    // For toggling highlights
-    // beforeRenderDeleted: function(annotations) {
-    //   chrome.storage.local.get(uri, function(obj) {
-    //     for (var i = 0; i < annotations.length; i++) {
-    //       var id = annotations[i].id;
-    //       $('[data-annotation-id=' + id + ']').contents().unwrap();
-    //       for (var j = 0; j < obj[uri].length; j++) {
-    //         if (obj[uri][j].id === id) {
-    //           obj[uri].splice(j, 1);
-    //           break;
-    //         }
-    //       }
-    //     }
-    //     var newObj = {};
-    //     newObj[uri] = obj[uri];
-    //     chrome.storage.local.set(newObj);
-    //   });
-    // },
-
     beforeAnnotationUpdated: function(annotation) {
       chrome.storage.local.get(uri, function(obj) {
         for (var i = 0; i < obj[uri].length; i++) {

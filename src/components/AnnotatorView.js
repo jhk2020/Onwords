@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import MyAnnotationsButton from './my-annotations-button';
-import FriendAnnotationList from './annotationsList';
+import AnnotationsList from '../containers/annotationsListContainer';
 import FriendsCarousel from '../containers/FriendsCarouselContainer';
 
 export default class AnnotatorView extends Component {
@@ -56,12 +56,12 @@ export default class AnnotatorView extends Component {
     $(document).off();
   }
 
-  toggleFriendAnnotations(id) {
+  // toggleFriendAnnotations(id) {
   //   debugger;
   //   var friends = this.state.friendsShown;
   //
   //   if (!friends[id].shown) {
-      var ev = new CustomEvent('getFriendAnnotations', {detail: {userId: id}});
+      // var ev = new CustomEvent('getFriendAnnotations', {detail: {userId: id}});
   //     document.dispatchEvent(ev);
   //   } else {
   //     var targetAnnotations = [];
@@ -70,12 +70,12 @@ export default class AnnotatorView extends Component {
   //         targetAnnotations.push(this.state.annotations[i]);
   //       }
   //     }
-      var ev = new CustomEvent('deleteRender', {detail: {
-        targetAnnotations: targetAnnotations
-      }});
+      // var ev = new CustomEvent('deleteRender', {detail: {
+      //   targetAnnotations: targetAnnotations
+      // }});
   //     document.dispatchEvent(ev);
   //   }
-  }
+  // }
 
   render() {
     let {annotations} = this.props;
@@ -92,7 +92,7 @@ export default class AnnotatorView extends Component {
         </div>
         <br></br>
           <div className='friends-annotations-list'>
-            {annotations.length > 0 ? <FriendAnnotationList {...this.props} /> : null}
+            {annotations.length > 0 ? <AnnotationsList /> : null}
           </div>
       </div>
     );

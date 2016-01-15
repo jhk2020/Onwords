@@ -12,22 +12,11 @@ export default function friends(state = {}, action){
       return newState;
 
     case 'TOGGLE_ON_FRIEND_ANNOTATIONS':
-      debugger;
       let newFriends = Object.assign({}, state);
       newFriends[action.friendId].shown = true;
       return newFriends;
+
     default:
       return state;
   }
 }
-
-
-
-// export function shownFriends(state = [ownId], action) {
-//   switch (action.type) {
-//     case 'TOGGLE_FRIEND':
-//       let newState = state.slice().concat([action.friend]);
-//     default:
-//       return state;
-//   }
-// }

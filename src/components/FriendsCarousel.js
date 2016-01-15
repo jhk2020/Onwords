@@ -1,7 +1,6 @@
 import React from 'react';
 
 const FriendsCarousel = ({ friends, toggleFriendAnnotations }) => {
-  console.log(toggleFriendAnnotations);
   const ownId = window.localStorage.getItem('user_id');
   const friendsArray = Object.keys(friends);
 
@@ -21,5 +20,3 @@ const FriendsCarousel = ({ friends, toggleFriendAnnotations }) => {
 };
 
 export default FriendsCarousel;
-
-// onClick={this.toggleFriendAnnotations.bind(null, friend)}

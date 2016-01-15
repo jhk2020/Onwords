@@ -64,8 +64,9 @@ export default class App extends Component {
 
   componentDidMount() {
     document.addEventListener('spotlightAnnotation', function(e) {
-      this.setState({spotlight: e.detail.targetAnnotation});
-      this.updateView('showAnnotatorView');
+      this.props.mountSpotlight(e.detail.targetAnnotation);
+    //   this.setState({spotlight: e.detail.targetAnnotation});
+    //   this.updateView('showAnnotatorView');
     }.bind(this));
 
     this.props.fetchFriends();
@@ -115,7 +116,6 @@ export default class App extends Component {
 
   render() {
     let { annotations, annotatorShown, showAnnotator, friends, userInfo } = this.props;
-    console.log(userInfo)
     return (
       <div className='app-container'>
         { !annotatorShown ?
