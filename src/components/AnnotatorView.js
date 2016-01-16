@@ -27,10 +27,6 @@ export default class AnnotatorView extends Component {
     }.bind(this));
   }
 
-  componentWillUnmount() {
-    $(document).off();
-  }
-
   render() {
     let {annotations} = this.props;
     return (
@@ -50,5 +46,9 @@ export default class AnnotatorView extends Component {
           </div>
       </div>
     );
+  }
+
+  componentWillUnmount() {
+    $(document).off();
   }
 };

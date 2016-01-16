@@ -7,7 +7,6 @@ import { checkSpotlightFromHighlights } from '../actions/spotlightAction';
 
 function mapStateToProps(state) {
   return {
-    annotations: state.annotations,
     annotatorShown: state.annotatorShown
   }
 }

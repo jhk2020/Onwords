@@ -1,4 +1,4 @@
-import { loadAnns, createAnn, deleteAnn } from './actions/annotationsAction';
+import { loadAnns, createAnn, deleteAnn, updateAnn } from './actions/annotationsAction';
 
 var customAnnotationsModule = function(store) {
   // Grab the URI of the page
@@ -30,16 +30,17 @@ var customAnnotationsModule = function(store) {
     },
 
     beforeAnnotationUpdated: function(annotation) {
-      chrome.storage.local.get(uri, function(obj) {
-        for (var i = 0; i < obj[uri].length; i++) {
-          if (obj[uri][i].id === annotation.id) {
-            obj[uri][i].text = annotation.text;
-            var newObj = {};
-            newObj[uri] = obj[uri];
-            chrome.storage.local.set(newObj);
-          }
-        }
-      });
+      store.dispatch(updateAnn(annotation));
+      // chrome.storage.local.get(uri, function(obj) {
+      //   for (var i = 0; i < obj[uri].length; i++) {
+      //     if (obj[uri][i].id === annotation.id) {
+      //       obj[uri][i].text = annotation.text;
+      //       var newObj = {};
+      //       newObj[uri] = obj[uri];
+      //       chrome.storage.local.set(newObj);
+      //     }
+      //   }
+      // });
     }
   }
 };

@@ -18,3 +18,10 @@ export function deleteAnn(annotation) {
     annotation
   }
 }
+
+export function updateAnn(annotation) {
+  return {
+    type: 'UPDATE_ANNOTATION',
+    annotation
+  }
+}

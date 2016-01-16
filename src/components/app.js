@@ -17,14 +17,6 @@ export default class App extends Component {
     }
   }
 
-  componentDidMount() {
-    document.addEventListener('spotlightAnnotation', function(e) {
-      this.props.checkSpotlightFromHighlights(e.detail.targetAnnotation);
-    }.bind(this));
-
-    this.props.fetchFriends();
-  }
-
   render() {
     let { annotations, annotatorShown, showAnnotator} = this.props;
     return (
@@ -35,5 +27,13 @@ export default class App extends Component {
         }
       </div>
     );
+  }
+
+  componentDidMount() {
+    document.addEventListener('spotlightAnnotation', function(e) {
+      this.props.checkSpotlightFromHighlights(e.detail.targetAnnotation);
+    }.bind(this));
+
+    this.props.fetchFriends();
   }
 };

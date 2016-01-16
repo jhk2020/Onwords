@@ -22106,6 +22106,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.createAnn = createAnn;
 exports.loadAnns = loadAnns;
 exports.deleteAnn = deleteAnn;
+exports.updateAnn = updateAnn;
 function createAnn(annotation) {
   return {
     type: 'CREATE_ANNOTATION',
@@ -22123,6 +22124,13 @@ function loadAnns(annotations) {
 function deleteAnn(annotation) {
   return {
     type: 'DELETE_ANNOTATION',
+    annotation: annotation
+  };
+}
+
+function updateAnn(annotation) {
+  return {
+    type: 'UPDATE_ANNOTATION',
     annotation: annotation
   };
 }
@@ -22440,11 +22448,6 @@ var AnnotatorView = function (_Component) {
       }.bind(this));
     }
   }, {
-    key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      $(document).off();
-    }
-  }, {
     key: 'render',
     value: function render() {
       var annotations = this.props.annotations;
@@ -22479,6 +22482,11 @@ var AnnotatorView = function (_Component) {
           _react2.default.createElement(_annotationsListContainer2.default, null)
         )
       );
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      $(document).off();
     }
   }]);
 
@@ -22538,15 +22546,6 @@ var App = function (_Component) {
       }
     }
   }, {
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      document.addEventListener('spotlightAnnotation', function (e) {
-        this.props.checkSpotlightFromHighlights(e.detail.targetAnnotation);
-      }.bind(this));
-
-      this.props.fetchFriends();
-    }
-  }, {
     key: 'render',
     value: function render() {
       var _props = this.props;
@@ -22559,6 +22558,15 @@ var App = function (_Component) {
         { className: 'app-container' },
         !annotatorShown ? _react2.default.createElement(_annotatorButton2.default, { updateView: showAnnotator }) : _react2.default.createElement(_AnnotatorView2.default, { annotations: annotations, updateView: showAnnotator })
       );
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      document.addEventListener('spotlightAnnotation', function (e) {
+        this.props.checkSpotlightFromHighlights(e.detail.targetAnnotation);
+      }.bind(this));
+
+      this.props.fetchFriends();
     }
   }]);
 
@@ -22708,8 +22716,12 @@ var MyAnnotationComment = function (_Component) {
     var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(MyAnnotationComment).call(this, props));
 
     _this.state = {
-      shouldEditComment: false
+      shouldEditComment: false,
+      textAreaComment: props.annotation.text
     };
+    _this.editComment = _this.editComment.bind(_this);
+    _this.onChange = _this.onChange.bind(_this);
+    _this.submitChange = _this.submitChange.bind(_this);
     return _this;
   }
 
@@ -22717,6 +22729,11 @@ var MyAnnotationComment = function (_Component) {
     key: 'editComment',
     value: function editComment() {
       this.setState({ shouldEditComment: true });
+    }
+  }, {
+    key: 'onChange',
+    value: function onChange(e) {
+      this.setState({ textAreaComment: e.target.value });
     }
   }, {
     key: 'submitChange',
@@ -22744,9 +22761,10 @@ var MyAnnotationComment = function (_Component) {
       };
 
       var checkSpotlightOnClick = function checkSpotlightOnClick(e) {
-        if (e.target.className !== 'comment-delete-button') {
-          checkSpotlight(annotation);
+        if (e.target.className === 'comment-delete-button' || e.target.className === 'comment-edit-button') {
+          return;
         }
+        checkSpotlight(annotation);
       };
 
       var deleteOnClick = function deleteOnClick(e) {
@@ -22770,11 +22788,7 @@ var MyAnnotationComment = function (_Component) {
         ) : _react2.default.createElement(
           'form',
           null,
-          _react2.default.createElement(
-            'textArea',
-            { id: 'annotationEdit', style: { height: 100 + "px", width: 300 + "px" } },
-            annotation.text
-          ),
+          _react2.default.createElement('textArea', { id: 'annotationEdit', style: { height: 100 + "px", width: 300 + "px" }, value: this.state.textAreaComment, onChange: this.onChange }),
           _react2.default.createElement(
             'button',
             { className: 'comment-submit-button', onClick: this.submitChange },
@@ -22928,7 +22942,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function mapStateToProps(state) {
   return {
-    annotations: state.annotations,
     annotatorShown: state.annotatorShown
   };
 }
@@ -23029,6 +23042,7 @@ function mapDispatchToProps(dispatch) {
     unmountSpotlight: function unmountSpotlight() {
       dispatch((0, _spotlightAction.unmountSpotlight)());
     }
+
   };
 }
 
@@ -23069,16 +23083,17 @@ var customAnnotationsModule = function customAnnotationsModule(store) {
     },
 
     beforeAnnotationUpdated: function beforeAnnotationUpdated(annotation) {
-      chrome.storage.local.get(uri, function (obj) {
-        for (var i = 0; i < obj[uri].length; i++) {
-          if (obj[uri][i].id === annotation.id) {
-            obj[uri][i].text = annotation.text;
-            var newObj = {};
-            newObj[uri] = obj[uri];
-            chrome.storage.local.set(newObj);
-          }
-        }
-      });
+      store.dispatch((0, _annotationsAction.updateAnn)(annotation));
+      // chrome.storage.local.get(uri, function(obj) {
+      //   for (var i = 0; i < obj[uri].length; i++) {
+      //     if (obj[uri][i].id === annotation.id) {
+      //       obj[uri][i].text = annotation.text;
+      //       var newObj = {};
+      //       newObj[uri] = obj[uri];
+      //       chrome.storage.local.set(newObj);
+      //     }
+      //   }
+      // });
     }
   };
 };
@@ -23233,7 +23248,6 @@ function annotations() {
       return sortAnnotations(annotations);
 
     case 'CREATE_ANNOTATION':
-      debugger;
       var newState = state.slice().concat(action.annotation);
       return sortAnnotations(newState);
 
@@ -23244,12 +23258,24 @@ function annotations() {
       var deleteIndex = newAnnotations.indexOf(action.annotation);
       newAnnotations.splice(deleteIndex, 1);
       return newAnnotations;
+
+    case 'UPDATE_ANNOTATION':
+      var updatedAnnotations = state.slice();
+      for (var i = 0; i < updatedAnnotations.length; i++) {
+        if (updatedAnnotations[i].id === action.annotation.id) {
+          updatedAnnotations[i].text = action.annotation.text;
+          break;
+        }
+      }
+      return updatedAnnotations;
+
     case 'TOGGLE_OFF_FRIEND_ANNOTATIONS':
       var friendId = action.friendId;
       var filteredState = state.filter(function (annotation) {
         return !(annotation.user_id.toString() === friendId);
       });
       return filteredState;
+
     default:
       return state;
   }

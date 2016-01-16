@@ -5,7 +5,6 @@ export default function annotations (state = [], action) {
       return sortAnnotations(annotations);
 
     case 'CREATE_ANNOTATION':
-      debugger;
       let newState = state.slice().concat(action.annotation);
       return sortAnnotations(newState);
 
@@ -16,12 +15,24 @@ export default function annotations (state = [], action) {
       let deleteIndex = newAnnotations.indexOf(action.annotation);
       newAnnotations.splice(deleteIndex, 1);
       return newAnnotations;
+
+    case 'UPDATE_ANNOTATION':
+      let updatedAnnotations = state.slice();
+      for (var i = 0; i < updatedAnnotations.length; i++) {
+        if (updatedAnnotations[i].id === action.annotation.id) {
+          updatedAnnotations[i].text = action.annotation.text;
+          break;
+        }
+      }
+      return updatedAnnotations;
+
     case 'TOGGLE_OFF_FRIEND_ANNOTATIONS':
       let friendId = action.friendId;
       let filteredState = state.filter(function(annotation) {
         return !(annotation.user_id.toString() === friendId);
       });
       return filteredState;
+
     default:
       return state;
   }
