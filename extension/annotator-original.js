@@ -2902,11 +2902,6 @@ StorageAdapter.prototype.create = function (obj) {
     );
 };
 
-// Onwords method for toggling highlights
-// StorageAdapter.prototype.deleteRender = function(arr) {
-//   console.log(arr);
-//   this.runHook('beforeRenderDeleted', [arr]);
-// };
 
 /**
  * function:: StorageAdapter.prototype.update(obj)
@@ -4554,7 +4549,6 @@ exports.standalone = function standalone(element, options) {
         destroy: function () { widget.destroy(); },
         annotationsLoaded: function (anns) { widget.drawAll(anns); },
         annotationCreated: function (ann) { widget.draw(ann); },
-        // annotationDeleted: function (ann) { widget.undraw(ann); }, // Onwords
         annotationUpdated: function (ann) { widget.redraw(ann); }
     };
 };
@@ -4829,10 +4823,6 @@ function main(options) {
           app.annotations['update'](e.detail.targetAnnotation);
         })
 
-        // Get rid of highlights (i.e. toggle)
-        // document.addEventListener('deleteRender', function(e) {
-        //   app.annotations.deleteRender(e.detail.targetAnnotations);
-        // });
 // /Onwords
 
     }
@@ -4851,7 +4841,6 @@ function main(options) {
 
         annotationsLoaded: function (anns) { s.highlighter.drawAll(anns); },
         annotationCreated: function (ann) { s.highlighter.draw(ann); },
-        // annotationDeleted: function (ann) { s.highlighter.undraw(ann); }, // Onwords
         annotationUpdated: function (ann) { s.highlighter.redraw(ann); },
 
         beforeAnnotationCreated: function (annotation) {
