@@ -23,7 +23,7 @@ export default class MyAnnotationComment extends Component {
   submitChange(e) {
     e.preventDefault();
     var newText = $('textArea#annotationEdit').val();
-    var annotation = this.props.annotation;
+    let { annotation } = this.props;
     annotation.text = newText;
     var ev = new CustomEvent('updateAnnotation', {detail: {targetAnnotation: annotation}})
     document.dispatchEvent(ev);

@@ -8,8 +8,8 @@
     "assets/*"
   ],
 
-  "browser_action": {
-    
+  "browser-action": {
+
   },
 
   "background": {

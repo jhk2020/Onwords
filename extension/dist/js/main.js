@@ -22741,6 +22741,7 @@ var MyAnnotationComment = function (_Component) {
       e.preventDefault();
       var newText = $('textArea#annotationEdit').val();
       var annotation = this.props.annotation;
+
       annotation.text = newText;
       var ev = new CustomEvent('updateAnnotation', { detail: { targetAnnotation: annotation } });
       document.dispatchEvent(ev);
@@ -23054,7 +23055,6 @@ exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(
 var _annotationsAction = require('./actions/annotationsAction');
 
 var customAnnotationsModule = function customAnnotationsModule(store) {
-  // Grab the URI of the page
   var uri = window.location.href.split("?")[0];
   var targetUri;
   if (uri.substring(uri.length - 11) === 'onwords1991') {
@@ -23084,16 +23084,6 @@ var customAnnotationsModule = function customAnnotationsModule(store) {
 
     beforeAnnotationUpdated: function beforeAnnotationUpdated(annotation) {
       store.dispatch((0, _annotationsAction.updateAnn)(annotation));
-      // chrome.storage.local.get(uri, function(obj) {
-      //   for (var i = 0; i < obj[uri].length; i++) {
-      //     if (obj[uri][i].id === annotation.id) {
-      //       obj[uri][i].text = annotation.text;
-      //       var newObj = {};
-      //       newObj[uri] = obj[uri];
-      //       chrome.storage.local.set(newObj);
-      //     }
-      //   }
-      // });
     }
   };
 };
