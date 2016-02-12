@@ -18,11 +18,12 @@ var fetchToken = function() {
       return;
     }
 
-    var string = redirectUri.slice(redirectUri.indexOf('#')+1);
+    var string = redirectUri.slice(redirectUri.indexOf('#') + 1);
     var pairs = string.split('=');
     var token = pairs[1].split('&');
     var values = {};
     values[pairs[0]] = token[0];
+
     if (values.hasOwnProperty('access_token')) {
       access_token = values['access_token'];
       fetchFbProfile(access_token);
