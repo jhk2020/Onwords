@@ -1,7 +1,7 @@
 # node.js
 #
 node_modules/
-/server/node_modules/
-/extension/bower_components
 /extension/dependencies
+/extension/dist
 npm-debug.log
+/extension/config.js

@@ -1,21 +1,9 @@
-// Background Script: Runs when chrome extension is first loaded/initalized
+// Background page that runs at initialization
+// var config = require('../config.js');
 
-// Temporary measure to be able to log off
-chrome.storage.sync.clear();
-chrome.storage.local.clear();
-
-// Click handler on icon-press
-chrome.browserAction.onClicked.addListener(function() {
-  chrome.storage.sync.get('access_token', function(obj) {
-    if (!obj['access_token']) {
-      fetchToken();
-    }
-  });
-});
-
-function fetchToken() {
+var fetchToken = function() {
   var access_token;
-  var clientID = '';
+  var clientID = 190161771316309;
   var redirectUri = 'https://' + chrome.runtime.id + '.chromiumapp.org/provider_cb';
   var options = {
     'interactive': true,
@@ -26,7 +14,7 @@ function fetchToken() {
 
   chrome.identity.launchWebAuthFlow(options, function(redirectUri) {
     if (chrome.runtime.lastError) {
-      console.log(new Error(chrome.runtime.lastError));
+      console.error(chrome.runtime.lastError);
       return;
     }
 
@@ -41,15 +29,15 @@ function fetchToken() {
       fetchFbProfile(access_token);
     }
 
-    // Store FB access token in Chrome Storage (Sync)
+    // Set FB access token in chrome storage (sync)
     chrome.storage.sync.set({'access_token': access_token});
   });
-}
+};
 
-function fetchFbProfile(accessToken) {
+var fetchFbProfile = function(accessToken) {
   var xhr = new XMLHttpRequest();
   var urlPrefix = 'https://graph.facebook.com/v2.5/me';
-  var urlFields = '?fields=id,name,email,picture.width(100).height(100)';
+  var urlFields = '?fields=id,name,email,picture.width(700).height(700)';
   var urlSignature = '&access_token=' + accessToken;
   var url = urlPrefix + urlFields + urlSignature;
   xhr.open('GET', url, true);
@@ -65,11 +53,11 @@ function fetchFbProfile(accessToken) {
     }
   };
   xhr.send();
-}
+};
 
-function sendFbProfile(data) {
+var sendFbProfile = function(data) {
   var xhr = new XMLHttpRequest();
-  var url = 'https://onwords-test-server.herokuapp.com/api/users';
+  var url = 'https://test2server.herokuapp.com/api/users';
   xhr.open('POST', url, true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.onreadystatechange = function() {
@@ -81,8 +69,24 @@ function sendFbProfile(data) {
         email: resp.email,
         picUrl: resp.pic_url
       };
+      // Set username in chrome storage (sync)
       chrome.storage.sync.set({'user': user});
     }
   };
   xhr.send(JSON.stringify(data));
-}
+};
+
+
+// Temporary measures to clear storage for token renewal
+console.log(chrome.storage);
+chrome.storage.sync.clear();
+chrome.storage.local.clear();
+
+// Click event for when icon is pressed to initiate authentication process
+chrome.browserAction.onClicked.addListener(function() {
+  chrome.storage.sync.get('access_token', function(obj) {
+    if (!obj['access_token']) {
+      fetchToken();
+    }
+  });
+});
