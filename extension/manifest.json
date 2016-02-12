@@ -8,7 +8,7 @@
     "assets/*"
   ],
 
-  "browser-action": {
+  "browser_action": {
 
   },
 
