@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import AnnotatorSidebar from '../components/AnnotatorSidebar';
-import showMyFeed from '../actions/feedActions';
+import { toggleMyFeed } from '../actions/feedActions';
 
 function mapStateToProps(state) {
   return {
@@ -11,7 +11,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    showMyFeed: dispatch(showMyFeed())
+    toggleMyFeed: (result) => {
+      dispatch(toggleMyFeed(result));
+    }
   }
 }
 

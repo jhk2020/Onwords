@@ -28,5 +28,3 @@ export default class App extends Component {
     </div>
   }
 };
-
-// GET RID OF USING LOCAL STORAGE

@@ -414,10 +414,8 @@ button:focus {
   outline: none;
 }
 
-a .redirectLink {
-  text-decoration: none;
-  color: rgb(39, 47, 50);
-  all: inherit;
+.redirectLink {
+  margin: auto 7px auto 0;
 }
 
 /*FriendsFeed*/
@@ -513,6 +511,31 @@ a .redirectLink {
   border-right: 1px solid #e6e6e6;
   border-bottom: 1px solid #e6e6e6;
   border-left: 1px solid #e6e6e6;
+}
+
+.feed {
+  font-family: 'Lato', sans-serif;
+  font-weight: bold;
+  font-size: 15px;
+  overflow-y: auto;
+}
+
+.feedLink {
+  margin: 10px 10px;
+}
+
+.feedLink p:hover {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.feedLink img {
+  cursor: pointer;
+}
+
+.feedLinkComment {
+  margin: 10px;
+  font-size: 13px;
 }
 
 .annotations-title {

@@ -31,22 +31,27 @@ export default class AnnotatorSidebar extends Component {
   }
 
   render() {
-    const {annotations, showMyFeed, myFeedShown} = this.props;
+    const {annotations, toggleMyFeed, myFeedShown} = this.props;
     return <div className='friends-annotations-view-container'>
       <Paper className='friends-annotations-header' zDepth={2}>
         <div className='friends-annotations-buttons-container'>
-          <div className='annotations-title'>ANNOTATIONS</div>
-          <MyAnnotationsButton showMyFeed={showMyFeed}/>
+          <div className='annotations-title'>ONWORDS</div>
+          <MyAnnotationsButton toggleMyFeed={toggleMyFeed}/>
         </div>
-        <div className='friends-heading'>People You Follow</div>
-          <FriendsCarousel />
+        {!myFeedShown ?
+          <div>
+            <div className='friends-heading'>People You Follow</div>
+            <FriendsCarousel />
+          </div>
+          : <MyFeed toggleMyFeed={toggleMyFeed}/>
+        }
       </Paper>
       <br/>
       {!myFeedShown ?
         <div className='friends-annotations-list'>
           <AnnotationsList />
         </div>
-        : <MyFeed />
+        : null
       }
     </div>
   }
