@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import AnnotationsList from '../components/AnnotationsList';
-
 import { checkSpotlight, unmountSpotlight } from '../actions/spotlightAction';
 
 function mapStateToProps(state) {
@@ -21,7 +20,7 @@ function mapDispatchToProps(dispatch) {
     unmountSpotlight: () =>  {
       dispatch(unmountSpotlight());
     }
-    
+
   }
 }
 

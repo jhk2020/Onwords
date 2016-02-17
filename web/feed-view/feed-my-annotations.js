@@ -12,7 +12,7 @@ var MyAnnotations = React.createClass({
     console.log('MyAnnotations - componentDidMount');
     var user = window.localStorage.user_id;
     var uri = window.location.href.split("?")[0];
-    var completeUri = 'https://test2server.herokuapp.com/api/personalfeed?user_id=' + user;
+    var completeUri = 'http://localhost:9000/api/personalfeed?user_id=' + user;
     var self = this;
     $.get(completeUri, function(result) {
       if (self.isMounted()) {

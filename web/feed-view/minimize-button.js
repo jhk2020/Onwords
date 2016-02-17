@@ -2,7 +2,7 @@ var React = require('react');
 
 var MinimizeButton = React.createClass({
   handleClick: function() {
-    this.props.updateView('showAnnotatorView');
+    this.props.updateView('showAnnotatorSidebar');
   }, 
   render: function() {
     return (

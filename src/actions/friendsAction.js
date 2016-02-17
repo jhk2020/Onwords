@@ -15,7 +15,7 @@ export function fetchFriendsAsync() {
       uri = uri;
     }
 
-    $.get('https://test2server.herokuapp.com/api/users/uri/annotations', {uri: uri, user_id: firstUserId})
+    $.get('http://localhost:9000/api/users/uri/annotations', {uri: uri, user_id: firstUserId})
       .done(function(friends) {
         dispatch(fetchFriends(friends));
       });

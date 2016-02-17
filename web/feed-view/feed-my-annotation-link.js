@@ -26,14 +26,14 @@ var MyLink = React.createClass({
 
     // making it shared.
     $.ajax({
-      url: 'https://test2server.herokuapp.com/api/personalfeed/share?user_id='+ user +' &uri='+ uri +'&is_shared='+'true',
+      url: 'http://localhost:9000/api/personalfeed/share?user_id='+ user +' &uri='+ uri +'&is_shared='+'true',
       method: "put",
       dataType: 'json'
     });
 
     // updating general post.
     $.ajax({
-      url: 'https://test2server.herokuapp.com/api/uri/gp',
+      url: 'http://localhost:9000/api/uri/gp',
       method: "post",
       data: generalPost,
       dataType: 'json'

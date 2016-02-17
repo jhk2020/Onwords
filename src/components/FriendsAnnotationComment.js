@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Paper from 'material-ui/lib/paper';
 
 export default class FriendsAnnotationComment extends Component {
   render() {
@@ -13,13 +14,13 @@ export default class FriendsAnnotationComment extends Component {
     }
 
     return (
-      <div onClick={clickHandler} className="annotation" style={divStyle}>
+      <Paper onClick={clickHandler} className="annotation" style={divStyle} zDepth={2}>
         <img className='annotation-friends-pic' src={friendInfo.pic} />
         <div className='annotation-text'>
           <p className='username'>{friendInfo.name}</p>
           <p>{annotation.text}</p>
         </div>
-      </div>
+      </Paper>
     )
   }
 };

@@ -56,7 +56,7 @@ var fetchFbProfile = function(accessToken) {
 
 var sendFbProfile = function(data) {
   var xhr = new XMLHttpRequest();
-  var url = 'https://test2server.herokuapp.com/api/users';
+  var url = 'http://localhost:9000/api/users';
   xhr.open('POST', url, true);
   xhr.setRequestHeader('Content-Type', 'application/json');
   xhr.onreadystatechange = function() {

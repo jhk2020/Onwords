@@ -18,10 +18,6 @@
   transition: opacity .1s ease-in;
 }
 
-.annotation-text {
-  width: 83%;
-  margin-left: 17%;
-}
 
 .modify-comment-container {
   float: right;
@@ -40,13 +36,13 @@
 }
 
 #annotation-sidebar {
-  all: initial; 
+  all: initial;
   z-index: 9999999;
-  position: fixed; 
-  top: 0; 
+  position: fixed;
+  top: 0;
   width: 630px;
   right: -600px;
-  height: 100%; 
+  height: 100%;
   text-decoration: none;
   list-style-type: none;
   overflow-y: auto;
@@ -73,14 +69,14 @@
 
   overflow-y: scroll;
 }
-.annotator-button-container {
+.annotator-icon-container {
   margin-top: 7px;
   width: 25px;
   height: 25px;
   position: absolute;
   left: 0px;
 }
-.annotator-button {
+.annotator-icon {
   width: 25px;
   height: 25px;
 }
@@ -99,13 +95,13 @@
 }
 .friends-annotations-button-container {
   float: right;
-  width: 25px; 
+  width: 25px;
   height: 25px;
   margin: 7px 0 0 7px;
 
 }
 .friends-annotations-button {
-  width: 25px; 
+  width: 25px;
   height: 25px;
 }
 .home-button {
@@ -119,14 +115,14 @@
 }
 .annotator-my-view-button-container {
   float: left;
-  width: 40px; 
+  width: 40px;
   height: 30px;
   margin-top: 4px;
   margin-left: -5px;
   display: inline-block;
-} 
+}
 .annotator-my-view-button {
-  width: 50px; 
+  width: 50px;
   height: 30px;
   border-radius: 50%;
 }
@@ -169,7 +165,7 @@
   padding-left: 5px;
 }
 .statistic {
-  padding-right: 3px; 
+  padding-right: 3px;
 }
 .description-container {
   width: 255px;
@@ -220,7 +216,7 @@
   padding-left: 5px;
 }
 .statistic {
-  padding-right: 3px; 
+  padding-right: 3px;
 }
 .description-container {
   width: 255px;
@@ -405,7 +401,7 @@
   width: 100%;
   padding: 0px;
   border: none;
-  resize: none; 
+  resize: none;
   font-family: 'source sans pro', sans-serif;
   font-size: 17px;
 }
@@ -546,6 +542,9 @@ a .redirectLink {
   color: #31353D;
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 16px;
+  width: 83%;
+  margin-left: 17%;
+  margin-bottom: 15px;
 }
 #annotationEdit {
   font-family: 'Source Sans Pro', sans-serif;
@@ -595,7 +594,7 @@ ul {
   height: 100px;
   margin-top: 20px;
   margin-left: 10px;
-  margin-bottom: 12.5px; 
+  margin-bottom: 12.5px;
   border-radius: 50%;
 }
 .post-body-container {
@@ -659,7 +658,7 @@ ul {
 }
 .comment-icon {
   height: 16px;
-  width: 16px; 
+  width: 16px;
 }
 
 /*PostComments*/
@@ -686,7 +685,7 @@ ul {
   display: inline-block;
 }
 .comment-pic-container {
-  margin-right: 10px; 
+  margin-right: 10px;
   width: 25px;
   height: 25px;
   display: inline-block;
@@ -694,7 +693,7 @@ ul {
 .comment-pic {
   vertical-align: middle;
   width: 25px;
-  height: 25px; 
+  height: 25px;
   display: inline-block;
   border-radius: 50%;
 }
@@ -732,13 +731,13 @@ ul {
   background: white;
   border-bottom: 1px solid #e6e6e6;
 }
-.my-annotations-button-container {
+.myAnnotationsButton-container {
   float: right;
   height: 25px;
   width: 25px;
   margin: 7px 10px 0 7px;
 }
-.my-annotations-button {
+.myAnnotationsButton {
   height: 25px;
   width: 25px;
   border-radius: 50%;

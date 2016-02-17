@@ -4,9 +4,9 @@ var HomeButton = require('./home-button');
 var AnnotatorMinimizeButton = require('./annotator-minimize-button');
 var FriendsAnnotationsButton = require('./friends-annotations-button');
 
-var AnnotatorView = React.createClass({
+var AnnotatorSidebar = React.createClass({
   componentWillMount: function() {
-    console.log('AnnotatorView mounted');
+    console.log('AnnotatorSidebar mounted');
     var THIS = this;
     $(document).on('click', 'body', function(e) {
       console.log('e is : ', e);
@@ -26,7 +26,7 @@ var AnnotatorView = React.createClass({
     });
   },
   componentWillUnmount: function() {
-    console.log('AnnotatorView unmounted');
+    console.log('AnnotatorSidebar unmounted');
     $(document).off();
   },
   render: function() {
@@ -45,4 +45,4 @@ var AnnotatorView = React.createClass({
   }
 });
 
-module.exports = AnnotatorView;
+module.exports = AnnotatorSidebar;

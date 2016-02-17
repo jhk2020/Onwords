@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import ReactAddons from 'react/addons';
-const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
-
 import MyAnnotationComment from './MyAnnotationComment';
 import FriendsAnnotationComment from './FriendsAnnotationComment';
 
-
 export default class AnnotationsList extends Component {
-  constructor(props) {
-    super(props);
+  componentWillUnmount() {
+    this.props.unmountSpotlight();
   }
 
   deleteAnn(annotation) {
@@ -19,22 +15,31 @@ export default class AnnotationsList extends Component {
   }
 
   render() {
-    var ownId = window.localStorage.getItem('user_id');
-    let { userInfo, friends, annotations, checkSpotlight } = this.props;
+    const ownId = window.localStorage.getItem('user_id');
+    const { userInfo, friends, annotations, checkSpotlight } = this.props;
 
     const annotationList = annotations.map(function(annotation, index) {
       let user = annotation.user_id;
-        return (
-          <div key={index}>
-            <li className="annotationListItem">
-              {user.toString() === ownId ?
-                <MyAnnotationComment userInfo={userInfo} checkSpotlight={checkSpotlight} user={annotation.user_id} annotation={annotation} deleteAnn={this.deleteAnn} />
-              : <FriendsAnnotationComment friendInfo = {friends[user]} checkSpotlight={checkSpotlight} user={annotation.user} annotation={annotation}/>
-              }
-            </li>
-            <br></br>
-          </div>
-        )
+        return <div key={index}>
+          <li className="annotationListItem">
+            {user.toString() === ownId ?
+              <MyAnnotationComment
+                  annotation={annotation}
+                  deleteAnn={this.deleteAnn}
+                  checkSpotlight={checkSpotlight}
+                  user={annotation.user_id}
+                  userInfo={userInfo}
+              />
+            : <FriendsAnnotationComment
+                  annotation={annotation}
+                  checkSpotlight={checkSpotlight}
+                  friendInfo = {friends[user]}
+                  user={annotation.user}
+              />
+            }
+          </li>
+          <br></br>
+        </div>
     }.bind(this));
 
 
@@ -44,10 +49,4 @@ export default class AnnotationsList extends Component {
       </div>
     )
   }
-
-  componentWillUnmount() {
-    this.props.unmountSpotlight();
-  }
 };
-// <ReactCSSTransitionGroup transitionName='annotationList' transitionAppear={true} transitionEnterTimeout={100} transitionAppearTimeout={100}>
-// </ReactCSSTransitionGroup>

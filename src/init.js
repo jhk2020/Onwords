@@ -17,7 +17,7 @@ var initializeAnnotator = function(initialAnnotationsUserId, store) {
   var app = new annotator.App();
   app.include(annotator.ui.main)
     .include(annotator.storage.http, {
-      prefix: 'https://test2server.herokuapp.com',
+      prefix: 'http://localhost:9000',
       urls: {
         create: '/api/annotations',
         update: '/api/annotations/{id}',

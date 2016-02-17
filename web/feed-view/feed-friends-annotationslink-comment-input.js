@@ -27,7 +27,7 @@ var CommentInput = React.createClass({
 
     // making a post.
     $.ajax({
-      url: 'https://test2server.herokuapp.com/api/comments',
+      url: 'http://localhost:9000/api/comments',
       method: 'post',
       data: comment,
       dataType: 'json'

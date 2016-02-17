@@ -4,9 +4,8 @@ export default function toggleFriendAnnotations(friendId) {
     if (friends[friendId].shown) {
       dispatch(toggleOffFriendAnnotations(friendId));
     } else {
-      // dispatch(toggleOnFriendAnnotations(friendId));
       Promise.resolve(dispatch(toggleOnFriendAnnotationsAsync(friendId)))
-        .then(function() {          
+        .then(function() {
           var ev = new CustomEvent('getFriendAnnotations', {detail: {userId: friendId}});
           document.dispatchEvent(ev);
         })

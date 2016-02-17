@@ -11,7 +11,7 @@ var FeedSearchList = React.createClass({
 
   componentWillReceiveProps: function(nextProps) {
     if (nextProps.fullName) {
-      var url = 'https://test2server.herokuapp.com/api/search/users';
+      var url = 'http://localhost:9000/api/search/users';
       var ownId = window.localStorage.getItem('user_id');
 
       var queryParameters = {
@@ -27,7 +27,7 @@ var FeedSearchList = React.createClass({
   },
 
   handleFollowClick: function(personId) {
-    var url = 'https://test2server.herokuapp.com/api/users/follow';
+    var url = 'http://localhost:9000/api/users/follow';
 
     var body = {
       user_id: personId,
@@ -38,7 +38,7 @@ var FeedSearchList = React.createClass({
   },
 
   handleUnfollowClick: function(personId) {
-    var urlPrefix = 'https://test2server.herokuapp.com/api/users/unfollow';
+    var urlPrefix = 'http://localhost:9000/api/users/unfollow';
     var url = urlPrefix + '?user_id=' + personId +'&follower_id=' + this.props.ownId;
 
     $.ajax({
