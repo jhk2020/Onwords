@@ -49,9 +49,5 @@ export default class MyFeedLink extends Component {
     </div>
   }
 }
-/*{
-{linkInfo.uri_link}
-  title,
-  uri_link
-}*/
+
 export default MyFeedLink;

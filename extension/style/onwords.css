@@ -538,6 +538,27 @@ button:focus {
   font-size: 13px;
 }
 
+#feed-search {
+  width: 80%;
+  font-size: 16px;
+  margin: auto 5px;
+  border: none;
+  height: 75%;
+}
+
+.feed-search-icon {
+  width: 20px;
+  height: 20px;
+  margin: auto 5px;
+}
+
+.feed-search-container {
+  position: absolute;
+  display: flex;
+  width: 85%;
+  height: 39px;
+}
+
 .annotations-title {
   position: absolute;
   width: 50%;

@@ -1,7 +1,8 @@
 import React from 'react';
+import _ from 'lodash';
 import { connect } from 'react-redux';
 import AnnotatorSidebar from '../components/AnnotatorSidebar';
-import { toggleMyFeed } from '../actions/feedActions';
+import { toggleMyFeed, searchFeed } from '../actions/feedActions';
 
 function mapStateToProps(state) {
   return {
@@ -11,6 +12,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    searchFeed: _.debounce(
+      (query) => {
+        dispatch(searchFeed(query));
+      }, 200),
     toggleMyFeed: (result) => {
       dispatch(toggleMyFeed(result));
     }

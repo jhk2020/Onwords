@@ -32,6 +32,7 @@ var identityListener = function(changes) {
       pic: changes.user.newValue.picUrl,
       name: changes.user.newValue.fullName
     }
+
     const store = configStore(initialState);
     renderApp(store);
     initializeAnnotator(initialAnnotationsUserId, store);

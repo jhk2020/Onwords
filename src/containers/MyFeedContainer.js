@@ -5,7 +5,7 @@ import { loadMyFeed } from '../actions/feedActions';
 
 function mapStateToProps(state) {
   return {
-    myFeedInfo: state.myFeed.feedInfo
+    myFeedInfo: state.myFeed.shownFeed
   }
 }
 

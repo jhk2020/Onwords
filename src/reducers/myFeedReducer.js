@@ -1,6 +1,7 @@
 const initialState = {
   shown: false,
-  feedInfo: []
+  feedInfo: [],
+  shownFeed: []
 }
 
 export default function myFeed (state = initialState, action) {
@@ -17,8 +18,17 @@ export default function myFeed (state = initialState, action) {
       }
     case 'LOAD_MY_FEED_SUCCESS':
       return Object.assign({}, state, {
-        feedInfo: action.result
+        feedInfo: action.result.slice(),
+        shownFeed: action.result.slice()
       });
+    case 'UPDATE_FEED':
+      return Object.assign({}, state, {
+        shownFeed: action.searchResult.filter(link => link)
+      });
+    case 'RESTORE_FEED':
+      return Object.assign({}, state, {
+        shownFeed: state.feedInfo.slice()
+      })
     default:
       return state;
   }

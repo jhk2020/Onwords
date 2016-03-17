@@ -14,7 +14,7 @@ var MyLink = React.createClass({
   },
   handleClick: function(e) {
     e.preventDefault();
-    debugger;
+    ;
     var message = $('.inputContent#'+this.props.index).val();
     var uri = this.state.annotation.uri_link;
     var user = window.localStorage.user_id;
@@ -43,7 +43,7 @@ var MyLink = React.createClass({
   },
   render: function() {
     console.log('in MyAnnotationsLink', this.state.annotation);
-    debugger;
+    ;
     var annotation = this.state.annotation;
     var numberOfLikes = annotation.likes.length;
     var redirectUri = annotation.uri_link;
